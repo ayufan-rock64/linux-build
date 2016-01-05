@@ -1,0 +1,24 @@
+#!/bin/sh
+
+LOCALPATH=$(pwd)
+ROOTDIR=$(cd $(dirname $(dirname $0)); pwd)
+OUT=${ROOTDIR}/out
+IMAGE=${ROOTDIR}/image
+
+if [ ! -d ${OUT} ];then
+mkdir ${OUT}
+fi
+
+if [ ! -d ${IMAGE} ];then
+mkdir ${IMAGE}
+fi
+
+
+
+cd ${ROOTDIR}/kernel
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- O=../out/kernel rk3036_kylin_linux_defconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- O=../out/kernel
+cd ${OUT}/kernel
+cat arch/arm/boot/zImage arch/arm/boot/dts/rk3036-kylin.dtb > kernel.img
+mkimage -A arm -O linux -T kernel -C none -a 0x60000000 -e 0x60000000 -d kernel.img ${IMAGE}/kernel.uimg
+cd ${LOCALPATH}

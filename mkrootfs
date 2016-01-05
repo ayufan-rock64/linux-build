@@ -1,0 +1,40 @@
+#!/bin/sh
+
+LOCALPATH=$(pwd)
+ROOTDIR=$(cd $(dirname $(dirname $0)); pwd)
+OUT=${ROOTDIR}/out
+IMAGE=${ROOTDIR}/image
+ROOTFSOUT=${OUT}/rootfs
+MOUNTPOINT=${OUT}/rootfs/ubuntu
+DOWNLOADPATH=http://cdimage.ubuntu.com/ubuntu-core/releases/15.10/release
+DOWNLOADFILE=ubuntu-core-15.10-core-armhf.tar.gz
+
+echo ${ROOTDIR}
+
+if [ ! -d ${OUT} ];then
+mkdir ${OUT}
+fi
+
+if [ ! -d ${IMAGE} ];then
+mkdir ${IMAGE}
+fi
+
+if [ ! -d ${ROOTFSOUT} ];then
+mkdir ${ROOTFSOUT}
+fi
+
+if [ ! -d ${MOUNTPOINT} ];then
+mkdir ${MOUNTPOINT}
+fi
+
+if [ ! -f ${ROOTFSOUT}/${DOWNLOADFILE} ];then
+curl ${DOWNLOADPATH}/${DOWNLOADFILE} > ${ROOTFSOUT}/${DOWNLOADFILE}
+fi
+dd if=/dev/zero of=${IMAGE}/ubuntu.img bs=1M count=300
+mkfs.ext4 ${IMAGE}/ubuntu.img
+sudo mount ${IMAGE}/ubuntu.img ${MOUNTPOINT}
+sudo tar -xpzf ${ROOTFSOUT}/${DOWNLOADFILE} -C ${MOUNTPOINT}
+PASSWORD="rockchip" RKPASSWD=$(perl -e 'print crypt($ARGV[0], "sa-ubuntu")' $PASSWORD)
+sudo useradd --root ${MOUNTPOINT} -s '/bin/bash' -m rockchip -p $RKPASSWD
+sudo umount ${MOUNTPOINT}
+cd ${LOCALPATH}

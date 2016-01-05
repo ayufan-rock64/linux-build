@@ -1,0 +1,23 @@
+#!/bin/bash
+
+LOCALPATH=$(pwd)
+ROOTDIR=$(cd $(dirname $(dirname $0)); pwd)
+OUT=${ROOTDIR}/out
+IMAGE=${ROOTDIR}/image
+
+if [ ! -d ${OUT} ];then
+mkdir ${OUT}
+fi
+
+if [ ! -d ${IMAGE} ];then
+mkdir ${IMAGE}
+fi
+
+
+cd ${ROOTDIR}/u-boot
+CROSS_COMPILE=arm-linux-gnueabi- make O=../out/uboot kylin-rk3036_defconfig all
+cd ${OUT}/uboot
+tools/mkimage  -n rk3036 -T rksd -d spl/u-boot-spl.bin spl.bin
+dd if=/dev/zero of=kylin-rk3036-uboot.bin count=64
+cat spl.bin u-boot-dtb.bin >> ${IMAGE}/kylin-rk3036-uboot.bin
+cd ${LOCALPATH}
