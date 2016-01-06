@@ -1,0 +1,15 @@
+#!/bin/sh
+
+LOCALPATH=$(pwd)
+ROOTDIR=$(cd $(dirname $(dirname $0)); pwd)
+BOARD=$1
+
+if [ $# != 1 ] ; then 
+BOARD=kylin
+fi
+echo "Building U-boot for ${BOARD} board!"
+${ROOTDIR}/build/mkuboot ${BOARD}
+echo "Building kernel for ${BOARD} board!"
+${ROOTDIR}/build/mkkernel ${BOARD} 
+echo "Building Ubuntu rootfs for ${BOARD} board!"
+${ROOTDIR}/build/mkrootfs ${BOARD} 
