@@ -4,6 +4,16 @@ LOCALPATH=$(pwd)
 ROOTDIR=$(cd $(dirname $(dirname $0)); pwd)
 OUT=${ROOTDIR}/out
 IMAGE=${ROOTDIR}/image
+BOARD=$1
+DEFCONFIG=""
+DTB=""
+KERNELIMAGE=""
+
+if [ $# != 1 ] ; then 
+BOARD=kylin
+fi
+
+KERNELIMAGE=${IMAGE}/${BOARD}-kernel.img
 
 if [ ! -d ${OUT} ];then
 mkdir ${OUT}
@@ -13,12 +23,31 @@ if [ ! -d ${IMAGE} ];then
 mkdir ${IMAGE}
 fi
 
-
+case ${BOARD} in
+	"kylin")
+		DEFCONFIG=rk3036_kylin_linux_defconfig
+		DTB=rk3036-kylin.dtb
+	;;
+	"firefly")
+		DEFCONFIG=""
+		DTB=rk3288-firefly.dtb
+	;;
+	"rk3036evb")
+		DEFCONFIG=""
+		DTB=rk3036-evb.dtb
+	;;
+	*)
+	echo "board not support in kernel"
+	;;
+esac
+echo Building kernel for ${BOARD} board!
+echo Using ${DEFCONFIG}
 
 cd ${ROOTDIR}/kernel
-make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- O=../out/kernel rk3036_kylin_linux_defconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- O=../out/kernel ${DEFCONFIG}
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- O=../out/kernel
 cd ${OUT}/kernel
-cat arch/arm/boot/zImage arch/arm/boot/dts/rk3036-kylin.dtb > kernel.img
-mkimage -A arm -O linux -T kernel -C none -a 0x60000000 -e 0x60000000 -d kernel.img ${IMAGE}/kernel.uimg
+cat arch/arm/boot/zImage arch/arm/boot/dts/${DTB} > kernel.img
+mkimage -A arm -O linux -T kernel -C none -a 0x60000000 -e 0x60000000 -d kernel.img ${KERNELIMAGE}
 cd ${LOCALPATH}
+echo Kernel Image: ${KERNELIMAGE}

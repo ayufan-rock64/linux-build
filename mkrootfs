@@ -8,8 +8,13 @@ ROOTFSOUT=${OUT}/rootfs
 MOUNTPOINT=${OUT}/rootfs/ubuntu
 DOWNLOADPATH=http://cdimage.ubuntu.com/ubuntu-core/releases/15.10/release
 DOWNLOADFILE=ubuntu-core-15.10-core-armhf.tar.gz
+BOARD=$1
+if [ $# != 1 ] ; then 
+BOARD=kylin
+fi
+ROOTFSIMAGE=${BOARD}-rootfs.img
 
-echo ${ROOTDIR}
+echo Making rootfs for ${BOARD} board!
 
 if [ ! -d ${OUT} ];then
 mkdir ${OUT}
@@ -30,11 +35,14 @@ fi
 if [ ! -f ${ROOTFSOUT}/${DOWNLOADFILE} ];then
 curl ${DOWNLOADPATH}/${DOWNLOADFILE} > ${ROOTFSOUT}/${DOWNLOADFILE}
 fi
-dd if=/dev/zero of=${IMAGE}/ubuntu.img bs=1M count=300
-mkfs.ext4 ${IMAGE}/ubuntu.img
-sudo mount ${IMAGE}/ubuntu.img ${MOUNTPOINT}
+dd if=/dev/zero of=${IMAGE}/${ROOTFSIMAGE} bs=1M count=300
+mkfs.ext4 ${IMAGE}/${ROOTFSIMAGE}
+sudo mount ${IMAGE}/${ROOTFSIMAGE} ${MOUNTPOINT}
 sudo tar -xpzf ${ROOTFSOUT}/${DOWNLOADFILE} -C ${MOUNTPOINT}
 PASSWORD="rockchip" RKPASSWD=$(perl -e 'print crypt($ARGV[0], "sa-ubuntu")' $PASSWORD)
 sudo useradd --root ${MOUNTPOINT} -s '/bin/bash' -m rockchip -p $RKPASSWD
 sudo umount ${MOUNTPOINT}
 cd ${LOCALPATH}
+
+
+
