@@ -50,6 +50,7 @@ sudo tar -xpzf ${ROOTFSOUT}/${DOWNLOADFILE} -C ${MOUNTPOINT}
 
 PASSWD=$(perl -e 'print crypt($ARGV[0], "nothing")' "rockchip")
 sudo sed -i "s/root:.:/root:$PASSWD:/" ${MOUNTPOINT}/etc/shadow
+sudo useradd --root ${MOUNTPOINT} -s '/bin/bash' -m rockchip -p $PASSWD
 
 echo Copy overlay files
 sudo cp -r ${ROOTDIR}/build/overlay/* ${MOUNTPOINT}/
