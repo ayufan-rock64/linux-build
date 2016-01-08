@@ -44,7 +44,7 @@ cd ${ROOTDIR}/u-boot
 CROSS_COMPILE=arm-linux-gnueabi- make O=../out/uboot ${DEFCONFIG} all
 cd ${OUT}/uboot
 tools/mkimage  -n rk3036 -T rksd -d spl/u-boot-spl.bin spl.bin
-dd if=/dev/zero of=${OUTBIN} count=64
+dd if=/dev/zero of=${IMAGE}/${OUTBIN} count=64
 cat spl.bin u-boot-dtb.bin >> ${IMAGE}/${OUTBIN}
 echo U-boot image:${IMAGE}/${OUTBIN}
 cd ${LOCALPATH}
