@@ -1,53 +1,69 @@
 #!/bin/sh
 
 LOCALPATH=$(pwd)
-ROOTDIR=$(cd $(dirname $(dirname $0)); pwd)
+ROOTDIR=$(dirname $(dirname $(readlink -f $0)))
 OUT=${ROOTDIR}/out
 IMAGE=${ROOTDIR}/image
 ROOTFSOUT=${OUT}/rootfs
 MOUNTPOINT=${OUT}/rootfs/ubuntu
+
 DOWNLOADPATH=http://cdimage.ubuntu.com/ubuntu-core/releases/15.10/release
 DOWNLOADFILE=ubuntu-core-15.10-core-armhf.tar.gz
+DOWNLOADFILE_CHECKSUM=626ae25e3df7f494dfd1a7aaec14acdc9d6fe767
+
 BOARD=$1
-if [ $# != 1 ] ; then 
-BOARD=kylin
+if [ $# != 1 ] ; then
+    BOARD=kylin
 fi
 ROOTFSIMAGE=${BOARD}-rootfs.img
 
 echo Making rootfs for ${BOARD} board!
 
 if [ ! -d ${OUT} ];then
-mkdir ${OUT}
+    mkdir ${OUT}
 fi
 
 if [ ! -d ${IMAGE} ];then
-mkdir ${IMAGE}
+    mkdir ${IMAGE}
 fi
 
 if [ ! -d ${ROOTFSOUT} ];then
-mkdir ${ROOTFSOUT}
+    mkdir ${ROOTFSOUT}
 fi
 
 if [ ! -d ${MOUNTPOINT} ];then
-mkdir ${MOUNTPOINT}
+    mkdir ${MOUNTPOINT}
 fi
 
 if [ ! -f ${ROOTFSOUT}/${DOWNLOADFILE} ];then
-curl ${DOWNLOADPATH}/${DOWNLOADFILE} > ${ROOTFSOUT}/${DOWNLOADFILE}
+    curl ${DOWNLOADPATH}/${DOWNLOADFILE} > ${ROOTFSOUT}/${DOWNLOADFILE}
 fi
+
+if [ ${DOWNLOADFILE_CHECKSUM} != $(sha1sum ${ROOTFSOUT}/${DOWNLOADFILE} | cut -d' ' -f1) ]; then
+    echo "file checksum mismatch: ${ROOTFSOUT}/${DOWNLOADFILE}"
+    echo "delete ${ROOTFSOUT}/${DOWNLOADFILE} and try again"
+    return
+fi
+
 dd if=/dev/zero of=${IMAGE}/${ROOTFSIMAGE} bs=1M count=300
+
 echo Format rootfs to ext4
 mkfs.ext4 ${IMAGE}/${ROOTFSIMAGE}
-echo mount rootfs to ${MOUNTPOINT}
+
+echo Mount rootfs to ${MOUNTPOINT}
 sudo mount ${IMAGE}/${ROOTFSIMAGE} ${MOUNTPOINT}
+
 echo Extract image to ${MOUNTPOINT}
 sudo tar -xpzf ${ROOTFSOUT}/${DOWNLOADFILE} -C ${MOUNTPOINT}
+
 echo Create user and password
 PASSWORD="rockchip" RKPASSWD=$(perl -e 'print crypt($ARGV[0], "sa-ubuntu")' $PASSWORD)
 sudo useradd --root ${MOUNTPOINT} -s '/bin/bash' -m rockchip -p $RKPASSWD
+
+echo Copy overlay files
+sudo cp -r ${ROOTDIR}/build/overlay/* ${MOUNTPOINT}/
+
 echo Umount rootfs
 sudo umount ${MOUNTPOINT}
 cd ${LOCALPATH}
 echo Rootfs Image: ${IMAGE}/${ROOTFSIMAGE}
-
-
