@@ -1,7 +1,7 @@
 #!/bin/sh
 
 LOCALPATH=$(pwd)
-ROOTDIR=$(cd $(dirname $(dirname $0)); pwd)
+ROOTDIR=$(dirname $(dirname $(readlink -f $0)))
 OUT=${ROOTDIR}/out
 IMAGE=${ROOTDIR}/image
 BOARD=$1
