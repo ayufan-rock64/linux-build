@@ -50,7 +50,8 @@ sudo tar -xpzf ${ROOTFSOUT}/${DOWNLOADFILE} -C ${MOUNTPOINT}
 
 PASSWD=$(perl -e 'print crypt($ARGV[0], "nothing")' "rockchip")
 sudo sed -i "s/root:.:/root:$PASSWD:/" ${MOUNTPOINT}/etc/shadow
-sudo useradd --root ${MOUNTPOINT} -s '/bin/bash' -m rockchip -p $PASSWD
+sudo useradd --root ${MOUNTPOINT} -s '/bin/bash' -m rockchip -p $PASSWD 2>&1 || \
+    echo -e "\e[31m Create user 'rockchip' failed, ignored!\e[0m"
 
 echo Copy overlay files
 sudo cp -r ${ROOTDIR}/build/overlay/* ${MOUNTPOINT}/
