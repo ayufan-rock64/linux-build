@@ -49,6 +49,8 @@ echo Using ${DEFCONFIG}
 cd ${ROOTDIR}/kernel
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- O=${OUT}/kernel ${DEFCONFIG}
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- O=${OUT}/kernel -j8
-cat ${OUT}/kernel/arch/arm/boot/zImage ${OUT}/kernel/arch/arm/boot/dts/${DTB} > ${KERNELIMAGE}
+cat ${OUT}/kernel/arch/arm/boot/zImage ${OUT}/kernel/arch/arm/boot/dts/${DTB} > ${KERNELIMAGE}.zimage
+mkimage -A arm -O linux -T kernel -C none -a 0x60800800 -d ${KERNELIMAGE}.zimage ${KERNELIMAGE}
+rm ${KERNELIMAGE}.zimage
 cd ${LOCALPATH}
-echo Kernel zImage with dtb appended: ${KERNELIMAGE}
+echo Kernel uImage with dtb appended: ${KERNELIMAGE}
