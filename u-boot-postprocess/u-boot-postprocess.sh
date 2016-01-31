@@ -19,7 +19,7 @@ TRUSTED_FIRMWARE="../arm-trusted-firmware-pine64"
 SUNXI_PACK_TOOLS="../sunxi-pack-tools/bin"
 
 BUILD="./out"
-mkdir -o $BUILD
+mkdir -p $BUILD
 
 cp -v $TRUSTED_FIRMWARE/build/sun50iw1p1/debug/bl31.bin $BUILD
 cp -v $UBOOT/u-boot-sun50iw1p1.bin $BUILD/u-boot.bin
@@ -27,19 +27,17 @@ cp -v $BSP/tools/pack/chips/sun50iw1p1/bin/scp.bin $BUILD
 cp -v $BSP/out/sun50iw1p1/linux/common/sunxi.dtb $BUILD
 cp -v $BSP/tools/pack/chips/sun50iw1p1/configs/t1/sys_config.fex $BUILD
 
-cd $BUILD
-unix2dos sys_config.fex
-$SUNXI_PACK_TOOLS/script sys_config.fex
+unix2dos $BUILD/sys_config.fex
+$SUNXI_PACK_TOOLS/script $BUILD/sys_config.fex
 
 # merge_uboot.exe u-boot.bin infile outfile mode[secmonitor|secos|scp]
-$SUNXI_PACK_TOOLS/merge_uboot u-boot.bin bl31.bin u-boot-merged.bin secmonitor
-$SUNXI_PACK_TOOLS/merge_uboot u-boot-merged.bin scp.bin u-boot-merged2.bin scp
+$SUNXI_PACK_TOOLS/merge_uboot $BUILD/u-boot.bin $BUILD/bl31.bin $BUILD/u-boot-merged.bin secmonitor
+$SUNXI_PACK_TOOLS/merge_uboot $BUILD/u-boot-merged.bin $BUILD/scp.bin $BUILD/u-boot-merged2.bin scp
 
 # update_fdt.exe u-boot.bin xxx.dtb output_file.bin
-$SUNXI_PACK_TOOLS/update_uboot_fdt u-boot-merged2.bin sunxi.dtb u-boot-with-dtb.bin
+$SUNXI_PACK_TOOLS/update_uboot_fdt $BUILD/u-boot-merged2.bin $BUILD/sunxi.dtb $BUILD/u-boot-with-dtb.bin
 
 # Add fex file to u-boot so it actually is accepted by boot0.
-$SUNXI_PACK_TOOLS/update_uboot u-boot-with-dtb.bin sys_config.bin
+$SUNXI_PACK_TOOLS/update_uboot $BUILD/u-boot-with-dtb.bin $BUILD/sys_config.bin
 
-cd -
 echo "Done - created $BUILD/u-boot-with-dtb.bin"
