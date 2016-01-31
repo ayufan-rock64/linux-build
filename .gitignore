@@ -1,0 +1,8 @@
+/simpleimage/*.img
+/simpleimage/*.fex
+/simpleimage/*.bin
+/u-boot-postprocess/out
+/lichee
+/u-boot-pine64
+/arm-trusted-firmware-pine64
+/sunxi-pack-tools
