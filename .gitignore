@@ -6,3 +6,5 @@
 /u-boot-pine64
 /arm-trusted-firmware-pine64
 /sunxi-pack-tools
+/mkbootimg
+/linux
