@@ -30,9 +30,28 @@ part_position=20480
 
 out="./simpleimage-bsp.img"
 
-dd if=/dev/zero bs=1k count=$part_position of="$out"
+dd if=/dev/zero bs=1M count=100 of="$out"
 dd if="$boot0" conv=notrunc bs=1k seek=$boot0_position of="$out"
 dd if="$uboot" conv=notrunc bs=1k seek=$uboot_position of="$out"
-dd if="$part" conv=notrunc bs=512 count=1 of="$out"
-dd if="$part" conv=notrunc oflag=append bs=1k skip=$part_position of="$out"
+
+# Add partition table
+cat <<EOF | sfdisk -f "$out"
+label: dos
+unit: sectors
+
+img1 : start=       40960, size=      102401, type=c
+img2 : start=      143361, size=       61439, type=83
+EOF
+
+# Create file systems
+dd if=/dev/zero bs=512 count=102401 of=${out}1
+mkfs.vfat ${out}1
+dd if=${out}1 conv=notrunc bs=512 seek=40960 of="$out"
+rm ${out}1
+
+dd if=/dev/zero bs=512 count=61439 of=${out}2
+mkfs.ext4 ${out}2
+dd if=${out}2 conv=notrunc bs=512 seek=143361 of="$out"
+rm ${out}2
+
 sync
