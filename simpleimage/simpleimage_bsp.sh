@@ -22,7 +22,6 @@ set -e
 
 boot0="./boot0-android.bin"
 uboot="./u-boot-with-dtb.bin"
-part="./dospartwithgap.img"
 
 boot0_position=8
 uboot_position=19096
