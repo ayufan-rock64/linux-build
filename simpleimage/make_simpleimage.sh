@@ -26,6 +26,7 @@ set -x
 
 boot0="./boot0-android.bin"
 uboot="./u-boot-with-dtb.bin"
+kernel="../kernel"
 
 boot0_position=8      # KiB
 uboot_position=19096  # KiB
@@ -47,12 +48,18 @@ start=$((part_position*2)), size=${boot_size}M, type=c
 start=$((part_position*2 + boot_size*1024*2)), type=83
 EOF
 
-# Create file systems
+# Create boot file system (VFAT)
 dd if=/dev/zero bs=1M count=${boot_size} of=${out}1
 mkfs.vfat ${out}1
+# Add boot stuff if there.
+if [ -e "${kernel}/kernel.img" -a -e "${kernel}/pine64_plus.dtb" ]; then
+	mcopy -i ${out}1 ${kernel}/kernel.img ::kernel.img
+	mcopy -i ${out}1 ${kernel}/*.dtb ::
+fi
 dd if=${out}1 conv=notrunc bs=1k seek=${part_position} of="$out"
 rm -f ${out}1
 
+# Create additional ext4 file system.
 dd if=/dev/zero bs=1M count=$((disk_size-boot_size-part_position/1024)) of=${out}2
 mkfs.ext4 ${out}2
 dd if=${out}2 conv=notrunc bs=1k seek=$((part_position+boot_size*1024)) of="$out"
