@@ -2,6 +2,7 @@
 
 ```bash
 git clone --depth 1 --branch a64-v1 --single-branch https://github.com/apritzel/linux.git linux-a64-v1
+```
 
 ## Configure Kernel
 
