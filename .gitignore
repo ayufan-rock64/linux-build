@@ -8,3 +8,6 @@
 /sunxi-pack-tools
 /mkbootimg
 /linux
+/kernel/*.img
+/kernel/initrd.gz
+/kernel/*.dtb
