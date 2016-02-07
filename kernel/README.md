@@ -40,6 +40,7 @@ file to `.config` of your Busybox folder.
 ```bash
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 oldconfig
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4
+```
 
 ### Make initrd.gz
 
