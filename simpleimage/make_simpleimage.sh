@@ -22,15 +22,16 @@
 #
 
 set -e
+set -x
 
 boot0="./boot0-android.bin"
 uboot="./u-boot-with-dtb.bin"
 
-boot0_position=8
-uboot_position=19096
-part_position=20480
-disk_size=100 # MiB
-boot_size=50  # MiB
+boot0_position=8      # KiB
+uboot_position=19096  # KiB
+part_position=20480   # KiB
+disk_size=100         # MiB
+boot_size=50          # MiB
 
 out="./simpleimage.img"
 
@@ -47,14 +48,14 @@ start=$((part_position*2 + boot_size*1024*2)), type=83
 EOF
 
 # Create file systems
-dd if=/dev/zero bs=512 count=102401 of=${out}1
+dd if=/dev/zero bs=1M count=${boot_size} of=${out}1
 mkfs.vfat ${out}1
-dd if=${out}1 conv=notrunc bs=512 seek=40960 of="$out"
-rm ${out}1
+dd if=${out}1 conv=notrunc bs=1k seek=${part_position} of="$out"
+rm -f ${out}1
 
-dd if=/dev/zero bs=512 count=61439 of=${out}2
+dd if=/dev/zero bs=1M count=$((disk_size-boot_size-part_position/1024)) of=${out}2
 mkfs.ext4 ${out}2
-dd if=${out}2 conv=notrunc bs=512 seek=143361 of="$out"
-rm ${out}2
+dd if=${out}2 conv=notrunc bs=1k seek=$((part_position+boot_size*1024)) of="$out"
+rm -f ${out}2
 
 sync
