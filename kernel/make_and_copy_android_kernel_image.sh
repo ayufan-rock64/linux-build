@@ -16,7 +16,6 @@ if [ -z "$DEST" ]; then
 fi
 
 LINUX="../linux"
-# https://d-i.debian.org/daily-images/arm64/20160206-00:06/netboot/debian-installer/arm64/
 INITRD="./initrd.gz"
 MKBOOTIMG="../mkbootimg"
 KERNEL="kernel.img"

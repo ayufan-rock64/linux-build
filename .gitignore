@@ -11,3 +11,4 @@
 /kernel/*.img
 /kernel/initrd.gz
 /kernel/*.dtb
+/busybox
