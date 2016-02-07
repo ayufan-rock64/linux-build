@@ -11,7 +11,7 @@ set -e
 
 # http://wiki.pine64.org/index.php/Pine_A64_Software_Release
 BSP="../lichee"
-# https://github.com/longsleep/u-boot-pine64
+# https://github.com/longsleep/u-boot-pine64/tree/pine64-hacks
 UBOOT="../u-boot-pine64"
 # https://github.com/longsleep/arm-trusted-firmware-pine64
 TRUSTED_FIRMWARE="../arm-trusted-firmware-pine64"
