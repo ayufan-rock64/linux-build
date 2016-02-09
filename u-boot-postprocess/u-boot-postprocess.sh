@@ -9,8 +9,8 @@
 
 set -e
 
-# http://wiki.pine64.org/index.php/Pine_A64_Software_Release
-BSP="../lichee"
+# Blobs as provided in the BSP
+BLOBS="../blobs"
 # https://github.com/longsleep/u-boot-pine64/tree/pine64-hacks
 UBOOT="../u-boot-pine64"
 # https://github.com/longsleep/arm-trusted-firmware-pine64
@@ -21,11 +21,11 @@ SUNXI_PACK_TOOLS="../sunxi-pack-tools/bin"
 BUILD="./out"
 mkdir -p $BUILD
 
-cp -v $TRUSTED_FIRMWARE/build/sun50iw1p1/debug/bl31.bin $BUILD
-cp -v $UBOOT/u-boot-sun50iw1p1.bin $BUILD/u-boot.bin
-cp -v $BSP/tools/pack/chips/sun50iw1p1/bin/scp.bin $BUILD
-cp -v $BSP/out/sun50iw1p1/linux/common/sunxi.dtb $BUILD
-cp -v $BSP/tools/pack/chips/sun50iw1p1/configs/t1/sys_config.fex $BUILD
+cp -avf $TRUSTED_FIRMWARE/build/sun50iw1p1/debug/bl31.bin $BUILD
+cp -avf $UBOOT/u-boot-sun50iw1p1.bin $BUILD/u-boot.bin
+cp -avf $BLOBS/sunxi.dtb $BUILD
+cp -avf $BLOBS/scp.bin $BUILD
+cp -avf $BLOBS/sys_config.fex $BUILD
 
 unix2dos $BUILD/sys_config.fex
 $SUNXI_PACK_TOOLS/script $BUILD/sys_config.fex
@@ -41,3 +41,4 @@ $SUNXI_PACK_TOOLS/update_uboot_fdt $BUILD/u-boot-merged2.bin $BUILD/sunxi.dtb $B
 $SUNXI_PACK_TOOLS/update_uboot $BUILD/u-boot-with-dtb.bin $BUILD/sys_config.bin
 
 echo "Done - created $BUILD/u-boot-with-dtb.bin"
+
