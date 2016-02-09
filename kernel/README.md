@@ -1,3 +1,11 @@
+# Linux Kernel for Pine64
+
+The Kernel for Pine64 is work in progress. A first set of patches is available
+but it is very early and most of the hardware does not work yet.
+
+To compile, you need a properly set up gcc-aarch64-linux-gnu toolchain. The
+recommended version to compile the Kernel is 5.2.
+
 ## Get Kernel tree
 
 ```bash

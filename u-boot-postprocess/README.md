@@ -6,6 +6,11 @@ bootable by the A64 boot0 boot loader.
 To be fully compatible with all the scripting in this module, clone the U-Boot
 tree into `build-pine64-image/u-boot-pine64` folder.
 
+A64 loads ATF and  U-Boot in 32bit mode. So to compile both you need a
+properly set up gcc-arm-linux-gnueabihf toolchain. The recommended version to
+compile U-Boot and ATF is 4.8. The U-Boot tree will not compile with 5.0 or
+newer.
+
 ## Get U-Boot tree
 
 ```bash
