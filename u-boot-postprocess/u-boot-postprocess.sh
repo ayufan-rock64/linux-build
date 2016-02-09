@@ -18,7 +18,7 @@ TRUSTED_FIRMWARE="../arm-trusted-firmware-pine64"
 # https://github.com/longsleep/sunxi-pack-tools
 SUNXI_PACK_TOOLS="../sunxi-pack-tools/bin"
 
-BUILD="./out"
+BUILD="../build"
 mkdir -p $BUILD
 
 cp -avf $TRUSTED_FIRMWARE/build/sun50iw1p1/debug/bl31.bin $BUILD

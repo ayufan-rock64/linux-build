@@ -2,30 +2,24 @@
 #
 # Simple script to create a disk image which boots to U-Boot on Pine64.
 #
-# This scripts uses boot0 binary blob (as extracted from the Pine64 Android
-# image) together with a correctly prefixed U-Boot, and A DOS partition table
-# to create a bootable SDcard image for the Pine64.
+# This script uses boot0 binary blob (as extracted from the Pine64 Android
+# image) together with a correctly prefixed U-Boot and A DOS partition table
+# to create a bootable SDcard image for the Pine64. If a Kernel and DTB is
+# found in ../kernel, it is added as well.
 #
-# U-Boot trees:
+# U-Boot tree:
 # - https://github.com/longsleep/u-boot-pine64/tree/lichee-dev-2014.07-fix-compile
 #
 # Build the U-Boot tree, patch the U-boot with a fex file and and put the
-# created u-boot.fex into the same directory as this script. Also extract the
-# boot0 binary blob from the Android image as released by Pine64 and put it
-# into the same directory.
-#
-# This is how to extract boot0 from an existing image:
-#
-# ```bash
-# dd if="$IMAGE" bs=1k skip=8 count=32 of=boot0-android.bin
-# ```
+# created u-boot.fex into the ../build directory. The u-boot-postprocess
+# script provides an easy way to do that.
 #
 
 set -e
 set -x
 
-boot0="./boot0-android.bin"
-uboot="./u-boot-with-dtb.bin"
+boot0="../blobs/boot0.bin"
+uboot="../build/u-boot-with-dtb.bin"
 kernel="../kernel"
 
 boot0_position=8      # KiB
