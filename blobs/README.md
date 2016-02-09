@@ -13,6 +13,8 @@ The boot0 loader is the first thing executed. It is extracted from the
 Android image. At this time, Allwinner has not released the source code for
 boot0 for A64.
 
+Android image download: http://wiki.pine64.org/index.php/Pine_A64_Software_Release#Android_Image_Release_20160112
+
 ### Extract yourself like this
 
 ```bash
