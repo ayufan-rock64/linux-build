@@ -11,7 +11,7 @@ set -e
 DEST="$1"
 
 if [ -z "$DEST" ]; then
-	echo "Usage: $0 <destination-folder>"
+	echo "Usage: $0 <destination-folder> [linux-folder]"
 	exit 1
 fi
 
@@ -21,12 +21,35 @@ MKBOOTIMG="../mkbootimg"
 KERNEL="kernel.img"
 DTB="pine64_plus.dtb"
 
-# Clean up
-rm -f "$DEST/$KERNEL"
-rm -f "$DEST/$DTB"
+if [ -n "$2" ]; then
+	LINUX="$2"
+fi
 
-# Create and copy
+echo "Using Linux from $LINUX ..."
+
+# Clean up
+rm -vf "$DEST/$KERNEL"
+rm -vf "$DEST/"*.dtb
+
+# Create and copy Kernel
 # Download https://android.googlesource.com/platform/system/core/+/master/mkbootimg/mkbootimg
+echo -n "Creating $DEST/$KERNEL ..."
 $MKBOOTIMG --kernel "$LINUX/arch/arm64/boot/Image" --ramdisk "$INITRD" --base 0x40000000 --kernel_offset 0x01080000 --ramdisk_offset 0x20000000 --board Pine64 --pagesize 2048 -o "$DEST/$KERNEL"
-cp -avf "$LINUX/arch/arm64/boot/dts/allwinner/$DTB" "$DEST/$DTB"
+echo " OK"
+
+# Create and copy binary device tree
+echo -n "Copy "
+if [ -d "$LINUX/arch/arm64/boot/dts/allwinner" ]; then
+	# Seems to be mainline Kernel.
+	if [ ! -e "$LINUX/arch/arm64/boot/dts/allwinner/$DTB" ]; then
+		echo "Error: DTB not found at $LINUX/arch/arm64/boot/dts/allwinner/$DTB"
+		exit 1
+	fi
+	cp -av "$LINUX/arch/arm64/boot/dts/allwinner/"*.dtb "$DEST/"
+else
+	# Not found, use BSP provided dtb.
+	cp -avf "../blobs/sunxi.dtb" "$DEST/$DTB"
+fi
+
 sync
+echo "Done - boot files in $DEST"
