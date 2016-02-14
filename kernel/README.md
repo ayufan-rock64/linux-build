@@ -68,7 +68,7 @@ This creates the Kernel image in `arch/arm64/boot/Image`.
 We do not compile a device tree with the BSP Kernel tree as it does not
 contain any proper source for the Pine64. Instead this build repository
 contains a device tree source in `blobs/pine64.dts` which was extracted and
-dumped from the released Android image.
+dumped from BSP tarball.
 
 With the BSP Kernel, MMC, USB and Ethernet (at 100baseTx-FD) work. And Arch
 Linux boots just fine when used as rootfs together with the rest of the tools
