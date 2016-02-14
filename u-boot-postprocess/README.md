@@ -24,11 +24,6 @@ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- sun50iw1p1_config
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
 ```
 
-## Get the Linux BSP (Lichee)
-
-Download from `http://wiki.pine64.org/index.php/Pine_A64_Software_Release`
-and extract into `build-pine64-image/lichee`.
-
 ## Get ARM Trust Firmware (ATF)
 
 Similar to U-Boot, this is based on an upstream project with A64 specific
@@ -68,9 +63,8 @@ When the `u-boot-sun50iw1p1.bin` was created by compling it can be used
 to merge it with the other parts required to be accepted by A64 boot0 so it
 actually can be booted.
 
-To do this, you need the BSP extracted to `build-pine64-image/lichee`, the
-ARM Trusted Firmware ready and compiled in `build-pine64-image/arm-trusted-firmware-pine64` and the Suxi pack tools compiled in
-`build-pine64-image/sunxi-pack-tools`.
+To do this, you need some blobs from the BSP (provided in the `build-pine64-image/blobs`
+directory), the ARM Trusted Firmware ready and compiled in `build-pine64-image/arm-trusted-firmware-pine64` and the Suxi pack tools compiled in `build-pine64-image/sunxi-pack-tools`.
 
 ```bash
 ./u-boot-postprocess.sh
