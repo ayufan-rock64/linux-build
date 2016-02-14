@@ -34,10 +34,12 @@ mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t devtmpfs none /dev
 
+sleep 1
+
 if [ -e /dev/mmcblk0p2 ]; then
 	# Mount real root.
 	mkdir -p /mnt/root
-	mount -o ro /dev/mmcblk0p2 /mnt/root
+	mount -o rw /dev/mmcblk0p2 /mnt/root
 
 	# Cleanup.
 	umount /proc
