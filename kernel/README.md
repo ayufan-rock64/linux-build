@@ -1,33 +1,78 @@
 # Linux Kernel for Pine64
 
-The Kernel for Pine64 is work in progress. A first set of patches is available
-but it is very early and most of the hardware does not work yet.
-
-To compile, you need a properly set up gcc-aarch64-linux-gnu toolchain. The
+This scripting helps in configuring and compiling the Kernel for Pine64. To
+compile, you need a properly set up gcc-aarch64-linux-gnu toolchain. The
 recommended version to compile the Kernel is 5.2.
 
-## Get Kernel tree
+## Mainline Kernel
+
+There is a mainlining process in the works. The first set of patches has been
+created. This tree boots fine into initrd - there is no working support for
+MMC, Ethernet or USB yet. So if you are not a developer and just want to use
+the Pine64 scroll down to Kernel 3.10 from BSP section for now.
 
 ```bash
 git clone --depth 1 --branch a64-v1 --single-branch https://github.com/apritzel/linux.git linux-a64-v1
 ```
+### Configure mainline Kernel
 
-## Configure Kernel
-
-Start by copying the `pine64_config_linux` file to `.config` of your Linux
-Kernel folder.
+Start by copying the `pine64_config_linux` (in the same directory as this
+`README.md`) to `.config` of your Linux Kernel folder.
 
 ```bash
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
 ```
 
-## Compile Kernel
+### Compile mainline Kernel
 
 ```bash
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- clean
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 Image
 make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 dtbs
 ```
+
+This creates the Kernel image in `arch/arm64/boot/Image` and the binary
+device trees in `arch/arm64/boot/dts/allwinner`.
+
+## Kernel 3.10 from BSP
+
+While mainlining is in the works you might want to try the Kernel which is
+released in the BSP. Unsurprisingly this Kernel tree has its problems and needs
+fixing. Thus clone my fixed tree like below.
+
+```bash
+git clone --depth 1 --branch pine64-hacks --single-branch https://github.com/longsleep/linux-pine64.git linux-pine64
+```
+
+This tree is based on mainline 3.10.65 with the changes from the Lichee
+applied. On top it has some backports and fixed to make it actually compile and
+work without issues on modern Linux distributions.
+
+### Configure BSP Kernel
+
+In my tree, i ship a ready to use Kernel configuration in `arch/arm64/configs/sun50iw1p1smp_linux_defconfig`.
+
+```bash
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- sun50iw1p1smp_linux_defconfig
+```
+
+### Compile BSP Kernel
+
+```
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- clean
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 Image
+```
+
+This creates the Kernel image in `arch/arm64/boot/Image`.
+
+We do not compile a device tree with the BSP Kernel tree as it does not
+contain any proper source for the Pine64. Instead this build repository
+contains a device tree source in `blobs/pine64.dts` which was extracted and
+dumped from the released Android image.
+
+With the BSP Kernel, MMC, USB and Ethernet (at 100baseTx-FD) work. And Arch
+Linux boots just fine when used as rootfs together with the rest of the tools
+found in this build scripts repository.
 
 ## Ramdisk
 
@@ -58,11 +103,13 @@ the busybox binary compiled earlier.
 ## Next steps
 
 Now that you have a Kernel and initrd, combine them with the provided
-`make_and_copy_android_kernel_image.sh` script. This produces a kerne.img and
+`make_and_copy_android_kernel_image.sh` script. This produces a kernel.img and
 copies it together with the compiled device tree to a target location. Both
 files are needed for booting. So put them on a partition which is readable by
 U-Boot. If you do not have that location yet, just use the current directory
 and create the files there.
+
+The tooling in simpleimage supports both mainline and BSP Kernel builds.
 
 To build a disk image now, go to the `simpleimage` folder. It automatically
 picks up the kernel.img and dtb from here.
