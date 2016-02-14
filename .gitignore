@@ -13,3 +13,4 @@
 /kernel/initrd.gz
 /kernel/*.dtb
 /busybox
+/blobs/*.dtb

@@ -15,9 +15,12 @@ if [ -z "$DEST" ]; then
 	exit 1
 fi
 
+BLOBS="../blobs"
 LINUX="../linux"
-INITRD="./initrd.gz"
 MKBOOTIMG="../mkbootimg"
+INITRD="./initrd.gz"
+
+# Targets file names as loaded by U-Boot.
 KERNEL="kernel.img"
 DTB="pine64_plus.dtb"
 
@@ -38,17 +41,18 @@ $MKBOOTIMG --kernel "$LINUX/arch/arm64/boot/Image" --ramdisk "$INITRD" --base 0x
 echo " OK"
 
 # Create and copy binary device tree
-echo -n "Copy "
 if [ -d "$LINUX/arch/arm64/boot/dts/allwinner" ]; then
 	# Seems to be mainline Kernel.
 	if [ ! -e "$LINUX/arch/arm64/boot/dts/allwinner/$DTB" ]; then
 		echo "Error: DTB not found at $LINUX/arch/arm64/boot/dts/allwinner/$DTB"
 		exit 1
 	fi
+	echo -n "Copy "
 	cp -av "$LINUX/arch/arm64/boot/dts/allwinner/"*.dtb "$DEST/"
 else
-	# Not found, use BSP provided dtb.
-	cp -avf "../blobs/sunxi.dtb" "$DEST/$DTB"
+	# Not found, use device tree from BSP.
+	echo "Compiling device tree from $BLOBS/pine64.dts -> $DEST/$DTB"
+	dtc -Odtb -o "$DEST/$DTB" "$BLOBS/pine64.dts"
 fi
 
 sync

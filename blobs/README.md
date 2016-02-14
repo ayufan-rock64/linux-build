@@ -25,9 +25,11 @@ dd if="$IMAGE" bs=1k skip=8 count=32 of=boot0.bin
 
 Binary blob scp.bin taken from the BSP `tools/pack/chips/sun50iw1p1/bin/scp.bin`.
 
-## Device tree for U-Boot
+## Device tree for U-Boot and BSP Kernel
 
-The U-Boot uses its own FDT. The binary is taken from the BSP `out/sun50iw1p1/android/common/sunxi.dtb`.
+The U-Boot uses its own FDT. A binary dtc has taken from the BSP `out/sun50iw1p1/android/common/sunxi.dtb` and dumped as source to `pine64.dts` with the `fdtdump`
+utility from git://git.kernel.org/pub/scm/utils/dtc/dtc.git. This device tree
+also works for booting the BSP Kernel.
 
 ## FEX description for U-Boot
 
