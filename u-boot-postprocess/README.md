@@ -33,16 +33,16 @@ To be fully compatible with all the scripting in this module, clone the ATF
 tree into `build-pine64-image/arm-trusted-firmware-pine64` folder.
 
 ```bash
-git clone --depth 1 --branch lichee-dev-1.0-fix-compile --single-branch https://github.com/longsleep/arm-trusted-firmware-pine64.git arm-trusted-firmware-pine64
+git clone --depth 1 --branch pine64-hacks --single-branch https://github.com/longsleep/arm-trusted-firmware-pine64.git arm-trusted-firmware-pine64
 ```
 
 ## Compile ARM Trust Firmware (ATF)
 
-Note that the ATF is a 32bit application and thus build with the 32bit ARM
-toolchain.
+The ATF has the toolchain it uses hardcoded in the Makefile. See CROSS_COMPILE =
+in line 31 if you want to change it. Defaults to `aarch64-linux-gnu-`.
 
 ```bash
-make clean && make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- PLAT=sun50iw1p1
+make clean && make ARCH=arm PLAT=sun50iw1p1
 ```
 
 ## Sunxi pack tools
