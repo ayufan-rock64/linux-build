@@ -64,8 +64,9 @@ dd if=/dev/zero bs=1M count=${boot_size} of=${out}1
 mkfs.vfat ${out}1
 # Add boot stuff if there.
 if [ -e "${kernel}/kernel.img" -a -e "${kernel}/pine64_plus.dtb" ]; then
-	mcopy -i ${out}1 ${kernel}/kernel.img ::kernel.img
+	mcopy -i ${out}1 ${kernel}/kernel.img ::
 	mcopy -i ${out}1 ${kernel}/*.dtb ::
+	mcopy -i ${out}1 ${kernel}/uEnv.txt ::
 fi
 dd if=${out}1 conv=notrunc bs=1k seek=${part_position} of="$out"
 rm -f ${out}1
@@ -73,7 +74,7 @@ rm -f ${out}1
 # Create additional ext4 file system.
 dd if=/dev/zero bs=1M count=$((disk_size-boot_size-part_position/1024)) of=${out}2
 mkfs.ext4 ${out}2
-dd if=${out}2 conv=notrunc bs=1k seek=$((part_position+boot_size*1024)) of="$out"
+dd if=${out}2 conv=notrunc bs=1M seek=$((part_position/1024+boot_size)) of="$out"
 rm -f ${out}2
 
 sync
