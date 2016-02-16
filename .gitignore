@@ -12,5 +12,6 @@
 /kernel/*.img
 /kernel/initrd.gz
 /kernel/*.dtb
+/kernel/uEnv.txt
 /busybox
 /blobs/*.dtb
