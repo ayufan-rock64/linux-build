@@ -22,7 +22,7 @@ INITRD="./initrd.gz"
 
 # Targets file names as loaded by U-Boot.
 KERNEL="kernel.img"
-DTB="pine64_plus.dtb"
+DTB="sun50i-a64-pine64-plus.dtb"
 
 if [ -n "$2" ]; then
 	LINUX="$2"
@@ -33,6 +33,7 @@ echo "Using Linux from $LINUX ..."
 # Clean up
 rm -vf "$DEST/$KERNEL"
 rm -vf "$DEST/"*.dtb
+rm -vf "$DEST/uEnv.txt"
 
 # Create and copy Kernel
 # Download https://android.googlesource.com/platform/system/core/+/master/mkbootimg/mkbootimg
@@ -54,6 +55,10 @@ else
 	echo "Compiling device tree from $BLOBS/pine64.dts -> $DEST/$DTB"
 	dtc -Odtb -o "$DEST/$DTB" "$BLOBS/pine64.dts"
 fi
+
+cat <<EOF > "$DEST/uEnv.txt"
+fdt_filename=$DTB
+EOF
 
 sync
 echo "Done - boot files in $DEST"
