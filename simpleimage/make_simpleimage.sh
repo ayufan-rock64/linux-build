@@ -8,11 +8,11 @@
 # found in ../kernel, it is added as well.
 #
 # U-Boot tree:
-# - https://github.com/longsleep/u-boot-pine64/tree/lichee-dev-2014.07-fix-compile
+# - https://github.com/longsleep/u-boot-pine64/tree/pine64-hacks
 #
-# Build the U-Boot tree, patch the U-boot with a fex file and and put the
-# created u-boot.fex into the ../build directory. The u-boot-postprocess
-# script provides an easy way to do that.
+# Build the U-Boot tree and assemble it with ATF, SCP and FEX and put the
+# resulting u-boot-with-dtb.bin file into the ../build directory. The
+# u-boot-postprocess script provides an easy way to do all that.
 #
 
 set -e
