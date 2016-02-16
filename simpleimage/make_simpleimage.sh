@@ -16,7 +16,25 @@
 #
 
 set -e
-set -x
+
+out="$1"
+disk_size="$2"
+
+if [ -z "$out" ]; then
+	echo "Usage: $0 <image-file.img> [disk size in MiB]"
+	exit 1
+fi
+
+if [ -z "$disk_size" ]; then
+	disk_size=100 #MiB
+fi
+
+if [ "$disk_size" -lt 60 ]; then
+	echo "Disk size must be at least 60 MiB"
+	exit 2
+fi
+
+echo "Creating image $out of size $disk_size MiB ..."
 
 boot0="../blobs/boot0.bin"
 uboot="../build/u-boot-with-dtb.bin"
@@ -25,17 +43,16 @@ kernel="../kernel"
 boot0_position=8      # KiB
 uboot_position=19096  # KiB
 part_position=20480   # KiB
-disk_size=100         # MiB
 boot_size=50          # MiB
 
-out="./simpleimage.img"
+set -x
 
 dd if=/dev/zero bs=1M count=$disk_size of="$out"
 dd if="$boot0" conv=notrunc bs=1k seek=$boot0_position of="$out"
 dd if="$uboot" conv=notrunc bs=1k seek=$uboot_position of="$out"
 
 # Add partition table
-cat <<EOF | sfdisk -f "$out"
+cat <<EOF | sfdisk -q -f "$out"
 label: dos
 unit: sectors
 start=$((part_position*2)), size=${boot_size}M, type=c
@@ -60,3 +77,5 @@ dd if=${out}2 conv=notrunc bs=1k seek=$((part_position+boot_size*1024)) of="$out
 rm -f ${out}2
 
 sync
+
+echo "Done - image created: $out"
