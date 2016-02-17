@@ -75,6 +75,9 @@ cat <<EOF > "$DEST/etc/fstab"
 /dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
 EOF
 
+# Enable SSH root login with password
+sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" "$DEST/etc/ssh/sshd_config"
+
 # Install Kernel modules
 make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH="$DEST"
 
