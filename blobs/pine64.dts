@@ -1132,13 +1132,13 @@
                 allwinner,drive = <0xffffffff>;
                 allwinner,data = <0xffffffff>;
             };
-            gmac_para@0 {
+            gmac0@0 {
                 linux,phandle = <0x0000009e>;
                 phandle = <0x0000009e>;
-                allwinner,pins = "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PA16", "PA17", "PA18", "PA19", "PA20", "PA21", "PA22", "PA23", "PA24", "PA25", "PA26", "PA27";
-                allwinner,function = "gmac_para";
-                allwinner,pname = "gmac_txd0", "gmac_txd1", "gmac_txd2", "gmac_txd3", "gmac_txd4", "gmac_txd5", "gmac_txd6", "gmac_txd7", "gmac_txclk", "gmac_txen", "gmac_gtxclk", "gmac_rxd0", "gmac_rxd1", "gmac_rxd2", "gmac_rxd3", "gmac_rxd4", "gmac_rxd5", "gmac_rxd6", "gmac_rxd7", "gmac_rxdv", "gmac_rxclk", "gmac_txerr", "gmac_rxerr", "gmac_col", "gmac_crs", "gmac_clkin", "gmac_mdc", "gmac_mdio";
-                allwinner,muxsel = <0x00000002>;
+                allwinner,pins = "PD18", "PD17", "PD16", "PD15", "PD20", "PD19", "PD11", "PD10", "PD9", "PD8", "PD13", "PD12", "PD21", "PD22", "PD23";
+                allwinner,function = "gmac0";
+                allwinner,pname = "gmac_txd0", "gmac_txd1", "gmac_txd2", "gmac_txd3", "gmac_txen", "gmac_gtxclk", "gmac_rxd0", "gmac_rxd1", "gmac_rxd2", "gmac_rxd3", "gmac_rxdv", "gmac_rxclk", "gmac_clkin", "gmac_mdc", "gmac_mdio";
+                allwinner,muxsel = <0x00000004>;
                 allwinner,pull = <0xffffffff>;
                 allwinner,drive = <0xffffffff>;
                 allwinner,data = <0xffffffff>;
@@ -1939,6 +1939,8 @@
             ignore-pm-notify;
         };
         disp@01000000 {
+            fb_base = <0x47400000>;
+            boot_disp = <0x0000040a>;
             compatible = "allwinner,sun50i-disp";
             reg = <0x00000000 0x01000000 0x00000000 0x00300000 0x00000000 0x01c0c000 0x00000000 0x000017fc 0x00000000 0x01ca0000 0x00000000 0x000010fc>;
             interrupts = <0x00000000 0x00000056 0x00000104 0x00000000 0x00000057 0x00000104 0x00000000 0x00000059 0x00000104>;
@@ -1947,13 +1949,13 @@
             device_type = "disp";
             disp_init_enable = <0x00000001>;
             disp_mode = <0x00000000>;
-            screen0_output_type = <0x00000001>;
-            screen0_output_mode = <0x00000004>;
+            screen0_output_type = <0x00000003>;
+            screen0_output_mode = <0x0000000a>;
             screen1_output_type = <0x00000003>;
             screen1_output_mode = <0x00000004>;
             fb0_format = <0x00000000>;
-            fb0_width = <0x00000000>;
-            fb0_height = <0x00000000>;
+            fb0_width = <0x00000780>;
+            fb0_height = <0x00000438>;
             fb1_format = <0x00000000>;
             fb1_width = <0x00000000>;
             fb1_height = <0x00000000>;
@@ -2102,8 +2104,8 @@
             compatible = "allwinner,boot_disp";
             device_type = "boot_disp";
             output_disp = <0x00000000>;
-            output_type = <0x00000001>;
-            output_mode = <0x00000004>;
+            output_type = <0x00000003>;
+            output_mode = <0x0000000a>;
         };
         cci@0x01cb3000 {
             compatible = "allwinner,sunxi-csi_cci";
@@ -2128,8 +2130,8 @@
             pinctrl-0 = <0x000000b1>;
             csi0_mck = <0x00000030 0x00000004 0x00000001 0x00000000 0x00000000 0x00000001 0x00000000>;
             dev@0 {
-                csi0_dev0_mname = "gc2155";
-                csi0_dev0_twi_addr = <0x00000078>;
+                csi0_dev0_mname = "hm5065";
+                csi0_dev0_twi_addr = <0x0000003e>;
                 csi0_dev0_pos = "rear";
                 csi0_dev0_isp_used = <0x00000001>;
                 csi0_dev0_fmt = <0x00000000>;
@@ -2161,8 +2163,8 @@
                 csi0_dev0_af_pwdn;
             };
             dev@1 {
-                csi0_dev1_mname = "gc0329";
-                csi0_dev1_twi_addr = <0x00000062>;
+                csi0_dev1_mname = "gc2145";
+                csi0_dev1_twi_addr = <0x00000078>;
                 csi0_dev1_pos = "front";
                 csi0_dev1_isp_used = <0x00000001>;
                 csi0_dev1_fmt = <0x00000000>;
@@ -2556,7 +2558,7 @@
             compatible = "allwinner,sunxi-gmac";
             reg = <0x00000000 0x01c30000 0x00000000 0x00040000 0x00000000 0x01c00000 0x00000000 0x00000030>;
             pinctrl-names = "default";
-            pinctrl-0 = <0x0000008e>;
+            pinctrl-0 = <0x0000009e>;
             interrupts = <0x00000000 0x00000052 0x00000004>;
             interrupt-names = "gmacirq";
             clocks = <0x0000008f>;
@@ -2564,10 +2566,11 @@
             phy-mode = "rgmii";
             tx-delay = <0x00000007>;
             rx-delay = <0x0000001f>;
-            gmac_power1 = "axp81x_dldo2:2500000";
-            gmac_power2 = "axp81x_eldo2:1800000";
-            gmac_power3 = "axp81x_fldo1:1200000";
+            gmac_power1 = "axp81x_dc1sw:0";
+            gmac_power2;
+            gmac_power3;
             status = "okay";
+            device_type = "gmac0";
         };
         product {
             device_type = "product";
@@ -2986,15 +2989,15 @@
         dram_type = <0x00000003>;
         dram_zq = <0x003b3bbb>;
         dram_odt_en = <0x00000001>;
-        dram_para1 = <0x10e410e4>;
-        dram_para2 = <0x00001000>;
-        dram_mr0 = <0x00001840>;
+        dram_para1 = <0x10e40400>;
+        dram_para2 = <0x04000000>;
+        dram_mr0 = <0x00001c70>;
         dram_mr1 = <0x00000040>;
         dram_mr2 = <0x00000018>;
-        dram_mr3 = <0x00000002>;
-        dram_tpr0 = <0x004a2195>;
-        dram_tpr1 = <0x02424190>;
-        dram_tpr2 = <0x0008b060>;
+        dram_mr3 = <0x00000000>;
+        dram_tpr0 = <0x0048a192>;
+        dram_tpr1 = <0x01c2418d>;
+        dram_tpr2 = <0x00076051>;
         dram_tpr3 = <0x04b005dc>;
         dram_tpr4 = <0x00000000>;
         dram_tpr5 = <0x00000000>;
@@ -3005,12 +3008,12 @@
         dram_tpr10 = <0x00008808>;
         dram_tpr11 = <0x20250000>;
         dram_tpr12 = <0x00000000>;
-        dram_tpr13 = <0x04000800>;
+        dram_tpr13 = <0x04000803>;
         device_type = "dram";
     };
     memory@40000000 {
         device_type = "memory";
-        reg = <0x00000000 0x40000000 0x00000000 0x40000000>;
+        reg = <0x00000000 0x41000000 0x00000000 0x3f000000>;
     };
     interrupt-controller@1c81000 {
         compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
