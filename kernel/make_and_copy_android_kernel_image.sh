@@ -58,6 +58,7 @@ fi
 
 cat <<EOF > "$DEST/uEnv.txt"
 fdt_filename=$DTB
+console=tty0 console=ttyS0,115200n8 no_console_suspend
 EOF
 
 sync
