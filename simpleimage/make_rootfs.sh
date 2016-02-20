@@ -82,7 +82,8 @@ make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTA
 if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko ]; then
 	v=$(ls $DEST/lib/modules/)
 	mkdir "$DEST/lib/modules/$v/kernel/extramodules"
-	cp -va $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
+	cp -v $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
+	depmod -A -b $LINUX $v
 fi
 
 # Clean up
