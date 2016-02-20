@@ -82,13 +82,11 @@ The BSP Kernel tree also contains the graphics driver in `modules/gpu`.
 
 ```
 cd modules/gpu
-LICHEE_KDIR=$(pwd)/../.. LICHEE_MOD_DIR=$(pwd)/../../../ LICHEE_PLATFORM=Pine64 make
+LICHEE_KDIR=$(pwd)/../.. LICHEE_PLATFORM=Pine64 make build
 ```
 
 This will compile the mali.ko Kernel module with the Kernel .config found in
-LICHEE_KDIR and then copies the compiled module to LICHE_MOD_DIR. To use that
-module with Linux, copy it to `/lib/modules/${version}/kernel/extramodules` or
-some other directory which can contain Kernel modules.
+LICHEE_KDIR. To use that module with Linux, copy it to `/lib/modules/${version}/kernel/extramodules` or some other directory which can contain Kernel modules.
 
 ## Ramdisk
 

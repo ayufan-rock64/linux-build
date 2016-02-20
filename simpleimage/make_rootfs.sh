@@ -66,9 +66,6 @@ chroot "$DEST" pacman -Rsn --noconfirm linux-aarch64 || true
 # Bring back folders
 mkdir -p "$DEST/lib/modules"
 
-# Add getty on ttyS0
-ln -sf /usr/lib/systemd/system/getty@.service "$DEST/etc/systemd/system/getty.target.wants/getty@ttyS0.service"
-
 # Create fstab
 cat <<EOF > "$DEST/etc/fstab"
 # <file system>	<dir>	<type>	<options>			<dump>	<pass>
@@ -80,6 +77,13 @@ sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" "$DEST/etc/s
 
 # Install Kernel modules
 make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH="$DEST"
+
+# Install extra mali module if found in Kernel tree.
+if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko ]; then
+	v=$(ls $DEST/lib/modules/)
+	mkdir "$DEST/lib/modules/$v/kernel/extramodules"
+	cp -va $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
+fi
 
 # Clean up
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
