@@ -76,6 +76,20 @@ With the BSP Kernel, MMC, USB and Ethernet (at 100baseTx-FD) work. And Arch
 Linux boots just fine when used as rootfs together with the rest of the tools
 found in this build scripts repository.
 
+### Compile BSP Mali Kernel module
+
+The BSP Kernel tree also contains the graphics driver in `modules/gpu`.
+
+```
+cd modules/gpu
+LICHEE_KDIR=$(pwd)/../.. LICHEE_MOD_DIR=$(pwd)/../../../ LICHEE_PLATFORM=Pine64 make
+```
+
+This will compile the mali.ko Kernel module with the Kernel .config found in
+LICHEE_KDIR and then copies the compiled module to LICHE_MOD_DIR. To use that
+module with Linux, copy it to `/lib/modules/${version}/kernel/extramodules` or
+some other directory which can contain Kernel modules.
+
 ## Ramdisk
 
 Either make one with the steps below or download one from some other place.
