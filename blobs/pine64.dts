@@ -1952,10 +1952,10 @@
             screen0_output_type = <0x00000003>;
             screen0_output_mode = <0x0000000a>;
             screen1_output_type = <0x00000003>;
-            screen1_output_mode = <0x00000004>;
+            screen1_output_mode = <0x0000000a>;
             fb0_format = <0x00000000>;
-            fb0_width = <0x00000780>;
-            fb0_height = <0x00000438>;
+            fb0_width = <0x00000000>;
+            fb0_height = <0x00000000>;
             fb1_format = <0x00000000>;
             fb1_width = <0x00000000>;
             fb1_height = <0x00000000>;
