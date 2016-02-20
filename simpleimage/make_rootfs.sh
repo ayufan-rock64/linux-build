@@ -69,6 +69,7 @@ mkdir -p "$DEST/lib/modules"
 # Create fstab
 cat <<EOF > "$DEST/etc/fstab"
 # <file system>	<dir>	<type>	<options>			<dump>	<pass>
+/dev/mmcblk0p1	/boot	vfat	defaults			0		2
 /dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
 EOF
 
