@@ -6,10 +6,9 @@ bootable by the A64 boot0 boot loader.
 To be fully compatible with all the scripting in this module, clone the U-Boot
 tree into `build-pine64-image/u-boot-pine64` folder.
 
-A64 loads ATF and  U-Boot in 32bit mode. So to compile both you need a
-properly set up gcc-arm-linux-gnueabihf toolchain. The recommended version to
-compile U-Boot and ATF is 4.8. The U-Boot tree will not compile with 5.0 or
-newer.
+A64 loads U-Boot in 32-bit mode. So to compile U-Boot you need a properly set
+up gcc-arm-linux-gnueabihf toolchain. The recommended version to compile
+U-Boot is 4.8. The U-Boot tree will not compile with 5.0 or newer.
 
 ## Get U-Boot tree
 
@@ -38,8 +37,9 @@ git clone --depth 1 --branch pine64-hacks --single-branch https://github.com/lon
 
 ## Compile ARM Trust Firmware (ATF)
 
-The ATF has the toolchain it uses hardcoded in the Makefile. See CROSS_COMPILE =
-in line 31 if you want to change it. Defaults to `aarch64-linux-gnu-`.
+The ATF has the aarch64 toolchain hardcoded in the Makefile. See CROSS_COMPILE =
+in line 31 if you want to change it. Defaults to `aarch64-linux-gnu-`. The
+recommended aarch64 toolchain is 5.2 (same as for the Kernel).
 
 ```bash
 make clean && make ARCH=arm PLAT=sun50iw1p1
