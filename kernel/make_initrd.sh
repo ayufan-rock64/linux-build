@@ -41,18 +41,21 @@ if [ -e /dev/mmcblk0p2 ]; then
 	mkdir -p /mnt/root
 	mount -o rw /dev/mmcblk0p2 /mnt/root
 
-	# Cleanup.
-	umount /proc
-	umount /sys
-	umount /dev
+	if [ -e /mnt/root/init ]; then
+		# Cleanup.
+		umount /proc
+		umount /sys
+		umount /dev
 
-	# Boot the real system.
-	exec switch_root /mnt/root /sbin/init
+		# Boot the real system.
+		exec switch_root /mnt/root /sbin/init
+	fi
+
 fi
 
-echo "Failed to enter system - dropping to shell!"
+echo "Dropping to a shell."
 echo
-exec /bin/sh
+setsid cttyhack /bin/sh
 EOF
 chmod 755 $TEMP/init
 
