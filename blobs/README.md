@@ -29,13 +29,10 @@ Binary blob scp.bin taken from the BSP `tools/pack/chips/sun50iw1p1/bin/scp.bin`
 
 The U-Boot uses its own FDT. A binary dtb has been extraced from the BSP `out/sun50iw1p1/android/common/sunxi.dtb` and dumped as source to `pine64.dts` with the `fdtdump`
 utility from git://git.kernel.org/pub/scm/utils/dtc/dtc.git. This device tree
-also works for booting the BSP Kernel.
+also works for booting the BSP Kernel. Some values in the device tree have
+been changed to match the values which are found in the Android image.
 
 ## FEX description for U-Boot
 
-The FEX file defines various aspects of how the SoC works. There are multiple
-FEX boot configurations found in the BSP. I am not sure which one to use
-but essentially it does not seem to matter much so i picked the one in the
-`t1` folder which seems to work fine. Original BSP location is
-`tools/pack/chips/sun50iw1p1/configs/t1/sys_config.fex`.
-
+The FEX file is minimal and does not contain any settings. It is just required
+to get the corret boot loader format to make the U-Boot acceptable to boot0.
