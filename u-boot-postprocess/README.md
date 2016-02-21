@@ -46,8 +46,8 @@ make clean
 make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- PLAT=sun50iw1p1
 ```
 
-This creates `build/sun50iw1p1/release/bl31.bin` and will be picked up
-from there later when combining U-Boot.
+This creates `build/sun50iw1p1/release/bl31.bin` which will be picked up
+from there later when merging U-Boot.
 
 ## Sunxi pack tools
 
@@ -63,19 +63,18 @@ make -C sunxi-pack-tools
 
 ## Merge U-Boot with other parts
 
-When the `u-boot-sun50iw1p1.bin` was created by compling it can be used
-to merge it with the other parts required to be accepted by A64 boot0 so it
-actually can be booted.
+To make boot0 accept and boot U-Boot, it needs to be correctly prefixed 
+and extended with the ATF.
 
-To do this, you need some blobs from the BSP (provided in the `build-pine64-image/blobs`
-directory), the ARM Trusted Firmware ready and compiled in `build-pine64-image/arm-trusted-firmware-pine64` and the Suxi pack tools compiled in `build-pine64-image/sunxi-pack-tools`.
+In addition some blobs, and the device tree are required to create this
+U-Boot bootloader format whre provided in the `build-pine64-image/blobs`
+directory). So have the ATF ready and compiled in `build-pine64-image/arm-trusted-firmware-pine64` and the Suxi pack tools compiled in `build-pine64-image/sunxi-pack-tools`.
 
 ```bash
 ./u-boot-postprocess.sh
 ```
 
-This creates `out/u-boot-with-dtb.bin` which is correctly prefixed to 
-be accepted by Allwinner's boot0.
+This creates `out/u-boot-with-dtb.bin` which is correctly prefixed, combined with ATF and FTD wich makes it acceptable for Allwinner's boot0. 
 
 ## Next steps
 
