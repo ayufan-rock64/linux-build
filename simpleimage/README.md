@@ -3,9 +3,9 @@
 This script builds a bootable disk image usable to boot a Pine64 to Linux in
 aarch64 mode.
 
-## Simpleimage
+## Minimal base image
 
-Tee simpleimage format is only a minimal disk with partition table, bootloader
+The simpleimage format is only a minimal disk with partition table, bootloader
 ramdisk and Kernel.
 
 ```
