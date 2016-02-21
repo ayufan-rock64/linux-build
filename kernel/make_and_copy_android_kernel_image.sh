@@ -5,6 +5,9 @@
 # the dtb as compiled.  Usually the destination is a location which can be
 # read while booting with U-Boot.
 #
+# Use this script to populate the first partition of disk images created with
+# the simpleimage script of this project.
+#
 
 set -e
 

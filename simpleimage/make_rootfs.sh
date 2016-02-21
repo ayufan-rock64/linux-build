@@ -1,4 +1,12 @@
 #!/bin/sh
+#
+# Simple script to create a rootfs for aarch64 platforms including support
+# for Kernel modules created by the rest of the scripting found in this
+# module.
+#
+# Use this script to populate the second partition of disk images created with
+# the simpleimage script of this project.
+#
 
 set -e
 
