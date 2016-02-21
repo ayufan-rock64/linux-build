@@ -8,9 +8,9 @@ aarch64 mode.
 Tee simpleimage format is only a minimal disk with partition table, bootloader
 ramdisk and Kernel.
 
-Header    :  20 MiB Bootloader
-Partition 1: 50 MiB vFAT label:ROOT
-Partition 2:        ext4 label:rootfs
+  Header      : 20 MiB Bootloader
+  Partition 1 : 50 MiB vFAT label:ROOT
+  Partition 2 :        ext4 label:rootfs
 
 By default the simple image does not contain any rootfs and spawns a shell on
 the UART tty.
