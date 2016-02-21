@@ -84,7 +84,7 @@ if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko
 	v=$(ls $DEST/lib/modules/)
 	mkdir "$DEST/lib/modules/$v/kernel/extramodules"
 	cp -v $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
-	depmod -A -b $LINUX $v
+	depmod -A -b $DEST $v
 fi
 
 # Clean up
