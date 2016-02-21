@@ -13,7 +13,7 @@ U-Boot is 4.8. The U-Boot tree will not compile with 5.0 or newer.
 ## Get U-Boot tree
 
 ```bash
-git clone --depth 1 --branch pine64-hacks --single-branch git@github.com:longsleep/u-boot-pine64.git u-boot-pine64
+git clone --depth 1 --branch pine64-hacks --single-branch https://github.com/longsleep/u-boot-pine64.git u-boot-pine64
 ```
 
 ## Compile U-Boot
@@ -26,24 +26,28 @@ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
 ## Get ARM Trust Firmware (ATF)
 
 Similar to U-Boot, this is based on an upstream project with A64 specific
-patches from Allwinner.
+patches from Allwinner. Andre Przywara has cleaned up the Allwinner 
+patches - we will be using his `allwinner` branch. Thanks @aprizel.
 
 To be fully compatible with all the scripting in this module, clone the ATF
 tree into `build-pine64-image/arm-trusted-firmware-pine64` folder.
 
 ```bash
-git clone --depth 1 --branch pine64-hacks --single-branch https://github.com/longsleep/arm-trusted-firmware-pine64.git arm-trusted-firmware-pine64
+git clone --depth 1 --branch allwinner --single-branch https://github.com/apritzel/arm-trusted-firmware.git arm-trusted-firmware-pine64
 ```
 
 ## Compile ARM Trust Firmware (ATF)
 
-The ATF has the aarch64 toolchain hardcoded in the Makefile. See CROSS_COMPILE =
-in line 31 if you want to change it. Defaults to `aarch64-linux-gnu-`. The
-recommended aarch64 toolchain is 5.2 (same as for the Kernel).
+The recommended aarch64 toolchain to compile ATF is 5.2 (same as for
+the Kernel).
 
 ```bash
-make clean && make ARCH=arm PLAT=sun50iw1p1
+make clean 
+make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- PLAT=sun50iw1p1
 ```
+
+This creates `build/sun50iw1p1/release/bl31.bin` and will be picked up
+from there later when combining U-Boot.
 
 ## Sunxi pack tools
 
@@ -70,8 +74,12 @@ directory), the ARM Trusted Firmware ready and compiled in `build-pine64-image/a
 ./u-boot-postprocess.sh
 ```
 
+This creates `out/u-boot-with-dtb.bin` which is correctly prefixed to 
+be accepted by Allwinner's boot0.
+
 ## Next steps
 
 Now that you have the boot loader, you actually can create a disk image with
 it. See the `simpleimage` folder. Copy the created `out/u-boot-with-dtb.bin`
 file into the `simpleimage` folder to be used there.
+

@@ -15,13 +15,14 @@ BLOBS="../blobs"
 UBOOT="../u-boot-pine64"
 # https://github.com/longsleep/arm-trusted-firmware-pine64
 TRUSTED_FIRMWARE="../arm-trusted-firmware-pine64"
+TRUSTED_FIRMWARE_BUILD="release"
 # https://github.com/longsleep/sunxi-pack-tools
 SUNXI_PACK_TOOLS="../sunxi-pack-tools/bin"
 
 BUILD="../build"
 mkdir -p $BUILD
 
-cp -avf $TRUSTED_FIRMWARE/build/sun50iw1p1/debug/bl31.bin $BUILD
+cp -avf $TRUSTED_FIRMWARE/build/sun50iw1p1/$TRUSTED_FIRMWARE_BUILD/bl31.bin $BUILD
 cp -avf $UBOOT/u-boot-sun50iw1p1.bin $BUILD/u-boot.bin
 cp -avf $BLOBS/scp.bin $BUILD
 cp -avf $BLOBS/sys_config.fex $BUILD
