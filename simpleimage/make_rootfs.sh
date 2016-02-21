@@ -68,8 +68,29 @@ echo "OK"
 # Add qemu emulation.
 cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
 
-# Cleanup preinstalled Kernel
-chroot "$DEST" pacman -Rsn --noconfirm linux-aarch64 || true
+do_chroot() {
+	cmd="$@"
+	chroot "$DEST" mount -t proc proc /proc || true
+	chroot "$DEST" mount -t sysfs sys /sys || true
+	chroot "$DEST" $cmd
+	chroot "$DEST" umount /sys
+	chroot "$DEST" umount /proc
+}
+
+# Run stuff in new system.
+case $DISTRO in
+	arch)
+		# Cleanup preinstalled Kernel
+		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
+		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
+		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
+		do_chroot pacman -Sy --noconfirm dosfstools || true
+		rm -f "$DEST/etc/resolv.conf"
+		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
+		;;
+	*)
+		;;
+esac
 
 # Bring back folders
 mkdir -p "$DEST/lib/modules"
@@ -80,9 +101,6 @@ cat <<EOF > "$DEST/etc/fstab"
 /dev/mmcblk0p1	/boot	vfat	defaults			0		2
 /dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
 EOF
-
-# Enable SSH root login with password
-sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" "$DEST/etc/ssh/sshd_config"
 
 # Install Kernel modules
 make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH="$DEST"
