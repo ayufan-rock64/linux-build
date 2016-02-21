@@ -63,7 +63,7 @@ EOF
 dd if=/dev/zero bs=1M count=${boot_size} of=${out}1
 mkfs.vfat ${out}1
 # Add boot stuff if there.
-if [ -e "${kernel}/kernel.img" -a -e "${kernel}/pine64_plus.dtb" ]; then
+if [ -e "${kernel}/kernel.img" -a -e "${kernel}/sun50i-a64-pine64-plus.dtb" ]; then
 	mcopy -i ${out}1 ${kernel}/kernel.img ::
 	mcopy -i ${out}1 ${kernel}/*.dtb ::
 	mcopy -i ${out}1 ${kernel}/uEnv.txt ::
