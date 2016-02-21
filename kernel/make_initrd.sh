@@ -41,7 +41,7 @@ if [ -e /dev/mmcblk0p2 ]; then
 	mkdir -p /mnt/root
 	mount -o rw /dev/mmcblk0p2 /mnt/root
 
-	if [ -e /mnt/root/init ]; then
+	if [ -x /mnt/root/sbin/init ]; then
 		# Cleanup.
 		umount /proc
 		umount /sys
