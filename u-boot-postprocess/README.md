@@ -26,8 +26,8 @@ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
 ## Get ARM Trust Firmware (ATF)
 
 Similar to U-Boot, this is based on an upstream project with A64 specific
-patches from Allwinner. Andre Przywara has cleaned up the Allwinner 
-patches - we will be using his `allwinner` branch. Thanks @aprizel.
+patches from Allwinner. Andre Przywara has cleaned up the Allwinner
+patches - we will be using his `allwinner` branch. Thanks @apritzel.
 
 To be fully compatible with all the scripting in this module, clone the ATF
 tree into `build-pine64-image/arm-trusted-firmware-pine64` folder.
@@ -42,8 +42,8 @@ The recommended aarch64 toolchain to compile ATF is 5.2 (same as for
 the Kernel).
 
 ```bash
-make clean 
-make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- PLAT=sun50iw1p1
+make clean
+make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- PLAT=sun50iw1p1 bl31
 ```
 
 This creates `build/sun50iw1p1/release/bl31.bin` which will be picked up
@@ -63,7 +63,7 @@ make -C sunxi-pack-tools
 
 ## Merge U-Boot with other parts
 
-To make boot0 accept and boot U-Boot, it needs to be correctly prefixed 
+To make boot0 accept and boot U-Boot, it needs to be correctly prefixed
 and extended with the ATF.
 
 In addition some blobs, and the device tree are required to create this
@@ -74,7 +74,7 @@ directory). So have the ATF ready and compiled in `build-pine64-image/arm-truste
 ./u-boot-postprocess.sh
 ```
 
-This creates `out/u-boot-with-dtb.bin` which is correctly prefixed, combined with ATF and FTD wich makes it acceptable for Allwinner's boot0. 
+This creates `out/u-boot-with-dtb.bin` which is correctly prefixed, combined with ATF and FTD wich makes it acceptable for Allwinner's boot0.
 
 ## Next steps
 
