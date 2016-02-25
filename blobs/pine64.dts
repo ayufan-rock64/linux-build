@@ -63,6 +63,7 @@
             #clock-cells = <0x00000000>;
             compatible = "allwinner,sunxi-pll-clock";
             lock-mode = "new";
+            assigned-clock-rates = <0x01770000>;
             clock-output-names = "pll_audio";
             linux,phandle = <0x00000002>;
             phandle = <0x00000002>;
@@ -1068,15 +1069,6 @@
                 linux,phandle = <0x00000083>;
                 phandle = <0x00000083>;
             };
-            gmac@0 {
-                allwinner,pins = "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PD16", "PD17", "PD18", "PD19", "PD20", "PD21", "PD22", "PD23";
-                allwinner,function = "gmac0";
-                allwinner,muxsel = <0x00000004>;
-                allwinner,drive = <0x00000003>;
-                allwinner,pull = <0x00000000>;
-                linux,phandle = <0x0000008e>;
-                phandle = <0x0000008e>;
-            };
             card0_boot_para@0 {
                 linux,phandle = <0x00000099>;
                 phandle = <0x00000099>;
@@ -1613,7 +1605,7 @@
         };
         usbc0@0 {
             device_type = "usbc0";
-            compatible = "allwinner,sun50i-otg-manager";
+            compatible = "allwinner,sunxi-otg-manager";
             usb_port_type = <0x00000001>;
             usb_detect_type = <0x00000000>;
             usb_host_init_state = <0x00000001>;
@@ -1629,14 +1621,14 @@
             usb_drv_vbus_gpio;
         };
         udc-controller@0x01c19000 {
-            compatible = "allwinner,sun50i-udc";
+            compatible = "allwinner,sunxi-udc";
             reg = <0x00000000 0x01c19000 0x00000000 0x00001000 0x00000000 0x01c00000 0x00000000 0x00000100>;
             interrupts = <0x00000000 0x00000047 0x00000004>;
             clocks = <0x00000032 0x00000033>;
             status = "okay";
         };
         ehci0-controller@0x01c1a000 {
-            compatible = "allwinner,sun50i-ehci0";
+            compatible = "allwinner,sunxi-ehci0";
             reg = <0x00000000 0x01c1a000 0x00000000 0x00000fff 0x00000000 0x01c00000 0x00000000 0x00000100 0x00000000 0x01c19000 0x00000000 0x00001000>;
             interrupts = <0x00000000 0x00000048 0x00000004>;
             clocks = <0x00000032 0x00000034>;
@@ -1644,7 +1636,7 @@
             status = "okay";
         };
         ohci0-controller@0x01c1a400 {
-            compatible = "allwinner,sun50i-ohci0";
+            compatible = "allwinner,sunxi-ohci0";
             reg = <0x00000000 0x01c1a000 0x00000000 0x00000fff 0x00000000 0x01c00000 0x00000000 0x00000100 0x00000000 0x01c19000 0x00000000 0x00001000>;
             interrupts = <0x00000000 0x00000049 0x00000004>;
             clocks = <0x00000032 0x00000035>;
@@ -1653,8 +1645,6 @@
         };
         usbc1@0 {
             device_type = "usbc1";
-            usb_port_type = <0x00000001>;
-            usb_detect_type = <0x00000000>;
             usb_host_init_state = <0x00000001>;
             usb_regulator_io = "nocare";
             usb_wakeup_suspend = <0x00000001>;
@@ -1663,6 +1653,8 @@
             usb_hsic_ctrl = <0x00000000>;
             usb_hsic_usb3503_flag = <0x00000000>;
             status = "okay";
+            usb_port_type = <0x00000001>;
+            usb_detect_type = <0x00000000>;
             usb_drv_vbus_gpio;
             usb_hsic_rdy_gpio;
             usb_hsic_hub_connect_gpio;
@@ -1670,7 +1662,7 @@
             usb_hsic_reset_n_gpio;
         };
         ehci1-controller@0x01c1b000 {
-            compatible = "allwinner,sun50i-ehci1";
+            compatible = "allwinner,sunxi-ehci1";
             reg = <0x00000000 0x01c1b000 0x00000000 0x00000fff 0x00000000 0x01c00000 0x00000000 0x00000100 0x00000000 0x01c19000 0x00000000 0x00001000>;
             interrupts = <0x00000000 0x0000004a 0x00000004>;
             clocks = <0x00000036 0x00000037 0x00000038 0x00000039 0x0000003a>;
@@ -1678,7 +1670,7 @@
             status = "okay";
         };
         ohci1-controller@0x01c1b400 {
-            compatible = "allwinner,sun50i-ohci1";
+            compatible = "allwinner,sunxi-ohci1";
             reg = <0x00000000 0x01c1b000 0x00000000 0x00000fff 0x00000000 0x01c00000 0x00000000 0x00000100 0x00000000 0x01c19000 0x00000000 0x00001000>;
             interrupts = <0x00000000 0x0000004b 0x00000004>;
             clocks = <0x00000036 0x0000003b>;
@@ -1709,6 +1701,7 @@
             aif2config = <0x00000000>;
             aif3config = <0x00000000>;
             pa_sleep_time = <0x0000015e>;
+            dac_digital_vol = <0x0000a0a0>;
             status = "okay";
             linux,phandle = <0x0000004d>;
             phandle = <0x0000004d>;
@@ -1801,7 +1794,7 @@
             aif2fmt = <0x00000003>;
             aif3fmt = <0x00000003>;
             aif2master = <0x00000001>;
-            hp_detect_case = <0x00000000>;
+            hp_detect_case = <0x00000001>;
             status = "okay";
             device_type = "sndcodec";
         };
@@ -1882,7 +1875,7 @@
             sdc_tm4_sm3_freq1 = <0x00000405>;
             sdc_tm4_sm4_freq0 = <0x00050000>;
             sdc_tm4_sm4_freq1 = <0x00000408>;
-            status = "okay";
+            status = "disabled";
             non-removable;
             pinctrl-0 = <0x000000b4>;
             cd-gpios;
@@ -1965,7 +1958,7 @@
             pinctrl-names = "active", "sleep";
             status = "okay";
             device_type = "lcd0";
-            lcd_used = <0x00000001>;
+            lcd_used = <0x00000000>;
             lcd_driver_name = "mb709_mipi";
             lcd_backlight = <0x00000032>;
             lcd_if = <0x00000004>;
@@ -2405,7 +2398,7 @@
             nand0_p1 = <0x55aaaa55>;
             nand0_p2 = <0x55aaaa55>;
             nand0_p3 = <0x55aaaa55>;
-            status = "okay";
+            status = "disabled";
             nand0_support_2ch = <0x00000000>;
             pinctrl-0 = <0x000000ab 0x000000ac>;
         };
@@ -2558,19 +2551,19 @@
             compatible = "allwinner,sunxi-gmac";
             reg = <0x00000000 0x01c30000 0x00000000 0x00040000 0x00000000 0x01c00000 0x00000000 0x00000030>;
             pinctrl-names = "default";
-            pinctrl-0 = <0x0000009e>;
             interrupts = <0x00000000 0x00000052 0x00000004>;
             interrupt-names = "gmacirq";
             clocks = <0x0000008f>;
             clock-names = "gmac";
             phy-mode = "rgmii";
-            tx-delay = <0x00000007>;
-            rx-delay = <0x0000001f>;
+            tx-delay = <0x00000002>;
+            rx-delay = <0x00000002>;
             gmac_power1 = "axp81x_dc1sw:0";
-            gmac_power2;
-            gmac_power3;
             status = "okay";
             device_type = "gmac0";
+            pinctrl-0 = <0x0000009e>;
+            gmac_power2;
+            gmac_power3;
         };
         product {
             device_type = "product";
@@ -2654,11 +2647,6 @@
             pll9 = <0x00000129>;
             pll10 = <0x00000108>;
         };
-        gmac_para {
-            device_type = "gmac_para";
-            gmac_used = <0x00000001>;
-            pinctrl-0 = <0x0000009e>;
-        };
         rtp_para {
             device_type = "rtp_para";
             rtp_used = <0x00000000>;
@@ -2672,7 +2660,7 @@
         ctp {
             device_type = "ctp";
             compatible = "allwinner,sun50i-ctp-para";
-            status = "okay";
+            status = "disabled";
             ctp_name = "gt911_DB";
             ctp_twi_id = <0x00000000>;
             ctp_twi_addr = <0x00000040>;
@@ -2987,7 +2975,7 @@
         clock-names = "pll_ddr0", "pll_ddr1";
         dram_clk = <0x000002a0>;
         dram_type = <0x00000003>;
-        dram_zq = <0x003b3bbb>;
+        dram_zq = <0x003b3bdd>;
         dram_odt_en = <0x00000001>;
         dram_para1 = <0x10e40400>;
         dram_para2 = <0x04000000>;
@@ -2998,17 +2986,17 @@
         dram_tpr0 = <0x0048a192>;
         dram_tpr1 = <0x01c2418d>;
         dram_tpr2 = <0x00076051>;
-        dram_tpr3 = <0x04b005dc>;
+        dram_tpr3 = <0x050005dc>;
         dram_tpr4 = <0x00000000>;
         dram_tpr5 = <0x00000000>;
         dram_tpr6 = <0x00000000>;
-        dram_tpr7 = <0x00000000>;
+        dram_tpr7 = <0x2a066198>;
         dram_tpr8 = <0x00000000>;
         dram_tpr9 = <0x00000000>;
         dram_tpr10 = <0x00008808>;
-        dram_tpr11 = <0x20250000>;
-        dram_tpr12 = <0x00000000>;
-        dram_tpr13 = <0x04000803>;
+        dram_tpr11 = <0x40a60066>;
+        dram_tpr12 = <0x55550000>;
+        dram_tpr13 = <0x04000903>;
         device_type = "dram";
     };
     memory@40000000 {
