@@ -43,10 +43,14 @@ if [ -z "$DISTRO" ]; then
 fi
 
 ROOTFS=""
+UNTAR="bsdtar -xpf"
 
 case $DISTRO in
 	arch)
 		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
+		;;
+	xenial)
+		ROOTFS="http://cdimage.ubuntu.com/ubuntu-core/daily/current/xenial-core-arm64.tar.gz"
 		;;
 	*)
 		echo "Unknown distribution: $DISTRO"
@@ -57,12 +61,13 @@ esac
 TARBALL="$BUILD/$(basename $ROOTFS)"
 if [ ! -e "$TARBALL" ]; then
 	echo "Downloading $DISTRO rootfs tarball ..."
-	wget -o "$TARBALL" "$ROOTFS"
+	wget -O "$TARBALL" "$ROOTFS"
 fi
 
 # Extract with BSD tar
 echo -n "Extracting ... "
-bsdtar -xpf "$TARBALL" -C "$DEST"
+set -x
+$UNTAR "$TARBALL" -C "$DEST"
 echo "OK"
 
 # Add qemu emulation.
@@ -88,6 +93,14 @@ case $DISTRO in
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
+	xenial)
+		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
+		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
+		do_chroot apt-get -y update
+		do_chroot apt-get -y install dosfstools
+		rm -f "$DEST/etc/resolv.conf"
+		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
+		;;
 	*)
 		;;
 esac
@@ -110,7 +123,7 @@ if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko
 	v=$(ls $DEST/lib/modules/)
 	mkdir "$DEST/lib/modules/$v/kernel/extramodules"
 	cp -v $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
-	depmod -A -b $DEST $v
+	depmod -b $DEST $v
 fi
 
 # Clean up
