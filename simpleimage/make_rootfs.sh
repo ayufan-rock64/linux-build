@@ -73,6 +73,13 @@ echo "OK"
 # Add qemu emulation.
 cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
 
+# Prevent services from starting
+cat > "$DEST/usr/sbin/policy-rc.d" <<EOF
+#!/bin/sh
+exit 101
+EOF
+chmod a+x "$DEST/usr/sbin/policy-rc.d"
+
 do_chroot() {
 	cmd="$@"
 	chroot "$DEST" mount -t proc proc /proc || true
@@ -96,8 +103,24 @@ case $DISTRO in
 	xenial)
 		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
-		do_chroot apt-get -y update
-		do_chroot apt-get -y install dosfstools
+		cat > "$DEST/second-phase" <<EOF
+#!/bin/sh
+export DEBIAN_FRONTEND=noninteractive
+apt-get -y update
+apt-get -y install dosfstools ubuntu-minimal
+apt-get -y remove --purge ureadahead
+adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
+chown -R 1000:1000 /home/ubuntu
+echo "ubuntu:ubuntu" | chpasswd
+usermod -a -G sudo ubuntu
+EOF
+		chmod +x "$DEST/second-phase"
+		do_chroot /second-phase
+		cat > "$DEST/etc/network/interfaces.d/eth0" <<EOF
+auto eth0
+iface eth0 inet dhcp
+EOF
+		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
@@ -128,5 +151,6 @@ fi
 
 # Clean up
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
+rm -f "$DEST/usr/sbin/policy-rc.d"
 
 echo "Done - installed rootfs to $DEST"
