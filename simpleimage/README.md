@@ -41,3 +41,22 @@ First become root with `su -`. Default root password is `root`.
 
 This will launch a graphical log in screen. Use `alarm` with password `alarm`
 to start a Xfce4 desktop environment.
+
+### Ubuntu Linux
+
+#### Install full Xubuntu desktop
+
+Xubuntu is an elegant and easy to use operating system. Xubuntu comes with
+Xfce, which is a stable, light and configurable desktop environment. For more
+details see http://xubuntu.org/.
+
+```
+bash
+# sudo apt-get update
+# sudo apt-get install xubuntu-desktop
+```
+
+This downloads and installs loads of packages which at the end gives you a
+full installed Xubuntu desktop. At the current MMC speeds of the Pine64 it
+will take several hours to complete. Xubuntu needs around 2.5GiB additional
+space, so you might want to enlarge the rootfs partition before installing.
