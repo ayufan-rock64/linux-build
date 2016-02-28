@@ -2557,7 +2557,7 @@
             clock-names = "gmac";
             phy-mode = "rgmii";
             tx-delay = <0x00000002>;
-            rx-delay = <0x00000002>;
+            rx-delay = <0x00000000>;
             gmac_power1 = "axp81x_dc1sw:0";
             status = "okay";
             device_type = "gmac0";
