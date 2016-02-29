@@ -101,7 +101,7 @@ case $DISTRO in
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
 	xenial)
-		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
+		rm "$DEST/etc/resolv.conf"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
@@ -122,7 +122,7 @@ iface eth0 inet dhcp
 EOF
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
-		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
+		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 		;;
 	*)
 		;;
