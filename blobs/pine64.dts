@@ -2425,13 +2425,13 @@
             status = "okay";
             state_cnt = <0x00000007>;
             cluster_num = <0x00000001>;
-            state0 = <0x00119400 0x00000004>;
-            state1 = <0x0010d880 0x00000004>;
-            state2 = <0x000f6180 0x00000004>;
-            state3 = <0x000c7380 0x00000004>;
-            state4 = <0x0009e340 0x00000004>;
-            state5 = <0x0009e340 0x00000002>;
-            state6 = <0x0009e340 0x00000001>;
+            state0 = <0x00148200 0x00000004>;
+            state1 = <0x00124f80 0x00000004>;
+            state2 = <0x00119400 0x00000004>;
+            state3 = <0x0010d880 0x00000004>;
+            state4 = <0x000f6180 0x00000004>;
+            state5 = <0x000c7380 0x00000002>;
+            state6 = <0x000927c0 0x00000001>;
             linux,phandle = <0x00000087>;
             phandle = <0x00000087>;
         };
@@ -2461,21 +2461,21 @@
                         phandle = <0x00000086>;
                     };
                     t1 {
-                        temperature = <0x00000050>;
+                        temperature = <0x00000046>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x00000088>;
                         phandle = <0x00000088>;
                     };
                     t2 {
-                        temperature = <0x0000005a>;
+                        temperature = <0x0000004b>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x00000089>;
                         phandle = <0x00000089>;
                     };
                     t3 {
-                        temperature = <0x00000064>;
+                        temperature = <0x00000050>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x0000008a>;
@@ -2489,14 +2489,14 @@
                         phandle = <0x0000008b>;
                     };
                     t5 {
-                        temperature = <0x0000005f>;
+                        temperature = <0x0000005a>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x0000008d>;
                         phandle = <0x0000008d>;
                     };
                     t6 {
-                        temperature = <0x0000006e>;
+                        temperature = <0x0000005f>;
                         type = "critical";
                         hysteresis = <0x00000000>;
                     };
