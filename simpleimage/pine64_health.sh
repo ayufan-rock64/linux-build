@@ -20,7 +20,7 @@ cpu_frequency() {
 
 scaling_govenor() {
 	local gov=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)
-	print "Govenor" $gov
+	print "Governor" $gov
 }
 
 cpu_count() {
