@@ -14,8 +14,8 @@ print() {
 
 cpu_frequency() {
 	local cur=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq)
-	local ghz=$(awk "BEGIN {printf \"%.2f\",$cur/1000}")
-	print "CPU freq" $ghz "GHz"
+	local mhz=$(awk "BEGIN {printf \"%.2f\",$cur/1000}")
+	print "CPU freq" $mhz "MHz"
 }
 
 scaling_govenor() {
