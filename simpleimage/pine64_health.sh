@@ -24,8 +24,7 @@ scaling_govenor() {
 }
 
 cpu_count() {
-	local cpu=$(/usr/bin/awk -F": " '/^processor/ {print $2}' < /proc/cpuinfo | /usr/bin/tail -n1)
-	local cpus=$((1+cpu))
+	local cpus=$(grep -c processor /proc/cpuinfo)
 	print "CPU count" $cpus
 }
 
