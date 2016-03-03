@@ -2425,13 +2425,13 @@
             status = "okay";
             state_cnt = <0x00000007>;
             cluster_num = <0x00000001>;
-            state0 = <0x00148200 0x00000004>;
-            state1 = <0x00124f80 0x00000004>;
-            state2 = <0x00119400 0x00000004>;
-            state3 = <0x0010d880 0x00000004>;
-            state4 = <0x000f6180 0x00000004>;
-            state5 = <0x000c7380 0x00000002>;
-            state6 = <0x000927c0 0x00000001>;
+            state0 = <0x00119400 0x00000004>;
+            state1 = <0x0010d880 0x00000004>;
+            state2 = <0x000f6180 0x00000004>;
+            state3 = <0x000c7380 0x00000004>;
+            state4 = <0x0009e340 0x00000004>;
+            state5 = <0x0009e340 0x00000002>;
+            state6 = <0x0009e340 0x00000001>;
             linux,phandle = <0x00000087>;
             phandle = <0x00000087>;
         };
@@ -2454,28 +2454,28 @@
                 thermal-sensors = <0x00000085 0x00000000>;
                 trips {
                     t0 {
-                        temperature = <0x00000044>;
+                        temperature = <0x00000041>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x00000086>;
                         phandle = <0x00000086>;
                     };
                     t1 {
-                        temperature = <0x00000046>;
+                        temperature = <0x00000050>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x00000088>;
                         phandle = <0x00000088>;
                     };
                     t2 {
-                        temperature = <0x0000004b>;
+                        temperature = <0x0000005a>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x00000089>;
                         phandle = <0x00000089>;
                     };
                     t3 {
-                        temperature = <0x00000050>;
+                        temperature = <0x0000005f>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x0000008a>;
@@ -2496,7 +2496,7 @@
                         phandle = <0x0000008d>;
                     };
                     t6 {
-                        temperature = <0x0000005f>;
+                        temperature = <0x00000064>;
                         type = "critical";
                         hysteresis = <0x00000000>;
                     };
@@ -3030,22 +3030,22 @@
     };
     dvfs_table {
         compatible = "allwinner,dvfs_table";
-        max_freq = <0x47868c00>;
+        max_freq = <0x44aa2000>;
         min_freq = <0x1c9c3800>;
         lv_count = <0x00000008>;
-        lv1_freq = <0x501bd000>;
+        lv1_freq = <0x44aa2000>;
         lv1_volt = <0x00000514>;
-        lv2_freq = <0x47868c00>;
-        lv2_volt = <0x00000514>;
-        lv3_freq = <0x44aa2000>;
-        lv3_volt = <0x00000514>;
-        lv4_freq = <0x41cdb400>;
-        lv4_volt = <0x000004ec>;
-        lv5_freq = <0x3c14dc00>;
-        lv5_volt = <0x000004b0>;
-        lv6_freq = <0x30a32c00>;
-        lv6_volt = <0x0000044c>;
-        lv7_freq = <0x269fb200>;
+        lv2_freq = <0x41cdb400>;
+        lv2_volt = <0x000004ec>;
+        lv3_freq = <0x3c14dc00>;
+        lv3_volt = <0x000004b0>;
+        lv4_freq = <0x30a32c00>;
+        lv4_volt = <0x0000044c>;
+        lv5_freq = <0x269fb200>;
+        lv5_volt = <0x00000410>;
+        lv6_freq = <0x00000000>;
+        lv6_volt = <0x00000410>;
+        lv7_freq = <0x00000000>;
         lv7_volt = <0x00000410>;
         lv8_freq = <0x00000000>;
         lv8_volt = <0x00000410>;
