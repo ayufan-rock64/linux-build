@@ -22,7 +22,7 @@ make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTA
 
 # Install extra mali module if found in Kernel tree.
 if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko ]; then
-	v=$(ls $DEST/lib/modules/)
+	v=$(ls -1tr $DEST/lib/modules/|tail -n1)
 	mkdir "$DEST/lib/modules/$v/kernel/extramodules"
 	cp -v $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
 	depmod -b $DEST $v
