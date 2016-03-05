@@ -12,7 +12,7 @@ get_cooling_state() {
 
 enable_cpu() {
 	if [ $(cat /sys/devices/system/cpu/cpu$1/online) = 0 ]; then
-		echo 1 > /sys/devices/system/cpu/cpu$1/online
+		echo 1 > /sys/devices/system/cpu/cpu$1/online || true
 	fi
 }
 
