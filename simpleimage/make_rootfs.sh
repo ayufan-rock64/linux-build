@@ -161,6 +161,12 @@ if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko
 	depmod -b $DEST $v
 fi
 
+# Install platform scripts
+mkdir -p "$DEST/usr/local/sbin"
+cp -av ./platform-scripts/* "$DEST/usr/local/sbin"
+chown root.root "$DEST/usr/local/sbin/*"
+chmod 755 "$DEST/usr/local/sbin/*"
+
 # Clean up
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
 rm -f "$DEST/usr/sbin/policy-rc.d"
