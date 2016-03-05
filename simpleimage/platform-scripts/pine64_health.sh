@@ -49,10 +49,40 @@ cooling_limit() {
 	print "Cooling limit" $limit
 }
 
-cpu_frequency
-cpu_count
-scaling_govenor
-vcore_voltage
-soc_temp
-cooling_state
-cooling_limit
+all() {
+	cpu_frequency
+	cpu_count
+	scaling_govenor
+	vcore_voltage
+	soc_temp
+	cooling_state
+	cooling_limit
+}
+
+usage() {
+	echo "Usage: $0 [-w] [-h]"
+}
+
+WATCH=""
+for i in "$@"; do
+	case $i in
+	-w)
+		WATCH=1
+		shift
+		;;
+	-h|--help)
+		usage
+		exit 0
+		;;
+	*)
+		usage
+		exit 1
+		;;
+	esac
+done
+
+if [ -n "$WATCH" ]; then
+	exec watch -n0.5 "$0"
+else
+	all
+fi
