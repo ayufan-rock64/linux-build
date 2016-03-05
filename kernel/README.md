@@ -60,9 +60,9 @@ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- sun50iw1p1smp_linux_defconfig
 ### Compile BSP Kernel
 
 ```
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- clean
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 Image
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 modules
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- LOCALVERSION= clean
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 LOCALVERSION= Image
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 LOCALVERSION= modules
 ```
 
 This creates the Kernel image in `arch/arm64/boot/Image`.

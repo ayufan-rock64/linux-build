@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -e
+
+DEST="$1"
+
+if [ -z "$DEST" ]; then
+	echo "Usage: $0 <destination-folder> [linux-folder] [extra-version]"
+	exit 1
+fi
+
+LINUX="../linux"
+
+if [ -n "$2" ]; then
+	LINUX="$2"
+fi
+
+EXTRAVERSION="$3"
+
+echo "Using Linux from $LINUX ..."
+
+TEMP=$(mktemp -d)
+mkdir $TEMP/boot
+
+cleanup() {
+	if [ -d "$TEMP" ]; then
+		rm -rf "$TEMP"
+	fi
+}
+trap cleanup EXIT
+
+./make_and_copy_android_kernel_image.sh "$TEMP/boot" "$LINUX"
+./install_kernel_modules.sh "$TEMP" "$LINUX"
+
+if [ -z "$EXTRAVERSION" -a -e "$LINUX/.version" ]; then
+	EXTRAVERSION=$(cat "$LINUX/.version")
+else
+	EXTRAVERSION=$(date +%s)
+fi
+
+VERSION="$(ls -1tr $TEMP/lib/modules/|tail -n1)-$EXTRAVERSION"
+
+echo "Building $VERSION ..."
+tar -C "$TEMP" -cJ --owner=0 --group=0 --xform='s,./,,' -f "$DEST/linux-pine64-$VERSION.tar.xz" .
+
+echo "Done - $DEST/linux-pine64-$VERSION.tar.xz"
