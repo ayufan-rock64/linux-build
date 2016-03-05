@@ -120,6 +120,7 @@ EOF
 auto eth0
 iface eth0 inet dhcp
 EOF
+		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
 		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
