@@ -96,7 +96,7 @@ case $DISTRO in
 		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
-		do_chroot pacman -Sy --noconfirm dosfstools || true
+		do_chroot pacman -Sy --noconfirm dosfstools curl xz || true
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
@@ -107,7 +107,7 @@ case $DISTRO in
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
 apt-get -y update
-apt-get -y install dosfstools ubuntu-minimal
+apt-get -y install dosfstools ubuntu-minimal curl xz-utils
 apt-get -y remove --purge ureadahead
 adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
 chown -R 1000:1000 /home/ubuntu
@@ -164,8 +164,11 @@ fi
 # Install platform scripts
 mkdir -p "$DEST/usr/local/sbin"
 cp -av ./platform-scripts/* "$DEST/usr/local/sbin"
-chown root.root "$DEST/usr/local/sbin/*"
-chmod 755 "$DEST/usr/local/sbin/*"
+chown root.root "$DEST/usr/local/sbin/"*
+chmod 755 "$DEST/usr/local/sbin/"*
+
+# Set kernel update version
+do_chroot /usr/local/sbin/pine64_update_kernel.sh --mark-only
 
 # Clean up
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
