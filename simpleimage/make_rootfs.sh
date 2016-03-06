@@ -142,6 +142,7 @@ esac
 
 # Bring back folders
 mkdir -p "$DEST/lib/modules"
+mkdir -p "$DEST/usr"
 
 # Create fstab
 cat <<EOF > "$DEST/etc/fstab"
@@ -152,6 +153,10 @@ EOF
 
 # Install Kernel modules
 make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH="$DEST"
+# Install Kernel firmware
+make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- firmware_install INSTALL_MOD_PATH="$DEST"
+# Install Kernel headers
+make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- headers_install INSTALL_HDR_PATH="$DEST/usr"
 
 # Install extra mali module if found in Kernel tree.
 if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko ]; then
