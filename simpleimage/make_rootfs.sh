@@ -131,6 +131,31 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
+		cat > "$DEST/etc/systemd/system/eth0-mackeeper.service" <<EOF
+[Unit]
+Description=Fix eth0 mac address to uEnv.txt
+
+[Service]
+Type=oneshot
+After=systemd-modules-load.service
+After=local-fs.target
+ExecStart=/usr/local/sbin/pine64_eth0-mackeeper.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+		do_chroot systemctl enable eth0-mackeeper
+		cat > "$DEST/etc/systemd/system/cpu-corekeeper.service" <<EOF
+[Unit]
+Description=CPU corekeeper
+
+[Service]
+ExecStart=/usr/local/sbin/pine64_corekeeper.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+		do_chroot systemctl enable cpu-corekeeper
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
