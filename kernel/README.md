@@ -116,14 +116,13 @@ the busybox binary compiled earlier.
 
 ## Next steps
 
-Now that you have a Kernel and initrd, combine them with the provided
-`make_and_copy_android_kernel_image.sh` script. This produces a kernel.img and
-copies it together with the compiled device tree to a target location. Both
-files are needed for booting. So put them on a partition which is readable by
-U-Boot. If you do not have that location yet, just use the current directory
-and create the files there.
+Now that you have a Kernel and initrd copy them together with the compiled
+device tree to a target location. You can use the `install_kernel.sh` script
+to do that for you. So put them on a partiion which is readable by U-Boot. If
+you do not have that location yet, just use "-" to put the files into
+`../build` folder to be picked up later.
 
 The tooling in simpleimage supports both mainline and BSP Kernel builds.
 
 To build a disk image now, go to the `simpleimage` folder. It automatically
-picks up the kernel.img and dtb from here.
+picks up the just generated files from `../build`.

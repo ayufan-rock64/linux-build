@@ -29,7 +29,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-./make_and_copy_android_kernel_image.sh "$TEMP/boot" "$LINUX"
+./install_kernel.sh "$TEMP/boot" "$LINUX"
 ./install_kernel_modules.sh "$TEMP" "$LINUX"
 
 if [ -z "$EXTRAVERSION" -a -e "$LINUX/.version" ]; then
