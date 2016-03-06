@@ -60,8 +60,12 @@ else
 fi
 
 cat <<EOF > "$DEST/uEnv.txt"
-fdt_filename=$DTB
 console=tty0 console=ttyS0,115200n8 no_console_suspend
+fdt_filename=$DTB
+kernel_addr=4107f800
+kernel_filename=kernel.img
+boot_kernel=boota ${kernel_addr}
+bootscript=run load_dtb load_kernel set_cmdline boot_kernel
 EOF
 
 sync
