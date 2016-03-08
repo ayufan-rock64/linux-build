@@ -12,11 +12,6 @@ if [ "$(id -u)" -ne "0" ]; then
 	exit 1
 fi
 
-if [ ! -b "$DEVICE" ]; then
-	echo "Block device ${DEVICE} not found."
-	exit 2
-fi
-
 TEMP=$(mktemp -d)
 
 cleanup() {
@@ -68,6 +63,10 @@ downloadAndApply() {
 }
 
 if [ "$1" != "--mark-only" ]; then
+	if [ ! -b "$DEVICE" ]; then
+		echo "Block device ${DEVICE} not found."
+		exit 2
+	fi
 	downloadAndApply
 	echo "Done - you should reboot now."
 fi
