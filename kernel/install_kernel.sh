@@ -46,12 +46,12 @@ rm -vf "$DEST/uEnv.txt"
 
 # Create and copy Kernel
 echo -n "Copying Kernel ..."
-cp -vaf "$LINUX/arch/arm64/boot/Image" "$DEST/$KERNEL"
+cp -vf "$LINUX/arch/arm64/boot/Image" "$DEST/$KERNEL"
 echo " OK"
 
 # Copy initrd
 echo -n "Copying initrd ..."
-cp -vaf "$INITRD" "$DEST/$INITRD_IMG"
+cp -vf "$INITRD" "$DEST/$INITRD_IMG"
 echo " OK"
 
 # Create and copy binary device tree
@@ -62,7 +62,7 @@ if [ -d "$LINUX/arch/arm64/boot/dts/allwinner" ]; then
 		exit 1
 	fi
 	echo -n "Copy "
-	cp -av "$LINUX/arch/arm64/boot/dts/allwinner/"*.dtb "$DEST/$SUBFOLDER/"
+	cp -v "$LINUX/arch/arm64/boot/dts/allwinner/"*.dtb "$DEST/$SUBFOLDER/"
 else
 	# Not found, use device tree from BSP.
 	echo "Compiling device tree from $BLOBS/pine64.dts -> $DEST/$DTB"
