@@ -89,6 +89,49 @@ do_chroot() {
 	chroot "$DEST" umount /proc
 }
 
+add_platform_scripts() {
+	# Install platform scripts
+	mkdir -p "$DEST/usr/local/sbin"
+	cp -av ./platform-scripts/* "$DEST/usr/local/sbin"
+	chown root.root "$DEST/usr/local/sbin/"*
+	chmod 755 "$DEST/usr/local/sbin/"*
+
+	# Set Kernel and U-boot update version
+	do_chroot /usr/local/sbin/pine64_update_kernel.sh --mark-only
+	do_chroot /usr/local/sbin/pine64_update_uboot.sh --mark-only
+}
+
+add_mackeeper_service() {
+	cat > "$DEST/etc/systemd/system/eth0-mackeeper.service" <<EOF
+[Unit]
+Description=Fix eth0 mac address to uEnv.txt
+
+[Service]
+Type=oneshot
+After=systemd-modules-load.service
+After=local-fs.target
+ExecStart=/usr/local/sbin/pine64_eth0-mackeeper.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+	do_chroot systemctl enable eth0-mackeeper
+}
+
+add_corekeeper_service() {
+	cat > "$DEST/etc/systemd/system/cpu-corekeeper.service" <<EOF
+[Unit]
+Description=CPU corekeeper
+
+[Service]
+ExecStart=/usr/local/sbin/pine64_corekeeper.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+	do_chroot systemctl enable cpu-corekeeper
+}
+
 # Run stuff in new system.
 case $DISTRO in
 	arch)
@@ -97,6 +140,9 @@ case $DISTRO in
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
 		do_chroot pacman -Sy --noconfirm dosfstools curl xz || true
+		add_platform_scripts
+		add_mackeeper_service
+		add_corekeeper_service
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
@@ -131,31 +177,9 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
-		cat > "$DEST/etc/systemd/system/eth0-mackeeper.service" <<EOF
-[Unit]
-Description=Fix eth0 mac address to uEnv.txt
-
-[Service]
-Type=oneshot
-After=systemd-modules-load.service
-After=local-fs.target
-ExecStart=/usr/local/sbin/pine64_eth0-mackeeper.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-		do_chroot systemctl enable eth0-mackeeper
-		cat > "$DEST/etc/systemd/system/cpu-corekeeper.service" <<EOF
-[Unit]
-Description=CPU corekeeper
-
-[Service]
-ExecStart=/usr/local/sbin/pine64_corekeeper.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-		do_chroot systemctl enable cpu-corekeeper
+		add_platform_scripts
+		add_mackeeper_service
+		add_corekeeper_service
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
@@ -190,15 +214,6 @@ if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko
 	cp -v $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
 	depmod -b $DEST $v
 fi
-
-# Install platform scripts
-mkdir -p "$DEST/usr/local/sbin"
-cp -av ./platform-scripts/* "$DEST/usr/local/sbin"
-chown root.root "$DEST/usr/local/sbin/"*
-chmod 755 "$DEST/usr/local/sbin/"*
-
-# Set kernel update version
-do_chroot /usr/local/sbin/pine64_update_kernel.sh --mark-only
 
 # Clean up
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
