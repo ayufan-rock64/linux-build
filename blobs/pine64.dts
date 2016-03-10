@@ -2454,14 +2454,14 @@
                 thermal-sensors = <0x00000085 0x00000000>;
                 trips {
                     t0 {
-                        temperature = <0x00000041>;
+                        temperature = <0x00000050>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x00000086>;
                         phandle = <0x00000086>;
                     };
                     t1 {
-                        temperature = <0x00000050>;
+                        temperature = <0x00000055>;
                         type = "passive";
                         hysteresis = <0x00000000>;
                         linux,phandle = <0x00000088>;
