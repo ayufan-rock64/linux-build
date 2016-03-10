@@ -32,6 +32,9 @@ trap cleanup EXIT
 ./install_kernel.sh "$TEMP/boot" "$LINUX"
 ./install_kernel_modules.sh "$TEMP" "$LINUX"
 
+# Use uEnv.txt.in so we do not overwrite customizations on next update.
+mv "$TEMP/boot/uEnv.txt" "$TEMP/boot/uEnv.txt.in"
+
 if [ -z "$EXTRAVERSION" -a -e "$LINUX/.version" ]; then
 	EXTRAVERSION=$(cat "$LINUX/.version")
 else
