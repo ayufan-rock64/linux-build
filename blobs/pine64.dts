@@ -2423,15 +2423,18 @@
             compatible = "allwinner,budget_cooling";
             #cooling-cells = <0x00000002>;
             status = "okay";
-            state_cnt = <0x00000007>;
+            state_cnt = <0x0000000a>;
             cluster_num = <0x00000001>;
             state0 = <0x00119400 0x00000004>;
             state1 = <0x0010d880 0x00000004>;
-            state2 = <0x000f6180 0x00000004>;
-            state3 = <0x000c7380 0x00000004>;
-            state4 = <0x0009e340 0x00000004>;
-            state5 = <0x0009e340 0x00000002>;
-            state6 = <0x0009e340 0x00000001>;
+            state2 = <0x00101d00 0x00000004>;
+            state3 = <0x000f6180 0x00000004>;
+            state4 = <0x000ea600 0x00000004>;
+            state5 = <0x000dea80 0x00000004>;
+            state6 = <0x000c7380 0x00000004>;
+            state7 = <0x0009e340 0x00000004>;
+            state8 = <0x0009e340 0x00000002>;
+            state9 = <0x0009e340 0x00000001>;
             linux,phandle = <0x00000087>;
             phandle = <0x00000087>;
         };
@@ -2515,12 +2518,12 @@
                     bind2 {
                         contribution = <0x00000000>;
                         trip = <0x00000089>;
-                        cooling-device = <0x00000087 0x00000003 0x00000004>;
+                        cooling-device = <0x00000087 0x00000003 0x00000006>;
                     };
                     bind3 {
                         contribution = <0x00000000>;
                         trip = <0x0000008a>;
-                        cooling-device = <0x00000087 0x00000005 0x00000006>;
+                        cooling-device = <0x00000087 0x00000007 0x00000009>;
                     };
                     bind4 {
                         contribution = <0x00000000>;
@@ -2859,7 +2862,7 @@
             compatible = "arm,cortex-a53", "arm,armv8";
             reg = <0x00000000 0x00000000>;
             enable-method = "psci";
-            cpufreq_tbl = <0x00075300 0x000927c0 0x000afc80 0x000c7380 0x000f6180 0x0010d880 0x00119400 0x00124f80 0x00148200>;
+            cpufreq_tbl = <0x00075300 0x000927c0 0x000afc80 0x000c7380 0x000dea80 0x000ea600 0x000f6180 0x00101d00 0x0010d880 0x00119400 0x00124f80 0x00148200>;
             clock-latency = <0x001e8480>;
             clock-frequency = <0x3c14dc00>;
             cpu-idle-states = <0x00000090 0x00000091 0x00000092>;
@@ -3037,17 +3040,17 @@
         lv1_volt = <0x00000514>;
         lv2_freq = <0x41cdb400>;
         lv2_volt = <0x000004ec>;
-        lv3_freq = <0x3c14dc00>;
-        lv3_volt = <0x000004b0>;
-        lv4_freq = <0x30a32c00>;
-        lv4_volt = <0x0000044c>;
-        lv5_freq = <0x269fb200>;
-        lv5_volt = <0x00000410>;
-        lv6_freq = <0x00000000>;
-        lv6_volt = <0x00000410>;
-        lv7_freq = <0x00000000>;
-        lv7_volt = <0x00000410>;
-        lv8_freq = <0x00000000>;
+        lv3_freq = <0x3ef14800>;
+        lv3_volt = <0x000004d8>;
+        lv4_freq = <0x3c14dc00>;
+        lv4_volt = <0x000004b0>;
+        lv5_freq = <0x39387000>;
+        lv5_volt = <0x00000488>;
+        lv6_freq = <0x365c0400>;
+        lv6_volt = <0x00000460>;
+        lv7_freq = <0x30a32c00>;
+        lv7_volt = <0x00000438>;
+        lv8_freq = <0x269fb200>;
         lv8_volt = <0x00000410>;
         device_type = "dvfs_table";
     };
