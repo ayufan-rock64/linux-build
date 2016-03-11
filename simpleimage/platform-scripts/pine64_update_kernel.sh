@@ -48,7 +48,7 @@ downloadAndApply() {
 	gpg --homedir "${TEMP}" --status-fd 1 --no-default-keyring --keyring "${TEMP}/pub.gpg" --trust-model always --verify "${FILENAME}.asc" 2>/dev/null
 
 	echo "Extracting ..."
-	tar -C / --numeric-owner --overwrite -xJf "${FILENAME}"
+	tar -C / --numeric-owner -xJf "${FILENAME}"
 }
 
 if [ "$1" != "--mark-only" ]; then
