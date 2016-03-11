@@ -19,6 +19,8 @@ echo "Using Linux from $LINUX ..."
 
 # Install Kernel modules
 make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH="$DEST"
+# Install Kernel firmware
+make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- firmware_install INSTALL_MOD_PATH="$DEST"
 
 # Install extra mali module if found in Kernel tree.
 if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko ]; then
