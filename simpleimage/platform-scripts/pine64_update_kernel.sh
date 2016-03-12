@@ -49,6 +49,7 @@ downloadAndApply() {
 
 	echo "Extracting ..."
 	tar -C / --numeric-owner -xJf "${FILENAME}"
+	chmod 755 / # Fix up rootfs permissions, which are strange in the tarball.
 }
 
 if [ "$1" != "--mark-only" ]; then
