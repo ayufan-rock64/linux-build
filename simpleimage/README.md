@@ -60,3 +60,23 @@ This downloads and installs loads of packages which at the end gives you a
 full installed Xubuntu desktop. At the current MMC speeds of the Pine64 it
 will take several hours to complete. Xubuntu needs around 2.5GiB additional
 space, so you might want to enlarge the rootfs partition before installing.
+
+
+## Platform scripts
+
+To help with various tasks some scripts are available in the `platform-scripts`
+folder.
+
+### Update helpers for U-Boot and Kernel
+
+To update the U-Boot and Kernel, run the following commands (as root) on your
+Pine64.
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/longsleep/build-pine64-image/master/simpleimage/platform-scripts/pine64_update_uboot.sh)
+bash <(curl -s https://raw.githubusercontent.com/longsleep/build-pine64-image/master/simpleimage/platform-scripts/pine64_update_kernel.sh)
+```
+
+This downloads the latest versions of the updaet scripts which check if there
+is an update, the downloads the update file, validates it with gpg and applies
+it to the current system when validation is successfull.
