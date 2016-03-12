@@ -49,7 +49,13 @@ downloadAndApply() {
 
 	echo "Extracting ..."
 	tar -C / --numeric-owner -xJf "${FILENAME}"
+
+	echo "Fixing up ..."
 	chmod 755 / # Fix up rootfs permissions, which are strange in the tarball.
+	if [ ! -e "/boot/uEnv.txt" -a -e "/boot/uEnv.txt.in" ]; then
+		# Install default uEnv.txt when not there.
+		mv "/boot/uEnv.txt.in" "/boot/uEnv.txt"
+	fi
 }
 
 if [ "$1" != "--mark-only" ]; then
