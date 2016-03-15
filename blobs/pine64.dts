@@ -2499,7 +2499,7 @@
                         phandle = <0x0000008d>;
                     };
                     t6 {
-                        temperature = <0x00000064>;
+                        temperature = <0x0000006c>;
                         type = "critical";
                         hysteresis = <0x00000000>;
                     };
