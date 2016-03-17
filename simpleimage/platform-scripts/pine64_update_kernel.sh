@@ -48,10 +48,9 @@ downloadAndApply() {
 	gpg --homedir "${TEMP}" --status-fd 1 --no-default-keyring --keyring "${TEMP}/pub.gpg" --trust-model always --verify "${FILENAME}.asc" 2>/dev/null
 
 	echo "Extracting ..."
-	tar -C / --numeric-owner --no-overwrite-dir -xJf "${FILENAME}"
+	tar -C / --numeric-owner --no-overwrite-dir -xJhf "${FILENAME}"
 
 	echo "Fixing up ..."
-	chmod 755 / # Fix up rootfs permissions, which are strange in the tarball.
 	if [ ! -e "/boot/uEnv.txt" -a -e "/boot/uEnv.txt.in" ]; then
 		# Install default uEnv.txt when not there.
 		mv "/boot/uEnv.txt.in" "/boot/uEnv.txt"
