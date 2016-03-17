@@ -48,7 +48,11 @@ downloadAndApply() {
 	gpg --homedir "${TEMP}" --status-fd 1 --no-default-keyring --keyring "${TEMP}/pub.gpg" --trust-model always --verify "${FILENAME}.asc" 2>/dev/null
 
 	echo "Extracting ..."
-	tar -C / --numeric-owner --no-overwrite-dir -xJhf "${FILENAME}"
+	mkdir $TEMP/update
+	tar -C $TEMP/update --numeric-owner -xJf "${FILENAME}"
+	cp -RLp $TEMP/update/boot/* /boot/
+	cp -RLp $TEMP/update/lib/* /lib/ 2>/dev/null || true
+	cp -RLp $TEMP/update/usr/* /usr/
 
 	echo "Fixing up ..."
 	if [ ! -e "/boot/uEnv.txt" -a -e "/boot/uEnv.txt.in" ]; then
