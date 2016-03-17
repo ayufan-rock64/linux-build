@@ -48,7 +48,7 @@ downloadAndApply() {
 	gpg --homedir "${TEMP}" --status-fd 1 --no-default-keyring --keyring "${TEMP}/pub.gpg" --trust-model always --verify "${FILENAME}.asc" 2>/dev/null
 
 	echo "Extracting ..."
-	tar -C / --numeric-owner --exclude=./ -xJf "${FILENAME}"
+	tar -C / --numeric-owner --exclude=. -xJf "${FILENAME}"
 
 	echo "Fixing up ..."
 	chmod 755 / # Fix up rootfs permissions, which are strange in the tarball.
