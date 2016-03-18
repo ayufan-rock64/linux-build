@@ -1127,12 +1127,12 @@
             gmac0@0 {
                 linux,phandle = <0x0000009e>;
                 phandle = <0x0000009e>;
-                allwinner,pins = "PD18", "PD17", "PD16", "PD15", "PD20", "PD19", "PD11", "PD10", "PD9", "PD8", "PD13", "PD12", "PD21", "PD22", "PD23";
+                allwinner,pins = "PD18", "PD17", "PD19", "PD20", "PD11", "PD10", "PD13", "PD22", "PD23";
                 allwinner,function = "gmac0";
-                allwinner,pname = "gmac_txd0", "gmac_txd1", "gmac_txd2", "gmac_txd3", "gmac_txen", "gmac_gtxclk", "gmac_rxd0", "gmac_rxd1", "gmac_rxd2", "gmac_rxd3", "gmac_rxdv", "gmac_rxclk", "gmac_clkin", "gmac_mdc", "gmac_mdio";
+                allwinner,pname = "gmac_txd0", "gmac_txd1", "gmac_txclk", "gmac_txen", "gmac_rxd0", "gmac_rxd1", "gmac_rxdv", "gmac_mdc", "gmac_mdio";
                 allwinner,muxsel = <0x00000004>;
                 allwinner,pull = <0xffffffff>;
-                allwinner,drive = <0xffffffff>;
+                allwinner,drive = <0x00000003>;
                 allwinner,data = <0xffffffff>;
             };
             twi0@0 {
@@ -2558,8 +2558,8 @@
             interrupt-names = "gmacirq";
             clocks = <0x0000008f>;
             clock-names = "gmac";
-            phy-mode = "rgmii";
-            tx-delay = <0x00000003>;
+            phy-mode = "rmii";
+            tx-delay = <0x00000000>;
             rx-delay = <0x00000000>;
             gmac_power1 = "axp81x_dc1sw:0";
             status = "okay";
