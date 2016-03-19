@@ -25,7 +25,6 @@ INITRD="./initrd.gz"
 # Targets file names as loaded by U-Boot.
 SUBFOLDER="pine64"
 KERNEL="$SUBFOLDER/Image"
-DTB="$SUBFOLDER/sun50i-a64-pine64-plus.dtb"
 INITRD_IMG="initrd.img"
 
 if [ "$DEST" = "-" ]; then
@@ -57,21 +56,22 @@ echo " OK"
 # Create and copy binary device tree
 if [ -d "$LINUX/arch/arm64/boot/dts/allwinner" ]; then
 	# Seems to be mainline Kernel.
-	if [ ! -e "$LINUX/arch/arm64/boot/dts/allwinner/$DTB" ]; then
-		echo "Error: DTB not found at $LINUX/arch/arm64/boot/dts/allwinner/$DTB"
+	if [ ! -e "$LINUX/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dtb" ]; then
+		echo "Error: DTB not found at $LINUX/arch/arm64/boot/dts/allwinner/"
 		exit 1
 	fi
 	echo -n "Copy "
 	cp -v "$LINUX/arch/arm64/boot/dts/allwinner/"*.dtb "$DEST/$SUBFOLDER/"
 else
 	# Not found, use device tree from BSP.
-	echo "Compiling device tree from $BLOBS/pine64.dts -> $DEST/$DTB"
-	dtc -Odtb -o "$DEST/$DTB" "$BLOBS/pine64.dts"
+	echo "Compiling device tree from $BLOBS/pine64.dts"
+	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-plus.dtb" "$BLOBS/pine64.dts"
+	echo "Compiling device tree from $BLOBS/pine64noplus.dts"
+	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64.dtb" "$BLOBS/pine64noplus.dts"
 fi
 
 cat <<EOF > "$DEST/uEnv.txt"
 console=tty0 console=ttyS0,115200n8 no_console_suspend
-fdt_filename=$DTB
 kernel_filename=$KERNEL
 initrd_filename=$INITRD_IMG
 EOF
