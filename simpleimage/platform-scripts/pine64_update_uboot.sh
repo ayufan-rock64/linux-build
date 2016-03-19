@@ -12,7 +12,7 @@ if [ "$(id -u)" -ne "0" ]; then
 	exit 1
 fi
 
-TEMP=$(mktemp -d)
+TEMP=$(mktemp -d -p /var/tmp)
 
 cleanup() {
 	if [ -d "$TEMP" ]; then
