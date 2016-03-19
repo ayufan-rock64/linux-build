@@ -19,9 +19,10 @@ set -e
 
 out="$1"
 disk_size="$2"
+kernel_tarball="$3"
 
 if [ -z "$out" ]; then
-	echo "Usage: $0 <image-file.img> [disk size in MiB]"
+	echo "Usage: $0 <image-file.img> [disk size in MiB] [<kernel-tarball>]"
 	exit 1
 fi
 
@@ -39,6 +40,22 @@ echo "Creating image $out of size $disk_size MiB ..."
 boot0="../blobs/boot0.bin"
 uboot="../build/u-boot-with-dtb.bin"
 kernel="../build"
+
+temp=$(mktemp -d)
+
+cleanup() {
+	if [ -d "$temp" ]; then
+		rm -rf "$temp"
+	fi
+}
+trap cleanup EXIT
+
+if [ -n "$kernel_tarball" ]; then
+	echo "Using Kernel from $kernel_tarball ..."
+	tar -C $temp -xJf "$kernel_tarball"
+	kernel=$temp/boot
+	mv $temp/boot/uEnv.txt.in $temp/boot/uEnv.txt
+fi
 
 boot0_position=8      # KiB
 uboot_position=19096  # KiB
