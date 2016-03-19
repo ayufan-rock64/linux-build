@@ -139,7 +139,7 @@ case $DISTRO in
 		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
-		do_chroot pacman -Sy --noconfirm dosfstools curl xz || true
+		do_chroot pacman -Sy --noconfirm dosfstools curl xz iw rfkill netctl dialog wpa_supplicant || true
 		add_platform_scripts
 		add_mackeeper_service
 		add_corekeeper_service
@@ -153,7 +153,7 @@ case $DISTRO in
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
 apt-get -y update
-apt-get -y install dosfstools ubuntu-minimal curl xz-utils
+apt-get -y install dosfstools ubuntu-minimal curl xz-utils iw rfkill wpa_supplicant
 apt-get -y remove --purge ureadahead
 adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
 chown -R 1000:1000 /home/ubuntu
