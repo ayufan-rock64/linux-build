@@ -42,6 +42,14 @@ if [ -z "$DISTRO" ]; then
 	DISTRO="arch"
 fi
 
+TEMP=$(mktemp -d)
+cleanup() {
+	if [ -d "$TEMP" ]; then
+		rm -rf "$TEMP"
+	fi
+}
+trap cleanup EXIT
+
 ROOTFS=""
 UNTAR="bsdtar -xpf"
 
@@ -153,7 +161,7 @@ case $DISTRO in
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
 apt-get -y update
-apt-get -y install dosfstools ubuntu-minimal curl xz-utils iw rfkill wpa_supplicant
+apt-get -y install dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant
 apt-get -y remove --purge ureadahead
 adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
 chown -R 1000:1000 /home/ubuntu
@@ -190,7 +198,7 @@ EOF
 esac
 
 # Bring back folders
-mkdir -p "$DEST/lib/modules"
+mkdir -p "$DEST/lib"
 mkdir -p "$DEST/usr"
 
 # Create fstab
@@ -200,19 +208,28 @@ cat <<EOF > "$DEST/etc/fstab"
 /dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
 EOF
 
-# Install Kernel modules
-make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH="$DEST"
-# Install Kernel firmware
-make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- firmware_install INSTALL_MOD_PATH="$DEST"
-# Install Kernel headers
-make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- headers_install INSTALL_HDR_PATH="$DEST/usr"
+if [ -d "$LINUX" ]; then
+	mkdir "$DEST/lib/modules"
+	# Install Kernel modules
+	make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH="$DEST"
+	# Install Kernel firmware
+	make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- firmware_install INSTALL_MOD_PATH="$DEST"
+	# Install Kernel headers
+	make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- headers_install INSTALL_HDR_PATH="$DEST/usr"
 
-# Install extra mali module if found in Kernel tree.
-if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko ]; then
-	v=$(ls $DEST/lib/modules/)
-	mkdir "$DEST/lib/modules/$v/kernel/extramodules"
-	cp -v $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
-	depmod -b $DEST $v
+	# Install extra mali module if found in Kernel tree.
+	if [ -e $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko ]; then
+		v=$(ls $DEST/lib/modules/)
+		mkdir "$DEST/lib/modules/$v/kernel/extramodules"
+		cp -v $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
+		depmod -b $DEST $v
+	fi
+else
+	# Install Kernel modules from tarball
+	mkdir $TEMP/kernel
+	tar -C $TEMP/kernel --numeric-owner -xJf "$LINUX"
+	cp -RLp $TEMP/kernel/lib/* "$DEST/lib/" 2>/dev/null || true
+	cp -RLp $TEMP/kernel/usr/* "$DEST/usr/"
 fi
 
 # Clean up
