@@ -140,6 +140,33 @@ EOF
 	do_chroot systemctl enable cpu-corekeeper
 }
 
+add_ssh_keygen_service() {
+	cat > "$DEST/etc/systemd/system/ssh-keygen.service" <<EOF
+[Unit]
+Description=Generate SSH keys if not there
+Before=ssh.service
+ConditionPathExists=|!/etc/ssh/ssh_host_key
+ConditionPathExists=|!/etc/ssh/ssh_host_key.pub
+ConditionPathExists=|!/etc/ssh/ssh_host_rsa_key
+ConditionPathExists=|!/etc/ssh/ssh_host_rsa_key.pub
+ConditionPathExists=|!/etc/ssh/ssh_host_dsa_key
+ConditionPathExists=|!/etc/ssh/ssh_host_dsa_key.pub
+ConditionPathExists=|!/etc/ssh/ssh_host_ecdsa_key
+ConditionPathExists=|!/etc/ssh/ssh_host_ecdsa_key.pub
+ConditionPathExists=|!/etc/ssh/ssh_host_ed25519_key
+ConditionPathExists=|!/etc/ssh/ssh_host_ed25519_key.pub
+
+[Service]
+ExecStart=/usr/bin/ssh-keygen -A
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=ssh.service
+EOF
+	do_chroot systemctl enable ssh-keygen
+}
+
 # Run stuff in new system.
 case $DISTRO in
 	arch)
@@ -188,6 +215,7 @@ EOF
 		add_platform_scripts
 		add_mackeeper_service
 		add_corekeeper_service
+		add_ssh_keygen_service
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
