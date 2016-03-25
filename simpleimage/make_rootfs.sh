@@ -188,7 +188,7 @@ case $DISTRO in
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
 apt-get -y update
-apt-get -y install dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant
+apt-get -y install dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant openssh-server
 apt-get -y remove --purge ureadahead
 adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
 chown -R 1000:1000 /home/ubuntu
@@ -219,6 +219,7 @@ EOF
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
+		rm -f "$DEST"/etc/ssh/ssh_host_*
 		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 		;;
 	*)
