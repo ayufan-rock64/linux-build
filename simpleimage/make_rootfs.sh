@@ -167,6 +167,14 @@ EOF
 	do_chroot systemctl enable ssh-keygen
 }
 
+add_disp_udev_rules() {
+	cat > "$DEST/etc/udev/rules.d/90-sunxi-disp-permission.rules" <<EOF
+KERNEL=="disp", MODE="0770", GROUP="video"
+KERNEL=="cedar_dev", MODE="0770", GROUP="video"
+KERNEL=="ion", MODE="0770", GROUP="video"
+EOF
+}
+
 add_ubuntu_apt_sources() {
 	local release="$1"
 	cat > "$DEST/etc/apt/sources.list" <<EOF
@@ -195,6 +203,7 @@ case $DISTRO in
 		add_platform_scripts
 		add_mackeeper_service
 		add_corekeeper_service
+		add_disp_udev_rules
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
@@ -211,7 +220,7 @@ apt-get -y remove --purge ureadahead
 adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
 chown -R 1000:1000 /home/ubuntu
 echo "ubuntu:ubuntu" | chpasswd
-usermod -a -G sudo ubuntu
+usermod -a -G sudo,adm,input,video,plugdev ubuntu
 EOF
 		chmod +x "$DEST/second-phase"
 		do_chroot /second-phase
@@ -234,6 +243,7 @@ EOF
 		add_mackeeper_service
 		add_corekeeper_service
 		add_ssh_keygen_service
+		add_disp_udev_rules
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
