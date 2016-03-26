@@ -167,6 +167,23 @@ EOF
 	do_chroot systemctl enable ssh-keygen
 }
 
+add_ubuntu_apt_sources() {
+	local release="$1"
+	cat > "$DEST/etc/apt/sources.list" <<EOF
+deb http://ports.ubuntu.com/ ${release} main restricted universe multiverse
+deb-src http://ports.ubuntu.com/ ${release} main restricted universe multiverse
+
+deb http://ports.ubuntu.com/ ${release}-updates main restricted universe multiverse
+deb-src http://ports.ubuntu.com/ ${release}-updates main restricted universe multiverse
+
+deb http://ports.ubuntu.com/ ${release}-security main restricted universe multiverse
+deb-src http://ports.ubuntu.com/ ${release}-security main restricted universe multiverse
+
+deb http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
+deb-src http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
+EOF
+}
+
 # Run stuff in new system.
 case $DISTRO in
 	arch)
@@ -184,6 +201,7 @@ case $DISTRO in
 	xenial)
 		rm "$DEST/etc/resolv.conf"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
+		add_ubuntu_apt_sources xenial
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
