@@ -192,6 +192,12 @@ deb-src http://ports.ubuntu.com/ ${release}-backports main restricted universe m
 EOF
 }
 
+add_wifi_module_autoload() {
+	cat > "$DEST/etc/modules-load.d/pine64-wifi.conf" <<EOF
+8723bs
+EOF
+}
+
 # Run stuff in new system.
 case $DISTRO in
 	arch)
@@ -204,6 +210,7 @@ case $DISTRO in
 		add_mackeeper_service
 		add_corekeeper_service
 		add_disp_udev_rules
+		add_wifi_module_autoload
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
@@ -244,6 +251,7 @@ EOF
 		add_corekeeper_service
 		add_ssh_keygen_service
 		add_disp_udev_rules
+		add_wifi_module_autoload
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
