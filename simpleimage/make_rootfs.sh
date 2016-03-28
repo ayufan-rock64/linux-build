@@ -222,8 +222,10 @@ case $DISTRO in
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
 apt-get -y update
-apt-get -y install dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant openssh-server
+apt-get -y install software-properties-common dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant openssh-server
 apt-get -y remove --purge ureadahead
+apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers
+apt-get -y update
 adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
 chown -R 1000:1000 /home/ubuntu
 echo "ubuntu:ubuntu" | chpasswd
