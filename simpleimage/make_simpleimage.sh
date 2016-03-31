@@ -89,7 +89,7 @@ dd if=${out}2 conv=notrunc oflag=append bs=1M seek=$((part_position/1024+boot_si
 rm -f ${out}2
 
 # Add partition table
-fdisk "$out" <<EOF
+cat <<EOF | fdisk "$out"
 o
 n
 p
