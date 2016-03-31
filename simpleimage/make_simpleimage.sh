@@ -89,11 +89,24 @@ dd if=${out}2 conv=notrunc oflag=append bs=1M seek=$((part_position/1024+boot_si
 rm -f ${out}2
 
 # Add partition table
-cat <<EOF | sfdisk -q -f "$out"
-label: dos
-unit: sectors
-start=$((part_position*2)), size=${boot_size}M, type=c
-start=$((part_position*2 + boot_size*1024*2)), type=83
+fdisk "$out" <<EOF
+o
+n
+p
+1
+$((part_position*2))
++${boot_size}M
+t
+c
+n
+p
+2
+$((part_position*2 + boot_size*1024*2))
+
+t
+2
+83
+w
 EOF
 
 sync
