@@ -196,6 +196,14 @@ add_wifi_module_autoload() {
 	cat > "$DEST/etc/modules-load.d/pine64-wifi.conf" <<EOF
 8723bs
 EOF
+	cat > "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
+blacklist 8723bs_vq0
+EOF
+	cat >> "$DEST/etc/network/interfaces" <<EOF
+
+# Disable wlan1 by default (8723bs has two intefaces)
+iface wlan1 inet manual
+EOF
 }
 
 # Run stuff in new system.
