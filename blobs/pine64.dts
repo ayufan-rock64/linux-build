@@ -1204,10 +1204,10 @@
             uart3@0 {
                 linux,phandle = <0x000000a5>;
                 phandle = <0x000000a5>;
-                allwinner,pins = "PH4", "PH5", "PH6", "PH7";
+                allwinner,pins = "PD0", "PD1";
                 allwinner,function = "uart3";
-                allwinner,pname = "uart3_tx", "uart3_rx", "uart3_rts", "uart3_cts";
-                allwinner,muxsel = <0x00000002>;
+                allwinner,pname = "uart3_tx", "uart3_rx";
+                allwinner,muxsel = <0x00000003>;
                 allwinner,pull = <0x00000001>;
                 allwinner,drive = <0xffffffff>;
                 allwinner,data = <0xffffffff>;
@@ -1532,7 +1532,7 @@
             pinctrl-1 = <0x00000020>;
             uart2_port = <0x00000002>;
             uart2_type = <0x00000004>;
-            status = "disabled";
+            status = "okay";
             pinctrl-0 = <0x000000a4>;
         };
         uart@01c28c00 {
@@ -1545,7 +1545,7 @@
             pinctrl-1 = <0x00000023>;
             uart3_port = <0x00000003>;
             uart3_type = <0x00000004>;
-            status = "disabled";
+            status = "okay";
             pinctrl-0 = <0x000000a5>;
         };
         uart@01c29000 {
@@ -1558,7 +1558,7 @@
             pinctrl-1 = <0x00000026>;
             uart4_port = <0x00000004>;
             uart4_type = <0x00000004>;
-            status = "disabled";
+            status = "okay";
             pinctrl-0 = <0x000000a6>;
         };
         twi@0x01c2ac00 {
