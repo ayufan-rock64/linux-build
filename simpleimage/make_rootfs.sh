@@ -113,11 +113,10 @@ add_mackeeper_service() {
 	cat > "$DEST/etc/systemd/system/eth0-mackeeper.service" <<EOF
 [Unit]
 Description=Fix eth0 mac address to uEnv.txt
+After=systemd-modules-load.service local-fs.target
 
 [Service]
 Type=oneshot
-After=systemd-modules-load.service
-After=local-fs.target
 ExecStart=/usr/local/sbin/pine64_eth0-mackeeper.sh
 
 [Install]
