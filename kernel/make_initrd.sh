@@ -23,7 +23,7 @@ cp -va $BUSYBOX/busybox $TEMP/bin
 cd $TEMP
 mkdir dev proc sys tmp sbin
 mknod dev/console c 5 1
-cat > $TEMP/init <<EOF
+cat > $TEMP/init <<'EOF'
 #!/bin/busybox sh
 
 # Install busybox
@@ -34,28 +34,59 @@ mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t devtmpfs none /dev
 
-sleep 1
+cmdline() {
+        local value
+        value=" $(cat /proc/cmdline) "
+        value="${value##* $1=}"
+        value="${value%% *}"
+        [ "$value" != "" ] && echo "$value"
+}
 
-if [ -e /dev/mmcblk0p2 ]; then
-	# Mount real root.
-	mkdir -p /mnt/root
-	mount -o rw /dev/mmcblk0p2 /mnt/root
+realboot() {
+        echo "Rootfs: $1";
+        # Mount real root.
+        mkdir -p /mnt/root
+        mount -o rw "$1" /mnt/root
 
-	if [ -x /mnt/root/sbin/init -o -h /mnt/root/sbin/init ]; then
-		# Cleanup.
-		umount /proc
-		umount /sys
-		umount /dev
+        if [ -x /mnt/root/sbin/init -o -h /mnt/root/sbin/init ]; then
+                # Cleanup.
+                umount /proc
+                umount /sys
+                umount /dev
 
-		# Boot the real system.
-		exec switch_root /mnt/root /sbin/init
-	fi
+                # Boot the real system.
+                exec switch_root /mnt/root /sbin/init
+        else
+                umount /mnt/root
+        fi
+}
 
-fi
+runshell() {
+        echo "Dropping to a shell."
+        echo
+        setsid cttyhack /bin/sh
+}
 
-echo "Dropping to a shell."
-echo
-setsid cttyhack /bin/sh
+boot() {
+        echo "Kernel params: `cat /proc/cmdline`"
+        local timeout=20;
+        local kernel_root_param=$(cmdline root)
+
+        while [ "$timeout" -ge 1 ]; do
+                echo "Waiting for root system $kernel_root_param, countdown : $timeout";
+                if [ -e "$kernel_root_param" ]; then
+                        realboot $kernel_root_param;
+                fi;
+
+                timeout=$(( $timeout - 1 ));
+                sleep 1;
+        done;
+
+        # Default rootfs - sd partition 2
+        realboot /dev/mmcblk0p2;
+        runshell;
+}
+boot;
 EOF
 chmod 755 $TEMP/init
 
