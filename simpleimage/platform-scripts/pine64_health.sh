@@ -8,6 +8,11 @@
 
 set -e
 
+if [ "$(id -u)" -ne "0" ]; then
+	echo "This script requires root."
+	exit 1
+fi
+
 print() {
 	printf "%-15s: %s %s\n" "$1" "$2 $3" "$4"
 }
