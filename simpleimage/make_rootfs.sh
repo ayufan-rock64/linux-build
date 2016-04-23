@@ -58,7 +58,7 @@ case $DISTRO in
 		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
 		;;
 	xenial)
-		ROOTFS="http://cdimage.ubuntu.com/ubuntu-core/daily/current/xenial-core-arm64.tar.gz"
+		ROOTFS="http://cdimage.ubuntu.com/ubuntu-core/releases/xenial/release/ubuntu-core-16.04-core-arm64.tar.gz"
 		;;
 	*)
 		echo "Unknown distribution: $DISTRO"
