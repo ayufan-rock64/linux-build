@@ -1,5 +1,6 @@
 #!/bin/sh
 
+apt-get -y update
 apt-get -y --no-install-recommends install \
 	xserver-xorg-video-fbturbo \
 	ubuntu-mate-core \
