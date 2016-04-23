@@ -24,6 +24,11 @@ if [ -e "/etc/modules-load.d/cups-filters.conf" ]; then
 	echo "" >/etc/modules-load.d/cups-filters.conf
 fi
 
+# Disable Pulseaudio timer scheduling which does not work with sndhdmi driver.
+if [ -e "/etc/pulse/default.pa" ]; then
+	sed -i 's/load-module module-udev-detect$/& tsched=0/g' /etc/pulse/default.pa
+fi
+
 # Mail blobs can be downloaded from the following URL. Does not help much
 # for now, as fbturbo requires mali-drm module to enable this in X11. Might
 # be of some use for framebuffer.
