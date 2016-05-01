@@ -21,4 +21,4 @@ if [ ! -w /dev/disp ]; then
 fi
 
 export VDPAU_DRIVER=sunxi
-exec mplayer -ao alsa:device=hw=1.0 -vo vdpau -vc ffmpeg12vdpau,ffh264vdpau,ffhevcvdpau, $@
+exec mplayer -vo vdpau -vc ffmpeg12vdpau,ffh264vdpau,ffhevcvdpau, $@
