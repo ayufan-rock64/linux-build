@@ -744,6 +744,14 @@
             linux,phandle = <0x00000098>;
             phandle = <0x00000098>;
         };
+        adda_com {
+            #clock-cells = <0x00000000>;
+            compatible = "allwinner,sunxi-periph-cpus-clock";
+            clock-output-names = "adda_com";
+            linux,phandle = <0x000000bf>;
+            phandle = <0x000000bf>;
+        };
+
     };
     soc@01c00000 {
         compatible = "simple-bus";
@@ -1680,7 +1688,7 @@
         codec@0x01c22c00 {
             compatible = "allwinner,sunxi-internal-codec";
             reg = <0x00000000 0x01c22c00 0x00000000 0x00000478 0x00000000 0x01f015c0 0x00000000 0x00000000>;
-            clocks = <0x0000003c>;
+            clocks = <0x0000003c 0x000000bf>;
             pinctrl-names = "aif2-default", "aif3-default", "aif2-sleep", "aif3-sleep";
             pinctrl-1 = <0x0000003e>;
             pinctrl-2 = <0x0000003f>;
