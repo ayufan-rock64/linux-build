@@ -246,9 +246,12 @@ EOF
 auto eth0
 iface eth0 inet dhcp
 EOF
+		cat > "$DEST/etc/hostname" <<EOF
+pine64
+EOF
 		cat > "$DEST/etc/hosts" <<EOF
 127.0.0.1 localhost
-127.0.1.1 localhost.localdomain
+127.0.1.1 pine64
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback
