@@ -235,6 +235,7 @@ apt-get -y install software-properties-common dosfstools ubuntu-minimal curl xz-
 apt-get -y remove --purge ureadahead
 apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers
 apt-get -y update
+apt-get -y install sunxi-disp-tool
 adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
 chown -R 1000:1000 /home/ubuntu
 echo "ubuntu:ubuntu" | chpasswd
