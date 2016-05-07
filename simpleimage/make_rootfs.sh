@@ -207,6 +207,11 @@ EOF
 	fi
 }
 
+add_asound_state() {
+	mkdir -p "$DEST/var/lib/alsa"
+	cp -vf ../blobs/asound.state "$DEST/var/lib/alsa/asound.state"
+}
+
 # Run stuff in new system.
 case $DISTRO in
 	arch)
@@ -220,6 +225,7 @@ case $DISTRO in
 		add_corekeeper_service
 		add_disp_udev_rules
 		add_wifi_module_autoload
+		add_asound_state
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
@@ -230,8 +236,9 @@ case $DISTRO in
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
+locale-gen en_US.UTF-8
 apt-get -y update
-apt-get -y install software-properties-common dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant openssh-server
+apt-get -y install software-properties-common dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils
 apt-get -y remove --purge ureadahead
 apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers
 apt-get -y update
@@ -240,6 +247,8 @@ adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
 chown -R 1000:1000 /home/ubuntu
 echo "ubuntu:ubuntu" | chpasswd
 usermod -a -G sudo,adm,input,video,plugdev ubuntu
+apt-get -y autoremove
+apt-get clean
 EOF
 		chmod +x "$DEST/second-phase"
 		do_chroot /second-phase
@@ -267,6 +276,7 @@ EOF
 		add_ssh_keygen_service
 		add_disp_udev_rules
 		add_wifi_module_autoload
+		add_asound_state
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
