@@ -39,7 +39,7 @@ if [ "$(ls -A -Ilost+found $DEST)" ]; then
 fi
 
 if [ -z "$DISTRO" ]; then
-	DISTRO="arch"
+	DISTRO="xenial"
 fi
 
 TEMP=$(mktemp -d)
