@@ -67,19 +67,24 @@ runshell() {
         setsid cttyhack /bin/sh
 }
 
+find_parition_by_value() {
+        echo `blkid | tr -d '"' | grep "$1" | cut -d ':' -f 1 | head -n 1`
+}
+
 boot() {
         echo "Kernel params: `cat /proc/cmdline`"
-        local timeout=20;
+        local i=5
         local kernel_root_param=$(cmdline root)
 
-        while [ "$timeout" -ge 1 ]; do
-                echo "Waiting for root system $kernel_root_param, countdown : $timeout";
-                if [ -e "$kernel_root_param" ]; then
-                        realboot $kernel_root_param;
+        while [ "$i" -ge 1 ]; do
+                echo "Waiting for root system $kernel_root_param, countdown : $i";
+                local root=`find_parition_by_value $kernel_root_param`
+                if [ -e "$root" ]; then
+                        realboot $root;
                 fi;
 
-                timeout=$(( $timeout - 1 ));
-                sleep 1;
+                i=$(( $i - 1 ));
+                sleep 5;
         done;
 
         # Default rootfs - sd partition 2
