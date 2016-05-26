@@ -59,6 +59,20 @@ downloadAndApply() {
 		# Install default uEnv.txt when not there.
 		mv "/boot/uEnv.txt.in" "/boot/uEnv.txt"
 	fi
+
+	VERSION=""
+	if [ -e "$TEMP/update/boot/Image.version" ]; then
+		VERSION=$(cat $TEMP/update/boot/Image.version)
+	fi
+
+	if [ -n "$VERSION" ]; then
+		# New Kernel with postinst support ...
+		echo "Running postinst for $VERSION ..."
+		if [ -e "/etc/kernel/header_postinst.d" ]; then
+			run-parts -v -a "$VERSION" /etc/kernel/header_postinst.d
+		fi
+	fi
+
 }
 
 if [ "$1" != "--mark-only" ]; then
