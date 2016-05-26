@@ -40,7 +40,7 @@ released in the BSP. Unsurprisingly this Kernel tree has its problems and needs
 fixing. Thus clone my fixed tree like below.
 
 ```bash
-git clone --depth 1 --branch pine64-hacks --single-branch https://github.com/longsleep/linux-pine64.git linux-pine64
+git clone --depth 1 --branch pine64-hacks-1.2 --single-branch https://github.com/longsleep/linux-pine64.git linux-pine64
 ```
 
 This tree is based on mainline 3.10.65 with the changes from the Lichee
