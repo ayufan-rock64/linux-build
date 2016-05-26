@@ -37,6 +37,13 @@ fi
 
 echo "Using Linux from $LINUX ..."
 
+VERSION=$(strings $LINUX/arch/arm64/boot/Image |grep "Linux version"|awk '{print $3}')
+echo "Kernel build version $VERSION ..."
+if [ -z "$VERSION" ]; then
+	echo "Failed to get build version, correct <linux-folder>?"
+	exit 1
+fi
+
 # Clean up
 mkdir -p "$DEST/$SUBFOLDER"
 rm -vf "$DEST/$KERNEL"
@@ -46,6 +53,7 @@ rm -vf "$DEST/uEnv.txt"
 # Create and copy Kernel
 echo -n "Copying Kernel ..."
 cp -vf "$LINUX/arch/arm64/boot/Image" "$DEST/$KERNEL"
+echo "$VERSION" > "$DEST/Image.version"
 echo " OK"
 
 # Copy initrd
