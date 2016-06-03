@@ -2177,7 +2177,7 @@
                 csi0_dev1_act_used = <0x00000000>;
                 csi0_dev1_act_name = "ad5820_act";
                 csi0_dev1_act_slave = <0x00000018>;
-                status = "okay";
+                status = "disabled";
                 device_type = "csi0_dev1";
                 csi0_dev1_afvdd;
                 csi0_dev1_afvdd_vol;
