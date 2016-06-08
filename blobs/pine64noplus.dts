@@ -1932,8 +1932,6 @@
             ignore-pm-notify;
         };
         disp@01000000 {
-            fb_base = <0x47400000>;
-            boot_disp = <0x0000040a>;
             compatible = "allwinner,sun50i-disp";
             reg = <0x00000000 0x01000000 0x00000000 0x00300000 0x00000000 0x01c0c000 0x00000000 0x000017fc 0x00000000 0x01ca0000 0x00000000 0x000010fc>;
             interrupts = <0x00000000 0x00000056 0x00000104 0x00000000 0x00000057 0x00000104 0x00000000 0x00000059 0x00000104>;
@@ -2123,8 +2121,8 @@
             pinctrl-0 = <0x000000b1>;
             csi0_mck = <0x00000030 0x00000004 0x00000001 0x00000000 0x00000000 0x00000001 0x00000000>;
             dev@0 {
-                csi0_dev0_mname = "hm5065";
-                csi0_dev0_twi_addr = <0x0000003e>;
+                csi0_dev0_mname = "s5k4ec";
+                csi0_dev0_twi_addr = <0x0000005a>;
                 csi0_dev0_pos = "rear";
                 csi0_dev0_isp_used = <0x00000001>;
                 csi0_dev0_fmt = <0x00000000>;
@@ -2136,7 +2134,7 @@
                 csi0_dev0_avdd = "avdd-csi";
                 csi0_dev0_avdd_vol = <0x002ab980>;
                 csi0_dev0_dvdd = "dvdd-csi-18";
-                csi0_dev0_dvdd_vol = <0x001b7740>;
+                csi0_dev0_dvdd_vol = <0x0016e360>;
                 csi0_dev0_flash_used = <0x00000000>;
                 csi0_dev0_flash_type = <0x00000002>;
                 csi0_dev0_flvdd = "vdd-csi-led";
@@ -2144,13 +2142,13 @@
                 csi0_dev0_act_used = <0x00000000>;
                 csi0_dev0_act_name = "ad5820_act";
                 csi0_dev0_act_slave = <0x00000018>;
-                status = "okay";
+                status = "disabled";
                 device_type = "csi0_dev0";
                 csi0_dev0_afvdd;
                 csi0_dev0_afvdd_vol;
                 csi0_dev0_power_en;
-                csi0_dev0_reset = <0x00000030 0x00000004 0x0000000e 0x00000000 0x00000000 0x00000001 0x00000000>;
-                csi0_dev0_pwdn = <0x00000030 0x00000004 0x0000000f 0x00000000 0x00000000 0x00000001 0x00000000>;
+                csi0_dev0_reset = <0x00000030 0x00000004 0x00000010 0x00000000 0x00000000 0x00000001 0x00000000>;
+                csi0_dev0_pwdn = <0x00000030 0x00000004 0x00000011 0x00000000 0x00000000 0x00000001 0x00000000>;
                 csi0_dev0_flash_en;
                 csi0_dev0_flash_mode;
                 csi0_dev0_af_pwdn;
