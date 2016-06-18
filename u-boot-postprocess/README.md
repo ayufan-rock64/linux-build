@@ -27,17 +27,14 @@ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
 
 Similar to U-Boot, this is based on an upstream project with A64 specific
 patches from Allwinner. Andre Przywara has cleaned up the Allwinner
-patches - we will be using his `allwinner` branch. Thanks @apritzel. The
-last revision which can be used with the BSP U-Boot is fc1e255c846bc0a0c72c8e6f822e64e24704e136 (from Feb. 15 2016).
+patches - thanks @apritzel. Make sure you use ATF compatible with BSP
+U-Boot (i keep a fork with the allwinner-a64-bsp branch).
 
 To be fully compatible with all the scripting in this module, clone the ATF
-tree into `build-pine64-image/arm-trusted-firmware-pine64` folder and
-checkout the the specific revision
+tree into `build-pine64-image/arm-trusted-firmware-pine64` folder.
 
 ```bash
-git clone --branch allwinner --single-branch https://github.com/apritzel/arm-trusted-firmware.git arm-trusted-firmware-pine64
-cd arm-trusted-firmware-pine64
-git checkout fc1e255c846bc0a0c72c8e6f822e64e24704e136
+git clone --branch allwinner-a64-bsp --single-branch https://github.com/longsleep/arm-trusted-firmware.git arm-trusted-firmware-pine64
 ```
 
 ## Compile ARM Trust Firmware (ATF)
@@ -47,7 +44,7 @@ the Kernel).
 
 ```bash
 make clean
-make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- PLAT=sun50iw1p1 DEBUG=1 bl31
+make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- PLAT=sun50iw1p1 bl31
 ```
 
 This creates `build/sun50iw1p1/release/bl31.bin` which will be picked up
