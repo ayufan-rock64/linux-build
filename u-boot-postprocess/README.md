@@ -6,9 +6,9 @@ bootable by the A64 boot0 boot loader.
 To be fully compatible with all the scripting in this module, clone the U-Boot
 tree into `build-pine64-image/u-boot-pine64` folder.
 
-A64 loads U-Boot in 32-bit mode. So to compile U-Boot you need a properly set
+BSP U-Boot is loaded in 32-bit mode. So to compile U-Boot you need a properly set
 up gcc-arm-linux-gnueabihf toolchain. The recommended version to compile
-U-Boot is 4.8. The U-Boot tree will not compile with 5.0 or newer.
+U-Boot is 5.3.
 
 ## Get U-Boot tree
 
@@ -39,7 +39,7 @@ git clone --branch allwinner-a64-bsp --single-branch https://github.com/longslee
 
 ## Compile ARM Trust Firmware (ATF)
 
-The recommended aarch64 toolchain to compile ATF is 5.2 (same as for
+The recommended aarch64 toolchain to compile ATF is 5.3 (same as for
 the Kernel).
 
 ```bash
