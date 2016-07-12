@@ -80,7 +80,7 @@ The BSP Kernel tree also contains the graphics driver in `modules/gpu`.
 
 ```
 cd modules/gpu
-LICHEE_KDIR=$(pwd)/../.. LICHEE_PLATFORM=Pine64 make build
+LICHEE_KDIR=$(pwd)/../.. ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- LICHEE_PLATFORM=Pine64 make build
 ```
 
 This will compile the mali.ko Kernel module with the Kernel .config found in
