@@ -58,7 +58,7 @@ case $DISTRO in
 		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
 		;;
 	xenial)
-		ROOTFS="http://cdimage.ubuntu.com/ubuntu-core/releases/xenial/release/ubuntu-core-16.04-core-arm64.tar.gz"
+		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/xenial/daily/current/xenial-base-arm64.tar.gz"
 		;;
 	*)
 		echo "Unknown distribution: $DISTRO"
@@ -105,8 +105,8 @@ add_platform_scripts() {
 	chmod 755 "$DEST/usr/local/sbin/"*
 
 	# Set Kernel and U-boot update version
-	do_chroot /usr/local/sbin/pine64_update_kernel.sh --mark-only
-	do_chroot /usr/local/sbin/pine64_update_uboot.sh --mark-only
+	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_kernel.sh
+	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_uboot.sh
 }
 
 add_mackeeper_service() {
@@ -320,6 +320,20 @@ else
 	tar -C $TEMP/kernel --numeric-owner -xJf "$LINUX"
 	cp -RLp $TEMP/kernel/lib/* "$DEST/lib/" 2>/dev/null || true
 	cp -RLp $TEMP/kernel/usr/* "$DEST/usr/"
+
+	VERSION=""
+	if [ -e "$TEMP/kernel/boot/Image.version" ]; then
+		VERSION=$(cat $TEMP/kernel/boot/Image.version)
+	fi
+
+	if [ -n "$VERSION" ]; then
+		# Create symlink to headers if not there.
+		if [ ! -e "$DEST/lib/modules/$VERSION/build" ]; then
+			ln -s /usr/src/linux-headers-$VERSION "$DEST/lib/modules/$VERSION/build"
+		fi
+
+		depmod -b $DEST $VERSION
+	fi
 fi
 
 # Clean up
