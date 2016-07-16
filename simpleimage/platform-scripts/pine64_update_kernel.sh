@@ -76,6 +76,11 @@ downloadAndApply() {
 	fi
 
 	if [ -n "$VERSION" ]; then
+		# Create symlink to headers if not there.
+		if [ ! -e /lib/modules/$VERSION/build ]; then
+			ln -s /usr/src/linux-headers-$VERSION /lib/modules/$VERSION/build
+		fi
+
 		# New Kernel with postinst support ...
 		depmod "$VERSION"
 
