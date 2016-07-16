@@ -92,9 +92,11 @@ downloadAndApply() {
 
 }
 
-if [ "$1" != "--mark-only" ]; then
+if [ -z "$MARK_ONLY" ]; then
 	downloadAndApply
 	sync
 	echo "Done - you should reboot now."
+else
+	echo "Mark only."
 fi
 echo $ETAG > "$CURRENTFILE"

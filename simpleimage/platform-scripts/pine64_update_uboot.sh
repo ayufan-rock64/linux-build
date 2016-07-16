@@ -72,7 +72,7 @@ downloadAndApply() {
 	dd if="${TEMP}/uboot.img" conv=notrunc bs=1k seek=$uboot_position oflag=sync of="${DEVICE}"
 }
 
-if [ "$1" != "--mark-only" ]; then
+if [ -z "$MARK_ONLY" ]; then
 	if [ ! -b "$DEVICE" ]; then
 		echo "Block device ${DEVICE} not found."
 		exit 2
@@ -80,5 +80,7 @@ if [ "$1" != "--mark-only" ]; then
 	downloadAndApply
 	sync
 	echo "Done - you should reboot now."
+else
+	echo "Mark only."
 fi
 echo $ETAG > "$CURRENTFILE"
