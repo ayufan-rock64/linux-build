@@ -238,7 +238,7 @@ case $DISTRO in
 export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 apt-get -y update
-apt-get -y install software-properties-common dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils
+apt-get -y install software-properties-common dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils zram-config
 apt-get -y remove --purge ureadahead
 apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers
 apt-get -y update
