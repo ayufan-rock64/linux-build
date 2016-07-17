@@ -2550,7 +2550,7 @@
         };
         eth@01c30000 {
             compatible = "allwinner,sunxi-gmac";
-            reg = <0x00000000 0x01c30000 0x00000000 0x00040000 0x00000000 0x01c00000 0x00000000 0x00000030>;
+            reg = <0x00000000 0x01c30000 0x00000000 0x00010000 0x00000000 0x01c00000 0x00000000 0x00000030>;
             pinctrl-names = "default";
             interrupts = <0x00000000 0x00000052 0x00000004>;
             interrupt-names = "gmacirq";
