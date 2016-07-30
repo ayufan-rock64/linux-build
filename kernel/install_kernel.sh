@@ -71,11 +71,17 @@ if [ -d "$LINUX/arch/arm64/boot/dts/allwinner" ]; then
 	echo -n "Copy "
 	cp -v "$LINUX/arch/arm64/boot/dts/allwinner/"*.dtb "$DEST/$SUBFOLDER/"
 else
+	basename="pine64"
+	if grep -q sunxi-drm "$LINUX/arch/arm64/boot/Image"; then
+		echo "Kernel with DRM driver!"
+		basename="pine64drm"
+	fi
+
 	# Not found, use device tree from BSP.
-	echo "Compiling device tree from $BLOBS/pine64.dts"
-	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-plus.dtb" "$BLOBS/pine64.dts"
-	echo "Compiling device tree from $BLOBS/pine64noplus.dts"
-	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64.dtb" "$BLOBS/pine64noplus.dts"
+	echo "Compiling device tree from $BLOBS/${basename}.dts"
+	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-plus.dtb" "$BLOBS/${basename}.dts"
+	echo "Compiling device tree from $BLOBS/${basename}noplus.dts"
+	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64.dtb" "$BLOBS/${basename}noplus.dts"
 fi
 
 cat <<EOF > "$DEST/uEnv.txt"
