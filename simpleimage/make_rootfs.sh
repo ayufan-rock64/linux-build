@@ -171,6 +171,7 @@ add_disp_udev_rules() {
 KERNEL=="disp", MODE="0770", GROUP="video"
 KERNEL=="cedar_dev", MODE="0770", GROUP="video"
 KERNEL=="ion", MODE="0770", GROUP="video"
+KERNEL=="mali", MODE="0770", GROUP="video"
 EOF
 }
 
