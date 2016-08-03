@@ -52,6 +52,7 @@ trap cleanup EXIT
 
 ROOTFS=""
 UNTAR="bsdtar -xpf"
+METHOD="download"
 
 case $DISTRO in
 	arch)
@@ -60,16 +61,60 @@ case $DISTRO in
 	xenial)
 		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/xenial/daily/current/xenial-base-arm64.tar.gz"
 		;;
+	sid|jessie)
+		ROOTFS="${DISTRO}-base-arm64.tar.gz"
+		METHOD="debootstrap"
+		;;
 	*)
 		echo "Unknown distribution: $DISTRO"
 		exit 1
 		;;
 esac
 
+deboostrap_rootfs() {
+	dist="$1"
+	tgz="$(readlink -f "$2")"
+
+	[ "$TEMP" ] || exit 1
+	cd $TEMP && pwd
+
+	# this is updated very seldom, so is ok to hardcode
+	debian_archive_keyring_deb='http://httpredir.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2014.3_all.deb'
+	wget -O keyring.deb "$debian_archive_keyring_deb"
+	ar -x keyring.deb && rm -f control.tar.gz debian-binary && rm -f keyring.deb
+	DATA=$(ls data.tar.*) && compress=${DATA#data.tar.}
+
+	KR=debian-archive-keyring.gpg
+	bsdtar --include ./usr/share/keyrings/$KR --strip-components 4 -xvf "$DATA"
+	rm -f "$DATA"
+
+	apt-get -y install debootstrap qemu-user-static
+
+	qemu-debootstrap --arch=arm64 --keyring=$TEMP/$KR $dist rootfs http://httpredir.debian.org/debian
+	rm -f $KR
+
+	# keeping things clean as this is copied later again
+	rm -f rootfs/usr/bin/qemu-aarch64-static
+
+	bsdtar -C $TEMP/rootfs -a -cf $tgz .
+	rm -fr $TEMP/rootfs
+
+	cd -
+
+}
+
+
 TARBALL="$BUILD/$(basename $ROOTFS)"
 if [ ! -e "$TARBALL" ]; then
-	echo "Downloading $DISTRO rootfs tarball ..."
-	wget -O "$TARBALL" "$ROOTFS"
+	if [ "$METHOD" = "download" ]; then
+		echo "Downloading $DISTRO rootfs tarball ..."
+		wget -O "$TARBALL" "$ROOTFS"
+	elif [ "$METHOD" = "debootstrap" ]; then
+		deboostrap_rootfs "$DISTRO" "$TARBALL"
+	else
+		echo "Unknown rootfs creation method"
+		exit 1
+	fi
 fi
 
 # Extract with BSD tar
