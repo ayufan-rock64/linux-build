@@ -220,6 +220,23 @@ KERNEL=="mali", MODE="0770", GROUP="video"
 EOF
 }
 
+add_debian_apt_sources() {
+	local release="$1"
+	local aptsrcfile="$DEST/etc/apt/sources.list"
+	cat > "$aptsrcfile" <<EOF
+deb http://httpredir.debian.org/debian ${release} main contrib non-free
+#deb-src http://httpredir.debian.org/debian ${release} main contrib non-free
+EOF
+	# No separate security or updates repo for unstable/sid
+	[ "$release" = "sid" ] || cat >> "$aptsrcfile" <<EOF
+deb http://httpredir.debian.org/debian ${release}-updates main contrib non-free
+#deb-src http://httpredir.debian.org/debian ${release}-updates main contrib non-free
+
+deb http://security.debian.org/ ${release}/updates main contrib non-free
+#deb-src http://security.debian.org/ ${release}/updates main contrib non-free
+EOF
+}
+
 add_ubuntu_apt_sources() {
 	local release="$1"
 	cat > "$DEST/etc/apt/sources.list" <<EOF
@@ -275,24 +292,40 @@ case $DISTRO in
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
-	xenial)
+	xenial|sid|jessie)
 		rm "$DEST/etc/resolv.conf"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
-		add_ubuntu_apt_sources xenial
+		if [ "$DISTRO" = "xenial" ]; then
+			DEB=ubuntu
+			DEBUSER=ubuntu
+			EXTRADEBS="software-properties-common zram-config ubuntu-minimal"
+			ADDPPACMD="apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers"
+			DISPTOOLCMD="apt-get -y install sunxi-disp-tool"
+		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
+			DEB=debian
+			DEBUSER=debian
+			EXTRADEBS=
+			ADDPPACMD=
+			DISPTOOLCMD=
+		else
+			echo "Unknown DISTRO=$DISTRO"
+			exit 2
+		fi
+		add_${DEB}_apt_sources $DISTRO
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 apt-get -y update
-apt-get -y install software-properties-common dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils zram-config
+apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils $EXTRADEBS
 apt-get -y remove --purge ureadahead
-apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers
+$ADDPPACMD
 apt-get -y update
-apt-get -y install sunxi-disp-tool
-adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
-chown -R 1000:1000 /home/ubuntu
-echo "ubuntu:ubuntu" | chpasswd
-usermod -a -G sudo,adm,input,video,plugdev ubuntu
+$DISPTOOLCMD
+adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
+chown -R 1000:1000 /home/$DEBUSER
+echo "$DEBUSER:$DEBUSER" | chpasswd
+usermod -a -G sudo,adm,input,video,plugdev $DEBUSER
 apt-get -y autoremove
 apt-get clean
 EOF
