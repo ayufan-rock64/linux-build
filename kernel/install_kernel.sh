@@ -48,7 +48,6 @@ fi
 mkdir -p "$DEST/$SUBFOLDER"
 rm -vf "$DEST/$KERNEL"
 rm -vf "$DEST/"*.dtb
-rm -vf "$DEST/uEnv.txt"
 
 # Create and copy Kernel
 echo -n "Copying Kernel ..."
