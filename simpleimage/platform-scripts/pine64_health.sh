@@ -50,7 +50,8 @@ cooling_state() {
 }
 
 cooling_limit() {
-	local limit=$(cat /sys/devices/soc.0/cpu_budget_cool.16/roomage)
+	local budget=$(ls -1 -d  /sys/devices/soc.0/cpu_budget_cool.* |head -n1)
+	local limit=$(cat $budget/roomage)
 	print "Cooling limit" $limit
 }
 
