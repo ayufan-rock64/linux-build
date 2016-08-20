@@ -82,13 +82,17 @@ else
 	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-plus.dtb" "$BLOBS/${basename}.dts"
 	echo "Compiling device tree from $BLOBS/${basename}noplus.dts"
 	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64.dtb" "$BLOBS/${basename}noplus.dts"
+	echo "Compiling device tree from $BLOBS/${basename}so.dts"
+	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-so.dtb" "$BLOBS/${basename}so.dts"
 fi
 
-cat <<EOF > "$DEST/uEnv.txt"
+if [ ! -e "$DEST/uEnv.txt" ]; then
+	cat <<EOF > "$DEST/uEnv.txt"
 console=tty0 console=ttyS0,115200n8 no_console_suspend
 kernel_filename=$KERNEL
 initrd_filename=$INITRD_IMG
 EOF
+fi
 
 sync
 echo "Done - boot files in $DEST"
