@@ -1886,7 +1886,7 @@
             sdc_tm4_sm3_freq1 = <0x00000405>;
             sdc_tm4_sm4_freq0 = <0x00050000>;
             sdc_tm4_sm4_freq1 = <0x00000408>;
-            status = "okay";
+            status = "disabled";
             non-removable;
             pinctrl-0 = <0x000000b4>;
             cd-gpios;
@@ -2212,7 +2212,7 @@
             gpios = <0x30 0x2 0x8 0x0 0x0 0x0 0x0>;
             pinctrl-names = "default";
             pinctrl-0 = <0xba>;
-            status = "disabled";
+            status = "okay";
         };
         ce@1c15000 {
             compatible = "allwinner,sunxi-ce";

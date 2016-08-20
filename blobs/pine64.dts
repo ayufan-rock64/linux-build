@@ -2211,7 +2211,7 @@
             gpios = <0x30 0x2 0x8 0x0 0x0 0x0 0x0>;
             pinctrl-names = "default";
             pinctrl-0 = <0xba>;
-            status = "disabled";
+            status = "okay";
         };
         ce@1c15000 {
             compatible = "allwinner,sunxi-ce";
