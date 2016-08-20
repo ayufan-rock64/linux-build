@@ -52,6 +52,7 @@ trap cleanup EXIT
 
 ROOTFS=""
 UNTAR="bsdtar -xpf"
+METHOD="download"
 
 case $DISTRO in
 	arch)
@@ -60,16 +61,60 @@ case $DISTRO in
 	xenial)
 		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/xenial/daily/current/xenial-base-arm64.tar.gz"
 		;;
+	sid|jessie)
+		ROOTFS="${DISTRO}-base-arm64.tar.gz"
+		METHOD="debootstrap"
+		;;
 	*)
 		echo "Unknown distribution: $DISTRO"
 		exit 1
 		;;
 esac
 
+deboostrap_rootfs() {
+	dist="$1"
+	tgz="$(readlink -f "$2")"
+
+	[ "$TEMP" ] || exit 1
+	cd $TEMP && pwd
+
+	# this is updated very seldom, so is ok to hardcode
+	debian_archive_keyring_deb='http://httpredir.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2014.3_all.deb'
+	wget -O keyring.deb "$debian_archive_keyring_deb"
+	ar -x keyring.deb && rm -f control.tar.gz debian-binary && rm -f keyring.deb
+	DATA=$(ls data.tar.*) && compress=${DATA#data.tar.}
+
+	KR=debian-archive-keyring.gpg
+	bsdtar --include ./usr/share/keyrings/$KR --strip-components 4 -xvf "$DATA"
+	rm -f "$DATA"
+
+	apt-get -y install debootstrap qemu-user-static
+
+	qemu-debootstrap --arch=arm64 --keyring=$TEMP/$KR $dist rootfs http://httpredir.debian.org/debian
+	rm -f $KR
+
+	# keeping things clean as this is copied later again
+	rm -f rootfs/usr/bin/qemu-aarch64-static
+
+	bsdtar -C $TEMP/rootfs -a -cf $tgz .
+	rm -fr $TEMP/rootfs
+
+	cd -
+
+}
+
+
 TARBALL="$BUILD/$(basename $ROOTFS)"
 if [ ! -e "$TARBALL" ]; then
-	echo "Downloading $DISTRO rootfs tarball ..."
-	wget -O "$TARBALL" "$ROOTFS"
+	if [ "$METHOD" = "download" ]; then
+		echo "Downloading $DISTRO rootfs tarball ..."
+		wget -O "$TARBALL" "$ROOTFS"
+	elif [ "$METHOD" = "debootstrap" ]; then
+		deboostrap_rootfs "$DISTRO" "$TARBALL"
+	else
+		echo "Unknown rootfs creation method"
+		exit 1
+	fi
 fi
 
 # Extract with BSD tar
@@ -175,6 +220,23 @@ KERNEL=="mali", MODE="0770", GROUP="video"
 EOF
 }
 
+add_debian_apt_sources() {
+	local release="$1"
+	local aptsrcfile="$DEST/etc/apt/sources.list"
+	cat > "$aptsrcfile" <<EOF
+deb http://httpredir.debian.org/debian ${release} main contrib non-free
+#deb-src http://httpredir.debian.org/debian ${release} main contrib non-free
+EOF
+	# No separate security or updates repo for unstable/sid
+	[ "$release" = "sid" ] || cat >> "$aptsrcfile" <<EOF
+deb http://httpredir.debian.org/debian ${release}-updates main contrib non-free
+#deb-src http://httpredir.debian.org/debian ${release}-updates main contrib non-free
+
+deb http://security.debian.org/ ${release}/updates main contrib non-free
+#deb-src http://security.debian.org/ ${release}/updates main contrib non-free
+EOF
+}
+
 add_ubuntu_apt_sources() {
 	local release="$1"
 	cat > "$DEST/etc/apt/sources.list" <<EOF
@@ -230,24 +292,40 @@ case $DISTRO in
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
-	xenial)
+	xenial|sid|jessie)
 		rm "$DEST/etc/resolv.conf"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
-		add_ubuntu_apt_sources xenial
+		if [ "$DISTRO" = "xenial" ]; then
+			DEB=ubuntu
+			DEBUSER=ubuntu
+			EXTRADEBS="software-properties-common zram-config ubuntu-minimal"
+			ADDPPACMD="apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers"
+			DISPTOOLCMD="apt-get -y install sunxi-disp-tool"
+		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
+			DEB=debian
+			DEBUSER=debian
+			EXTRADEBS=
+			ADDPPACMD=
+			DISPTOOLCMD=
+		else
+			echo "Unknown DISTRO=$DISTRO"
+			exit 2
+		fi
+		add_${DEB}_apt_sources $DISTRO
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 apt-get -y update
-apt-get -y install software-properties-common dosfstools ubuntu-minimal curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils zram-config
+apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils $EXTRADEBS
 apt-get -y remove --purge ureadahead
-apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers
+$ADDPPACMD
 apt-get -y update
-apt-get -y install sunxi-disp-tool
-adduser --gecos ubuntu --disabled-login ubuntu --uid 1000
-chown -R 1000:1000 /home/ubuntu
-echo "ubuntu:ubuntu" | chpasswd
-usermod -a -G sudo,adm,input,video,plugdev ubuntu
+$DISPTOOLCMD
+adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
+chown -R 1000:1000 /home/$DEBUSER
+echo "$DEBUSER:$DEBUSER" | chpasswd
+usermod -a -G sudo,adm,input,video,plugdev $DEBUSER
 apt-get -y autoremove
 apt-get clean
 EOF
