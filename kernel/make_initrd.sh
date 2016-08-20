@@ -3,8 +3,9 @@
 # Simple script to create a small busybox based initrd. It requires a compiled
 # busybox static binary. You can also use any other prebuilt initrd.
 #
-# Please note that some prebuilt initrd-s might inappropriate, for example, the
-# ones from the Debian Installer will start an install process, so don't use those.
+# Please note that some prebuilt initrds might be inappropriate, for example,
+# the ones from the Debian Installer will start an install process, so don't
+# use those.
 #
 # Run this script with fakeroot or as root.
 
