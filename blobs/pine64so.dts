@@ -1377,6 +1377,17 @@
                 allwinner,drive = <0x00000002>;
                 allwinner,data = <0xffffffff>;
             };
+            w1_pin@0 {
+                linux,phandle = <0xba>;
+                phandle = <0xba>;
+                allwinner,pins = "PC8";
+                allwinner,function = "gpio_in";
+                allwinner,pname = "w1";
+                allwinner,muxsel = <0x0>;
+                allwinner,pull = <0x1>;
+                allwinner,drive = <0x0>;
+                allwinner,data = <0xffffffff>;
+            };
         };
         pinctrl@0 {
             compatible = "allwinner,axp-pinctrl";
@@ -2195,6 +2206,13 @@
             status = "okay";
             device_type = "Vdevice";
             pinctrl-0 = <0x000000b9>;
+        };
+        onewire_device@0 {
+            compatible = "w1-gpio";
+            gpios = <0x30 0x2 0x8 0x0 0x0 0x0 0x0>;
+            pinctrl-names = "default";
+            pinctrl-0 = <0xba>;
+            status = "disabled";
         };
         ce@1c15000 {
             compatible = "allwinner,sunxi-ce";
