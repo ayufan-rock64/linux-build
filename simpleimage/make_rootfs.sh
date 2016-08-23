@@ -310,7 +310,7 @@ case $DISTRO in
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
 			DEB=debian
 			DEBUSER=debian
-			EXTRADEBS=
+			EXTRADEBS="sudo"
 			ADDPPACMD=
 			DISPTOOLCMD=
 		else
