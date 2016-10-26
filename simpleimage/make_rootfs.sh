@@ -288,7 +288,7 @@ case $DISTRO in
 		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
-		do_chroot pacman -Sy --noconfirm dosfstools curl xz iw rfkill netctl dialog wpa_supplicant || true
+		do_chroot pacman -Sy --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant || true
 		add_platform_scripts
 		add_mackeeper_service
 		add_corekeeper_service
