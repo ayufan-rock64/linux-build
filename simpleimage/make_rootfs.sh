@@ -287,6 +287,7 @@ case $DISTRO in
 		# Cleanup preinstalled Kernel
 		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
+		sed -i 's|CheckSpace|#CheckSpace|' "$DEST/etc/pacman.conf"
 		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
 		do_chroot pacman -Sy --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant || true
 		add_platform_scripts
@@ -297,6 +298,7 @@ case $DISTRO in
 		add_asound_state
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
+		sed -i 's|#CheckSpace|CheckSpace|' "$DEST/etc/pacman.conf"
 		;;
 	xenial|sid|jessie)
 		rm "$DEST/etc/resolv.conf"
