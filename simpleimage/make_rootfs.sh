@@ -299,6 +299,15 @@ case $DISTRO in
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		sed -i 's|#CheckSpace|CheckSpace|' "$DEST/etc/pacman.conf"
+		cat > "$DEST/second-phase" <<EOF
+#!/bin/sh
+sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
+locale-gen
+localectl set-locale LANG=en_US.utf8
+localectl set-keymap us
+EOF
+		chmod +x "$DEST/second-phase"
+		do_chroot /second-phase
 		;;
 	xenial|sid|jessie)
 		rm "$DEST/etc/resolv.conf"
