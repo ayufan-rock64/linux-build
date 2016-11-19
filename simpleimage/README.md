@@ -10,7 +10,7 @@ ramdisk and Kernel.
 
 ```
 Header      : 20 MiB Bootloader
-Partition 1 : 50 MiB vFAT label:ROOT
+Partition 1 : 50 MiB vFAT label:BOOT
 Partition 2 :        ext4 label:rootfs
 ```
 
