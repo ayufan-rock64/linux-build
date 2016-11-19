@@ -2,8 +2,18 @@
 
 set -e
 
-if ! hash apt-get 2>/dev/null; then
-	echo "This script requires a Debian based distribution."
+DISTRO=""
+
+if hash apt-get 2>/dev/null; then
+	DISTRO=debian
+fi
+
+if hash pacman 2>/dev/null; then
+	DISTRO=arch
+fi
+
+if [[ -z "$DISTRO" ]]; then
+	echo "This script requires a Debian based or Arch Linux distribution."
 	exit 1
 fi
 
@@ -12,14 +22,34 @@ if [ "$(id -u)" -ne "0" ]; then
 	exit 1
 fi
 
-apt-get -y update
-apt-get -y --no-install-recommends install \
-	xserver-xorg-video-fbturbo \
-	ubuntu-mate-core \
-	ubuntu-mate-desktop \
-	ubuntu-mate-lightdm-theme \
-	ubuntu-mate-wallpapers-xenial \
-	lightdm
+case $DISTRO in
+	arch)
+		pacman -Syu --noconfirm
+		pacman -S --noconfirm --needed \
+			xorg-server \
+			xf86-video-fbturbo-git \
+			mate \
+			mate-extra \
+			gtk-engine-murrine \
+			pulseaudio \
+			lightdm \
+			lightdm-gtk-greeter
+			sed -i 's|^#greeter-session=.*|greeter-session=lightdm-gtk-greeter|' /etc/lightdm/lightdm.conf
+			systemctl enable lightdm
+		;;
+	debian)
+		apt-get -y update
+		apt-get -y --no-install-recommends install \
+			xserver-xorg-video-fbturbo \
+			ubuntu-mate-core \
+			ubuntu-mate-desktop \
+			ubuntu-mate-lightdm-theme \
+			ubuntu-mate-wallpapers-xenial \
+			lightdm
+		;;
+	*)
+		;;
+esac
 
 cat > "/etc/X11/xorg.conf" <<EOF
 Section "Device"
