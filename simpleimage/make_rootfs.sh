@@ -305,6 +305,7 @@ sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=en_US.utf8
 localectl set-keymap us
+yes | pacman -Scc
 EOF
 		chmod +x "$DEST/second-phase"
 		do_chroot /second-phase
