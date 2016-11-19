@@ -288,8 +288,9 @@ case $DISTRO in
 		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		sed -i 's|CheckSpace|#CheckSpace|' "$DEST/etc/pacman.conf"
+		do_chroot pacman -Syu --noconfirm || true
 		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
-		do_chroot pacman -Sy --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant alsa-utils || true
+		do_chroot pacman -S --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant alsa-utils || true
 		add_platform_scripts
 		add_mackeeper_service
 		add_corekeeper_service
@@ -299,6 +300,16 @@ case $DISTRO in
 		rm -f "$DEST/etc/resolv.conf"
 		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		sed -i 's|#CheckSpace|CheckSpace|' "$DEST/etc/pacman.conf"
+		cat > "$DEST/second-phase" <<EOF
+#!/bin/sh
+sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
+locale-gen
+localectl set-locale LANG=en_US.utf8
+localectl set-keymap us
+yes | pacman -Scc
+EOF
+		chmod +x "$DEST/second-phase"
+		do_chroot /second-phase
 		;;
 	xenial|sid|jessie)
 		rm "$DEST/etc/resolv.conf"
