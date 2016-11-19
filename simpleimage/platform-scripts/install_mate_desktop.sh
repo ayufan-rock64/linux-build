@@ -34,8 +34,8 @@ case $DISTRO in
 			pulseaudio \
 			lightdm \
 			lightdm-gtk-greeter
-			sed -i 's|^#greeter-session=.*|greeter-session=lightdm-gtk-greeter|' /etc/lightdm/lightdm.conf
-			systemctl enable lightdm
+		sed -i 's|^#greeter-session=.*|greeter-session=lightdm-gtk-greeter|' /etc/lightdm/lightdm.conf
+		systemctl enable lightdm
 		;;
 	debian)
 		apt-get -y update
