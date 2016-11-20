@@ -297,19 +297,21 @@ case $DISTRO in
 		add_disp_udev_rules
 		add_wifi_module_autoload
 		add_asound_state
-		rm -f "$DEST/etc/resolv.conf"
-		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
-		sed -i 's|#CheckSpace|CheckSpace|' "$DEST/etc/pacman.conf"
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=en_US.utf8
 localectl set-keymap us
+echo -e "\n[pine64]\nServer = https://andreascarpino.it/pine64/" >> /etc/pacman.conf
+pacman -Sy --noconfirm sunxi-disp-tool
 yes | pacman -Scc
 EOF
 		chmod +x "$DEST/second-phase"
 		do_chroot /second-phase
+		sed -i 's|#CheckSpace|CheckSpace|' "$DEST/etc/pacman.conf"
+		rm -f "$DEST/etc/resolv.conf"
+		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
 		;;
 	xenial|sid|jessie)
 		rm "$DEST/etc/resolv.conf"
