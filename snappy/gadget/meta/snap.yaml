@@ -1,0 +1,8 @@
+name: pine64
+version: 16.04-1
+summary: Pine64 support package
+description: |
+ Support files for booting Pine64
+type: gadget
+architectures:
+    - arm64

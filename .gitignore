@@ -2,6 +2,7 @@
 /simpleimage/*.img
 /simpleimage/*.fex
 /simpleimage/*.bin
+/simpleimage/releases
 /u-boot-postprocess/out
 /lichee
 /u-boot-pine64
@@ -15,3 +16,12 @@
 /kernel/uEnv.txt
 /busybox
 /blobs/*.dtb
+*.snap
+/snappy/releases
+/snappy/*.img
+/snappy/*/stage
+/snappy/*/prime
+/snappy/*/parts
+/snappy/gadget/uboot.env
+/snappy/gadget/uboot.conf
+/snappy/gadget/boot-assets
