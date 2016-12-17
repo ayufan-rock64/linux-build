@@ -255,8 +255,8 @@ deb-src http://ports.ubuntu.com/ ${release}-updates main restricted universe mul
 deb http://ports.ubuntu.com/ ${release}-security main restricted universe multiverse
 deb-src http://ports.ubuntu.com/ ${release}-security main restricted universe multiverse
 
-deb http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
-deb-src http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
+#deb http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
+#deb-src http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
 EOF
 }
 
