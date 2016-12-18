@@ -1,0 +1,11 @@
+{
+    "type": "model",
+    "authority-id": "IcQdq5akLGfjzZ15kmONNRvA8ORuNbAa",
+    "brand-id": "IcQdq5akLGfjzZ15kmONNRvA8ORuNbAa",
+    "series": "16",
+    "model": "pine64",
+    "architecture": "arm64",
+    "gadget": "pine64",
+    "kernel": "pine64-kernel",
+    "timestamp": "2016-11-27T00:04:06+00:00"
+}

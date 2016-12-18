@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -x
+
+# TODO(longsleep): pin eth0 mac address to uboot environment.

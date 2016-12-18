@@ -1,0 +1,21 @@
+type: model
+authority-id: IcQdq5akLGfjzZ15kmONNRvA8ORuNbAa
+series: 16
+brand-id: IcQdq5akLGfjzZ15kmONNRvA8ORuNbAa
+model: pine64
+architecture: arm64
+gadget: pine64
+kernel: pine64-kernel
+timestamp: 2016-11-27T00:04:06+00:00
+sign-key-sha3-384: BBZk-RcyZ-tJN9eRJTW-pwcHg7r2ME-Bm9kUn5qOKyRQMJ9SPyrham_UHoSNnrAJ
+
+AcLBXAQAAQoABgUCWDonowAKCRD3SQUNYdYX1Y6uEACEhbZw6/qcs/IE2Hp7WBzQU+u65osGk1JS
+ZzlKhj36FQT0LSXK4GHTYRm+yszeAfeDHMFW8WErCEZ7rgT0Ms+pcoQ8roiNE0M9/a1jWsfpZbj5
+kZN90WkPPx3N1Ye0vn483Gw6cWmqS0ympAJ8Stme4lTtKkjfkyG9OKBVJDwTyvdo/b2he5MO9noM
+Q7ZGBbFEBHMdHrSSJ5gWy0Nc5Fi7zaSP8hWywOZ9Biz9fgNkkCw9aEyQfOWrmJw4m9XXGSw/G2iS
+ksFWXh0Rxk7ahTy86nqqHDdJhN6k6idebuIeksosl5ePgmIAzhA3YQwzBFrWjx3mry525if9rgSW
+yqPYHVn8bizlRuKQBqnQF7BZOnAipElKWZxEtBtE5dcx1Xbk0TRkNW+2tqY6zMqGiJusS+d7Uprk
+BAjFxZmkE5Ji0HhlREzZzyRczPpVMRJN5EdMtGGIRTa0NBCbcALcEfVR75IirqdJ0wlQy+Up9I8B
+AC9TAflxGDSQvHwKadjvi+tsPCGEICGVSOUwfm/THCF8D4cunzotu0DReESiFIAxsji/hmeaR7Ev
+PBzBZ/cS8vS3xX0Ap7kxTi0xcqDPp4xHR0tZQjM39VZYL95fP0bvhh5pvawiDcVAkb9oXvWaeKVs
+AcgBK+EyNedXwTL2qijBn8+rJapO/KqIN6IbRlZYzA==

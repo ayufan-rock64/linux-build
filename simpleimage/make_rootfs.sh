@@ -14,9 +14,10 @@ BUILD="../build"
 DEST="$1"
 LINUX="$2"
 DISTRO="$3"
+BOOT="$4"
 
 if [ -z "$DEST" -o -z "$LINUX" ]; then
-	echo "Usage: $0 <destination-folder> <linux-folder> [distro] $DEST"
+	echo "Usage: $0 <destination-folder> <linux-folder> [distro] [<boot-folder>]"
 	exit 1
 fi
 
@@ -42,6 +43,10 @@ if [ -z "$DISTRO" ]; then
 	DISTRO="xenial"
 fi
 
+if [ -n "$BOOT" ]; then
+	BOOT=$(readlink -f "$BOOT")
+fi
+
 TEMP=$(mktemp -d)
 cleanup() {
 	if [ -e "$DEST/proc/cmdline" ]; then
@@ -65,7 +70,7 @@ case $DISTRO in
 		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
 		;;
 	xenial)
-		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/xenial/daily/current/xenial-base-arm64.tar.gz"
+		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.1/release/ubuntu-base-16.04.1-base-arm64.tar.gz"
 		;;
 	sid|jessie)
 		ROOTFS="${DISTRO}-base-arm64.tar.gz"
@@ -255,8 +260,8 @@ deb-src http://ports.ubuntu.com/ ${release}-updates main restricted universe mul
 deb http://ports.ubuntu.com/ ${release}-security main restricted universe multiverse
 deb-src http://ports.ubuntu.com/ ${release}-security main restricted universe multiverse
 
-deb http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
-deb-src http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
+#deb http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
+#deb-src http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
 EOF
 }
 
@@ -418,6 +423,14 @@ else
 	# Install Kernel modules from tarball
 	mkdir $TEMP/kernel
 	tar -C $TEMP/kernel --numeric-owner -xJf "$LINUX"
+	if [ -n "$BOOT" -a -e "$BOOT/uEnv.txt" ]; then
+		# Install Kernel and uEnv.txt too.
+		echo "Installing Kernel to boot $BOOT ..."
+		rm -rf "$BOOT/pine64"
+		rm -f "$BOOT/uEnv.txt"
+		cp -RLp $TEMP/kernel/boot/* "$BOOT/"
+		mv "$BOOT/uEnv.txt.in" "$BOOT/uEnv.txt"
+	fi
 	cp -RLp $TEMP/kernel/lib/* "$DEST/lib/" 2>/dev/null || true
 	cp -RLp $TEMP/kernel/usr/* "$DEST/usr/"
 
