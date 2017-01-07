@@ -1,5 +1,5 @@
 name: pine64-kernel
-version: 3.10.104-1
+version: 3.10.104-2
 summary: A pine64 kernel built from source
 description: This is longsleep Pine64 kernel from linux-pine64 branch pine64-hacks-1.2
 type: kernel
