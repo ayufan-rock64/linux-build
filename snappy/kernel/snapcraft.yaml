@@ -18,6 +18,7 @@ parts:
             - CONFIG_SQUASHFS_XZ=y
             - CONFIG_SQUASHFS_LZO=y
             - CONFIG_DEVPTS_MULTIPLE_INSTANCES=y
+            - CONFIG_CFG80211=y
         kernel-initrd-modules:
             - squashfs
         kernel-image-target: Image
