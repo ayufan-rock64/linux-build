@@ -1,5 +1,10 @@
 #!/bin/sh
 
-set -x
+set -ex
 
-# TODO(longsleep): pin eth0 mac address to uboot environment.
+# Pin eth0 mac address to uboot environment.
+
+MAC=$(cat /sys/class/net/eth0/address)
+cat <<EOF | /usr/bin/fw_setenv -s -
+ethaddr ${MAC}
+EOF
