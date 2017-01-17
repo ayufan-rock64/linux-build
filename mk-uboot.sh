@@ -60,16 +60,10 @@ cd ${LOCALPATH}/u-boot
 make ${DEFCONFIG} all
 
 if [ $CHIP == "RK3288" ] ; then
-	if [ $BOARD == "firefly" ] ; then
-		tools/mkimage -n rk3288 -T rksd -d spl/u-boot-spl-nodtb.bin u-boot-dtb.bin
-		cp u-boot-dtb.bin ${OUT}/u-boot/
-		cp u-boot.img ${OUT}/u-boot/
-	else
-		tools/mkimage -n rk3288 -T \
-			 rksd -d spl/u-boot-spl-dtb.bin u-boot.out
-		cat u-boot-dtb.bin >> u-boot.out
-		cp u-boot.out ${OUT}/u-boot/	
-	fi
+	tools/mkimage -n rk3288 -T \
+		 rksd -d spl/u-boot-spl-dtb.bin u-boot.out
+	cat u-boot-dtb.bin >> u-boot.out
+	cp u-boot.out ${OUT}/u-boot/	
 elif [ $CHIP == "RK3036" ]; then
 	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl.bin uboot.img
 	cat u-boot-dtb.bin >> uboot.img
