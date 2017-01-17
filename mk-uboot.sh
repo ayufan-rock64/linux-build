@@ -59,15 +59,15 @@ echo Using ${DEFCONFIG}
 cd ${LOCALPATH}/u-boot
 make ${DEFCONFIG} all
 
-if [ $CHIP == "RK3288" ] ; then
+if [ "$CHIP "== "RK3288" ] ; then
 	tools/mkimage -n rk3288 -T \
 		 rksd -d spl/u-boot-spl-dtb.bin u-boot.out
 	cat u-boot-dtb.bin >> u-boot.out
 	cp u-boot.out ${OUT}/u-boot/	
-elif [ $CHIP == "RK3036" ]; then
-	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl.bin uboot.img
-	cat u-boot-dtb.bin >> uboot.img
-	cp  uboot.img ${OUT}/u-boot/
-elif [ $CHIP == "RK3399" ]; then
+elif [ "$CHIP" == "RK3036" ] ; then
+	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl.bin uboot.out
+	cat u-boot-dtb.bin >> uboot.out
+	cp  uboot.out ${OUT}/u-boot/
+elif [ "$CHIP" == "RK3399" ] ; then
 	echo "nothing"
 fi

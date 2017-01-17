@@ -11,11 +11,16 @@ build u-boot image:
 build rootfs image:
 
 	fllow readme in rk-rootfs-build
-    
-update image(unsupported):
 
-	build/update.sh rk3288-evb all/kernel/uboot/rootfs
-    
+build one system image:
+
+	build/mk-image.sh -c rk3288 -t system -s 4000 -r rk-rootfs-build/linaro-rootfs.img
+
+update image:
+
+	emmc: build/flash_tool.sh  -p system  -i  out/system.img
+	sdcard: build/flash_tool.sh -c rk3288  -d /dev/sdb -p system  -i  out/system.img 
+
 ## Board list:
 
 * rk3288-evb
