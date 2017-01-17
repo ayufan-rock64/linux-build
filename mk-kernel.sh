@@ -32,6 +32,13 @@ case ${BOARD} in
 		export CROSS_COMPILE=aarch64-linux-gnu-
 		CHIP="RK3399"
 	;;
+	"rk3328-evb")
+		DEFCONFIG=rockchip_linux_defconfig
+		DTB=rk3328-evb.dtb
+		export ARCH=arm64
+		export CROSS_COMPILE=aarch64-linux-gnu-
+		CHIP="RK3328"
+	;;
 	"rk3288-evb")
 		DEFCONFIG=rockchip_linux_defconfig
 		DTB=rk3288-evb-act8846.dtb

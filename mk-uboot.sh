@@ -5,9 +5,12 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
 
 LOCALPATH=$(pwd)
 OUT=${LOCALPATH}/out
+TOOLPATH=${LOCALPATH}/rkbin/tool
 BOARD=$1
 DEFCONFIG=""
 CHIP=""
+
+PATH=$PATH:$TOOLPATH
 
 finish() {
 	echo -e "\e[31m MAKE UBOOT IMAGE FAILED.\e[0m"
@@ -27,6 +30,14 @@ case ${BOARD} in
 	"rk3399-evb")
 		DEFCONFIG=evb-rk3399_defconfig
 		CHIP="RK3399"
+		export ARCH=arm64
+		export CROSS_COMPILE=aarch64-linux-gnu-
+	;;
+	"rk3328-evb")
+		DEFCONFIG=evb-rk3328_defconfig
+		CHIP="RK3328"
+		export ARCH=arm64
+		export CROSS_COMPILE=aarch64-linux-gnu-
 	;;
 	"rk3288-evb")
 		DEFCONFIG=evb-rk3288_defconfig
@@ -69,5 +80,15 @@ elif [ "$CHIP" == "RK3036" ] ; then
 	cat u-boot-dtb.bin >> uboot.out
 	cp  uboot.out ${OUT}/u-boot/
 elif [ "$CHIP" == "RK3399" ] ; then
-	echo "nothing"
+	loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
+	$TOOLPATH/trust_merger $TOOLPATH/RK3399TRUST.ini
+
+	cp  uboot.img ${OUT}/u-boot/
+	cp  trust.img ${OUT}/u-boot/
+elif [ "$CHIP" == "RK3328" ] ; then
+	loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
+	$TOOLPATH/trust_merger $TOOLPATH/RK3328TRUST.ini
+
+	cp  uboot.img ${OUT}/u-boot/
+	cp  trust.img ${OUT}/u-boot/
 fi

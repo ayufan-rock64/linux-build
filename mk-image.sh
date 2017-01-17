@@ -64,7 +64,7 @@ generate_boot_image()
 	echo "Generate Boot image : ${BOOT}  !"
 
 	# 100 Mb
-	mkfs.vfat -n "boot" -S 512 -C ${BOOT} 102400
+	mkfs.vfat -n "boot" -S 512 -C ${BOOT} $((100*1024)) 
 
 	mmd -i ${BOOT}  ::/extlinux
 	mcopy -i ${BOOT}  -s ${EXTLINUXPATH}/${CHIP}.conf  ::/extlinux/extlinux.conf
@@ -96,7 +96,15 @@ generate_system_image()
 	if [ "$CHIP" == "rk3288" ]  || [ "$CHIP" == "rk3036" ]; then
 		dd if=${OUT}/u-boot/u-boot.out of=${SYSTEM} seek=${LOADER1_START}  conv=notrunc
 	elif [ "$CHIP" == "rk3399" ]; then
-		echo "nothing"
+		dd if=${LOCALPATH}/rkbin/rk33/RK3399MiniLoaderAll_V1.05.bin seek=${LOADER1_START}  conv=notrunc
+
+		dd if=${OUT}/u-boot/u-boot.img of=${SYSTEM} seek=${LOADER2_START}  conv=notrunc
+		dd if=${OUT}/u-boot/u-boot.img of=${SYSTEM} seek=${ATF_START}  conv=notrunc
+	elif [ "$CHIP" == "rk3328" ]; then
+		dd if=${LOCALPATH}/rkbin/rk33/RK3328MiniLoaderAll_V1.05.bin of=${SYSTEM} seek=${LOADER1_START}  conv=notrunc
+
+		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${LOADER2_START}  conv=notrunc
+		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START}  conv=notrunc
 	fi
 
 	# burn boot image

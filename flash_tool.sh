@@ -76,7 +76,7 @@ flash_upgt()
 	elif [ "${CHIP}" == "rk3399" ] ; then
 		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/RK3399MiniLoaderAll_V1.05.bin
 	elif [ "${CHIP}" == "rk3228" ] ; then
-		echo "nothing"
+		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/RK3328MiniLoaderAll_V1.05.bin
 	fi
 
 	sudo upgrade_tool wl ${SEEK} ${IMAGE}
