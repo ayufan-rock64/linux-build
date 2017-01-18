@@ -80,7 +80,7 @@ generate_system_image()
 
 	echo "Generate System image : ${SYSTEM} !"
 
-	dd if=/dev/zero of=${SYSTEM}  bs=1M count=$SIZE
+	dd if=/dev/zero of=${SYSTEM}  bs=1M count=0 seek=$SIZE
 
 	parted -s ${SYSTEM} mklabel gpt
 	parted -s ${SYSTEM} unit s mkpart loader1 ${LOADER1_START} `expr ${RESERVED1_START} - 1`
