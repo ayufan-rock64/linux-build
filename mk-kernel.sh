@@ -77,7 +77,7 @@ cd ${LOCALPATH}/kernel
 make ${DEFCONFIG}
 make -j8
 
-if [ $ARCH == "arm" ] ; then
+if [ "${ARCH}" == "arm" ] ; then
 	cp ${LOCALPATH}/kernel/arch/arm/boot/zImage ${OUT}/kernel/
 	cp ${LOCALPATH}/kernel/arch/arm/boot/dts/${DTB} ${OUT}/kernel/
 else
