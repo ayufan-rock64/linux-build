@@ -112,14 +112,14 @@ generate_system_image()
 		echo -e "\e[31m CAN'T FIND BOOT IMAGE \e[0m"
 		exit
 	fi
-	dd if=${OUT}/boot.img of=${SYSTEM} seek=${BOOT_START}
+	dd if=${OUT}/boot.img of=${SYSTEM} conv=notrunc seek=${BOOT_START}
 
 	# burn rootfs image
 	if [ ! -e ${ROOTFS_PATH} ] ; then
 		echo -e "\e[31m CAN'T FIND ROOTFS IMAGE \e[0m"
 		exit
 	fi
-	dd if=${ROOTFS_PATH} of=${SYSTEM} conv=notrunc seek=${ROOTFS_START}
+	dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START}
 }
 
 if [ "$TARGET" = "boot" ] ; then
