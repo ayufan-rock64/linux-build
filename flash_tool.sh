@@ -48,12 +48,12 @@ do
 			SEEK=${BPARTITIONS}_START
 			eval SEEK=\$$SEEK
 
-			if [ -n "$(echo $SEEK| sed -n "/^[0-9]\+$/p")" ];then  
-				echo "PARTITIONS OFFSET: $SEEK sectors."  
-			else  
+			if [ -n "$(echo $SEEK| sed -n "/^[0-9]\+$/p")" ];then
+				echo "PARTITIONS OFFSET: $SEEK sectors."
+			else
 				echo -e "\e[31m INVAILD PARTITION.\e[0m"
 				exit
-			fi  
+			fi
 			;;
 	esac
 done
@@ -67,7 +67,7 @@ if [ ! -e ${EXTLINUXPATH}/${CHIP}.conf ] ; then
 	CHIP="rk3288"
 fi
 
-flash_upgt() 
+flash_upgt()
 {
 	if [ "${CHIP}" == "rk3288" ] ; then
 		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk32/RK3288UbootLoader_V2.30.06.bin
@@ -84,7 +84,7 @@ flash_upgt()
 	sudo upgrade_tool rd
 }
 
-flash_sdcard() 
+flash_sdcard()
 {
 	sudo dd if=${IMAGE} of=${DEVICE} seek=${SEEK} conv=notrunc
 }
