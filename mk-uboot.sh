@@ -25,6 +25,10 @@ fi
 
 source $LOCALPATH/build/board_configs.sh $BOARD
 
+if [ $? -ne 0 ]; then
+	exit
+fi
+
 echo Building U-boot for ${BOARD} board!
 echo Using ${UBOOT_DEFCONFIG}
 

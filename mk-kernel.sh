@@ -19,6 +19,10 @@ fi
 
 source $LOCALPATH/build/board_configs.sh $BOARD
 
+if [ $? -ne 0 ]; then
+	exit
+fi
+
 echo Building kernel for ${BOARD} board!
 echo Using ${DEFCONFIG}
 
