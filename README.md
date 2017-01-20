@@ -18,7 +18,7 @@ build one system image:
 
 update image:
 
-	emmc: build/flash_tool.sh  -p system  -i  out/system.img
+	emmc: build/flash_tool.sh   -c rk3288 -p system  -i  out/system.img
 	sdcard: build/flash_tool.sh -c rk3288  -d /dev/sdb -p system  -i  out/system.img 
 
 ## Board list:
