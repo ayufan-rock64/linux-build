@@ -2,7 +2,7 @@
 
 LOCALPATH=$(pwd)
 OUT=${LOCALPATH}/out
-TOOLPATH=${LOCALPATH}/rkbin/tool
+TOOLPATH=${LOCALPATH}/rkbin/tools
 EXTLINUXPATH=${LOCALPATH}/build/extlinux
 CHIP=""
 DEVICE=""

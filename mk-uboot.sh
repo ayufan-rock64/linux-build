@@ -5,7 +5,7 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
 
 LOCALPATH=$(pwd)
 OUT=${LOCALPATH}/out
-TOOLPATH=${LOCALPATH}/rkbin/tool
+TOOLPATH=${LOCALPATH}/rkbin/tools
 BOARD=$1
 
 PATH=$PATH:$TOOLPATH
