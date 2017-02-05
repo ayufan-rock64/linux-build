@@ -82,6 +82,13 @@ flash_upgt()
 	sudo upgrade_tool wl ${SEEK} ${IMAGE}
 
 	sudo upgrade_tool rd
+
+	if [ "${CHIP}" == "rk3399" ] ; then
+		echo "Please enter maskrom agagin to flash bootloader"
+		read -p "Press any key to continue... " -n1 -s
+		sudo upgrade_tool ul  ${LOCALPATH}/rkbin/rk33/RK3399MiniLoaderAll_V1.05.bin
+		sudo upgrade_tool rd
+	fi
 }
 
 flash_sdcard()
