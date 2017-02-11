@@ -114,7 +114,7 @@ deboostrap_rootfs() {
 
 }
 
-
+mkdir -p $BUILD
 TARBALL="$BUILD/$(basename $ROOTFS)"
 if [ ! -e "$TARBALL" ]; then
 	if [ "$METHOD" = "download" ]; then
