@@ -2,7 +2,7 @@ LOCALVERSION ?=
 export VERSION ?= dev
 export DATE ?= $(VERSION)
 
-all:
+all: xenial-pinebook
 
 linux/.git:
 	git clone --depth 1 --branch new-bsp --single-branch \
@@ -38,25 +38,23 @@ kernel/initrd.gz: busybox/busybox
 boot-tools/.git:
 	git clone --single-branch --depth 1 https://github.com/ayufan-pine64/boot-tools
 
-boot-tools/.make: boot-tools/.git
-	make -C boot-tools
-	touch boot-tools/.make
+boot-tools: boot-tools/.git
 
-linux-pine64-$(VERSION).tar.xz: linux/arch/arm64/boot/Image boot-tools/.make kernel/initrd.gz
+linux-pine64-$(VERSION).tar.xz: linux/arch/arm64/boot/Image boot-tools kernel/initrd.gz
 	cd kernel && bash ./make_kernel_tarball.sh $(shell dirname $(shell readlink -f "$@"))
 
 kernel-tarball: linux-pine64-$(VERSION).tar.xz
 
-simple-image-pinebook.img: linux-pine64-$(VERSION).tar.xz boot-tools/.make
+simple-image-pinebook.img: linux-pine64-$(VERSION).tar.xz boot-tools
 	cd simpleimage && \
 		export boot0=../boot-tools/build/boot0_pinebook.bin && \
 		export uboot=../boot-tools/build/u-boot-sun50iw1p1-secure-with-pinebook-dtb.bin && \
 		bash ./make_simpleimage.sh $(shell readlink -f "$@") 100 $(shell readlink -f linux-pine64-$(VERSION).tar.xz)
 
-simple-image-pinebook.img.xz: simple-image-pinebook.img
-	xz -c simple-image-pinebook.img > simple-image-pinebook.img.xz
+%.img.xz: %.img
+	xz -3 $<
 
-xenial-pinebook-bspkernel-$(DATE)-1.img: simple-image-pinebook.img.xz kernel-tarball boot-tools/.make
-	sudo bash ./build-pine64-image.sh $(shell readlink -f simple-image-pinebook.img.xz) $(shell readlink -f linux-pine64-$(VERSION).tar.xz) xenial 1
+xenial-pinebook-bspkernel-$(DATE)-1.img: simple-image-pinebook.img.xz linux-pine64-$(VERSION).tar.xz boot-tools
+	sudo MODEL=pinebook DATE=$(DATE) bash ./build-pine64-image.sh $(shell readlink -f simple-image-pinebook.img.xz) $(shell readlink -f linux-pine64-$(VERSION).tar.xz) xenial 1
 
-xenial-pinebook: xenial-pinebook-bspkernel-$(DATE)-1.img
+xenial-pinebook: xenial-pinebook-bspkernel-$(DATE)-1.img.xz

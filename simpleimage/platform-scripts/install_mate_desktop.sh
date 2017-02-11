@@ -56,7 +56,7 @@ Section "Device"
         Identifier      "Allwinner A10/A13 FBDEV"
         Driver          "fbturbo"
         Option          "fbdev" "/dev/fb0"
-
+        Option          "Backlight" "lcd0"
         Option          "SwapbuffersWait" "true"
 EndSection
 EOF

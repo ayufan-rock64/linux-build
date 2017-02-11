@@ -51,22 +51,23 @@ cleanup() {
     local arg=$?
     echo "> Cleaning up ..."
     umount "$TEMP/boot" || true
+    umount $TEMP/rootfs/* || true
     umount "$TEMP/rootfs" || true
     kpartx -sd "$TEMP/$IMAGE" || true
+    kpartx -sd "$IMAGE" || true
     rmdir "$TEMP/boot"
     rmdir "$TEMP/rootfs"
-    rm "$TEMP/*" || true
-    rmdir "$TEMP"
+    rm -r "$TEMP"
     exit $arg
 }
 trap cleanup EXIT
 
-set -x
+set -ex
 
 # Unpack
 unxz -k --stdout "$SIMPLEIMAGE" > "$TEMP/$IMAGE"
 # Enlarge
-dd if=/dev/zero bs=1M count=$SIZE >> "$TEMP/$IMAGE"
+dd if=/dev/zero bs=1M seek=$(($SIZE-1)) count=1 of="$TEMP/$IMAGE"
 # Resize
 echo ", +" | sfdisk -N 2 "$TEMP/$IMAGE"
 
@@ -86,6 +87,6 @@ mount /dev/mapper/${DEVICENAME}p1 "$TEMP/boot"
 mount /dev/mapper/${DEVICENAME}p2 "$TEMP/rootfs"
 
 sleep 2
-(cd simpleimage && ./make_rootfs.sh "$TEMP/rootfs" "$KERNELTAR" "$DISTRO" "$TEMP/boot")
+(cd simpleimage && sh ./make_rootfs.sh "$TEMP/rootfs" "$KERNELTAR" "$DISTRO" "$TEMP/boot")
 
 mv -v "$TEMP/$IMAGE" .

@@ -116,6 +116,7 @@ deboostrap_rootfs() {
 
 
 TARBALL="$BUILD/$(basename $ROOTFS)"
+mkdir -p "$BUILD"
 if [ ! -e "$TARBALL" ]; then
 	if [ "$METHOD" = "download" ]; then
 		echo "Downloading $DISTRO rootfs tarball ..."
@@ -371,7 +372,7 @@ auto eth0
 iface eth0 inet dhcp
 EOF
 		cat > "$DEST/etc/hostname" <<EOF
-pine64
+pinebook
 EOF
 		cat > "$DEST/etc/hosts" <<EOF
 127.0.0.1 localhost
@@ -390,6 +391,7 @@ EOF
 		add_ssh_keygen_service
 		add_disp_udev_rules
 		add_wifi_module_autoload
+		add_disp_module_autoload
 		add_asound_state
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"

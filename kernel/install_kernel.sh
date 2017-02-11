@@ -24,7 +24,7 @@ INITRD="./initrd.gz"
 
 # Targets file names as loaded by U-Boot.
 SUBFOLDER="pine64"
-KERNEL="$SUBFOLDER/Image"
+KERNEL="kernel"
 INITRD_IMG="initrd.img"
 
 if [ "$DEST" = "-" ]; then
