@@ -10,6 +10,7 @@ if [ -z "$DEST" ]; then
 fi
 
 LINUX="../linux"
+BOOT_TOOLS="../boot-tools"
 
 if [ -n "$2" ]; then
 	LINUX="$2"
@@ -33,6 +34,10 @@ trap cleanup EXIT
 ./install_kernel_modules.sh "$TEMP" "$LINUX"
 ./install_kernel_headers.sh "$TEMP" "$LINUX"
 
+echo "Copying boot of boot-tools tools..."
+pwd
+cp -rv "$BOOT_TOOLS/boot/" "$TEMP/"
+
 # Use uEnv.txt.in so we do not overwrite customizations on next update.
 mv "$TEMP/boot/uEnv.txt" "$TEMP/boot/uEnv.txt.in"
 
@@ -42,7 +47,9 @@ else
 	EXTRAVERSION=$(date +%s)
 fi
 
-VERSION="$(ls -1tr $TEMP/lib/modules/|tail -n1)-$EXTRAVERSION"
+if [ -z "$VERSION" ]; then
+  VERSION="$(ls -1tr $TEMP/lib/modules/|tail -n1)-$EXTRAVERSION"
+fi
 
 echo "Building $VERSION ..."
 tar -C "$TEMP" -cJ --owner=0 --group=0 --xform='s,./,,' -f "$DEST/linux-pine64-$VERSION.tar.xz" .

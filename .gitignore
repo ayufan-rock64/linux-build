@@ -25,3 +25,5 @@
 /snappy/gadget/uboot.env
 /snappy/gadget/uboot.conf
 /snappy/gadget/boot-assets
+/boot-tools/
+

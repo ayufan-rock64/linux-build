@@ -268,6 +268,7 @@ EOF
 add_wifi_module_autoload() {
 	cat > "$DEST/etc/modules-load.d/pine64-wifi.conf" <<EOF
 8723bs
+8723cs
 EOF
 	cat > "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
 blacklist 8723bs_vq0
@@ -279,6 +280,13 @@ EOF
 iface wlan1 inet manual
 EOF
 	fi
+}
+
+add_disp_module_autoload() {
+	cat > "$DEST/etc/modules-load.d/pine64-disp.conf" <<EOF
+disp
+hdmi
+EOF
 }
 
 add_asound_state() {
@@ -301,6 +309,7 @@ case $DISTRO in
 		add_corekeeper_service
 		add_disp_udev_rules
 		add_wifi_module_autoload
+		add_disp_module_autoload
 		add_asound_state
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh

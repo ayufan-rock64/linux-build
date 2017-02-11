@@ -12,6 +12,9 @@ SIMPLEIMAGE="$1"
 KERNELTAR="$2"
 DISTRO="$3"
 COUNT="$4"
+if [[ -z "$MODEL" ]]; then
+  MODEL="pine64"
+fi
 
 if [ -z "$SIMPLEIMAGE" -o -z "$KERNELTAR" ]; then
 	echo "Usage: $0 <simpleimage.img.xz> <kernel.tar.xz> [distro] [count]"
@@ -35,11 +38,13 @@ SIMPLEIMAGE=$(readlink -f "$SIMPLEIMAGE")
 KERNELTAR=$(readlink -f "$KERNELTAR")
 
 SIZE=3650 # MiB
-DATE=$(date +%Y%m%H)
+if [[ -z "$DATE" ]]; then
+  DATE=$(date +%Y%m%H)
+fi
 
 PWD=$(readlink -f .)
-TEMP=$(mktemp -p $PWD -d -t "pine64-build-XXXXXXXXXX")
-IMAGE="$DISTRO-pine64-bspkernel-$DATE-$COUNT.img"
+TEMP=$(mktemp -p $PWD -d -t "$MODEL-build-XXXXXXXXXX")
+IMAGE="$DISTRO-$MODEL-bspkernel-$DATE-$COUNT.img"
 echo "> Building in $TEMP ..."
 
 cleanup() {
