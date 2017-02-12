@@ -35,7 +35,7 @@ SIMPLEIMAGE=$(readlink -f "$SIMPLEIMAGE")
 KERNELTAR=$(readlink -f "$KERNELTAR")
 
 SIZE=3650 # MiB
-DATE=$(date +%Y%m%H)
+DATE=$(date +%Y%m%d_%H%M%S_%Z)
 
 PWD=$(readlink -f .)
 TEMP=$(mktemp -p $PWD -d -t "pine64-build-XXXXXXXXXX")
