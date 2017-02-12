@@ -1,11 +1,12 @@
 LOCALVERSION ?=
 export VERSION ?= dev
 export DATE ?= $(VERSION)
+BRANCH ?= master
 
 all: xenial-pinebook
 
 linux/.git:
-	git clone --depth 1 --branch new-bsp --single-branch \
+	git clone --depth=1 --branch=$(BRANCH) --single-branch \
 		https://github.com/ayufan-pine64/linux-pine64.git linux
 
 linux/.config: linux/.git
@@ -36,7 +37,7 @@ kernel/initrd.gz: busybox/busybox
 	cd kernel/ && ./make_initrd.sh
 
 boot-tools/.git:
-	git clone --single-branch --depth 1 https://github.com/ayufan-pine64/boot-tools
+	git clone --single-branch --depth=1 --branch=$(BRANCH) https://github.com/ayufan-pine64/boot-tools
 
 boot-tools: boot-tools/.git
 
