@@ -41,11 +41,11 @@ if [ "${CHIP}" == "RK3288" ] ; then
 	cat u-boot-dtb.bin >> u-boot.out
 	cp u-boot.out ${OUT}/u-boot/
 elif [ "${CHIP}" == "RK3036" ] ; then
-	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl-nodtb.bin uboot.out
+	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl.bin uboot.out
 	cat u-boot-dtb.bin >> uboot.out
 	cp  uboot.out ${OUT}/u-boot/
 elif [ "${CHIP}" == "RK3399" ] ; then
-	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl-nodtb.bin uboot.out
+	tools/mkimage -n rk3399 -T rksd -d spl/u-boot-spl-nodtb.bin uboot.out
 	cat u-boot-dtb.bin >> uboot.out
 	cp  uboot.out ${OUT}/u-boot/
 
