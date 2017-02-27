@@ -38,7 +38,7 @@ case ${BOARD} in
 		UBOOT_DEFCONFIG=firefly-rk3288_defconfig
 		DTB=rk3288-firefly.dtb
 		CHIP="RK3288"
-    ;;
+	;;
 	"fennec")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=fennec-rk3288_defconfig
