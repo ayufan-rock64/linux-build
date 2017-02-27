@@ -45,14 +45,13 @@ elif [ "${CHIP}" == "RK3036" ] ; then
 	cat u-boot-dtb.bin >> uboot.out
 	cp  uboot.out ${OUT}/u-boot/
 elif [ "${CHIP}" == "RK3399" ] ; then
-	tools/mkimage -n rk3399 -T rksd -d spl/u-boot-spl-nodtb.bin uboot.out
-	cat u-boot-dtb.bin >> uboot.out
-	cp  uboot.out ${OUT}/u-boot/
+	loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
 
 	cd ../
 	$TOOLPATH/trust_merger $TOOLPATH/RK3399TRUST.ini
 	cd ${LOCALPATH}/u-boot
 
+	cp  uboot.img ${OUT}/u-boot/
 	mv  ../trust.img ${OUT}/u-boot/
 elif [ "${CHIP}" == "RK3328" ] ; then
 	loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img

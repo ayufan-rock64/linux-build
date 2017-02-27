@@ -96,7 +96,9 @@ generate_system_image()
 	if [ "$CHIP" == "rk3288" ]  || [ "$CHIP" == "rk3036" ]; then
 		dd if=${OUT}/u-boot/u-boot.out of=${SYSTEM} seek=${LOADER1_START}  conv=notrunc
 	elif [ "$CHIP" == "rk3399" ]; then
-		d if=${OUT}/u-boot/u-boot.out of=${SYSTEM} seek=${LOADER1_START}  conv=notrunc
+		dd if=${LOCALPATH}/rkbin/rk33/RK3399MiniLoaderAll_V1.05.bin of=${SYSTEM} seek=${LOADER1_START}  conv=notrunc
+
+		dd if=${OUT}/u-boot/uboot.img of=${SYSTEM} seek=${LOADER2_START}  conv=notrunc
 		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START}  conv=notrunc
 	elif [ "$CHIP" == "rk3328" ]; then
 		dd if=${LOCALPATH}/rkbin/rk33/RK3328MiniLoaderAll_V1.05.bin of=${SYSTEM} seek=${LOADER1_START}  conv=notrunc
