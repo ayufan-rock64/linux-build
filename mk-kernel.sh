@@ -2,6 +2,7 @@
 
 LOCALPATH=$(pwd)
 OUT=${LOCALPATH}/out
+EXTLINUXPATH=${LOCALPATH}/build/extlinux
 BOARD=$1
 
 finish() {
@@ -37,3 +38,7 @@ else
 	cp ${LOCALPATH}/kernel/arch/arm64/boot/Image ${OUT}/kernel/
 	cp ${LOCALPATH}/kernel/arch/arm64/boot/dts/rockchip/${DTB} ${OUT}/kernel/
 fi
+
+# Change extlinux.conf according board
+sed -e "s,fdt .*,fdt /$DTB,g" \
+    -i ${EXTLINUXPATH}/${CHIP}.conf
