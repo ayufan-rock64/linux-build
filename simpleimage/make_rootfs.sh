@@ -324,12 +324,14 @@ EOF
 		if [ "$DISTRO" = "xenial" ]; then
 			DEB=ubuntu
 			DEBUSER=ubuntu
+			DEBUSERPW=ubuntu
 			EXTRADEBS="software-properties-common zram-config ubuntu-minimal"
 			ADDPPACMD="apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers"
 			DISPTOOLCMD="apt-get -y install sunxi-disp-tool"
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
 			DEB=debian
 			DEBUSER=debian
+			DEBUSERPW=debian
 			EXTRADEBS="sudo"
 			ADDPPACMD=
 			DISPTOOLCMD=
@@ -350,7 +352,7 @@ apt-get -y update
 $DISPTOOLCMD
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
-echo "$DEBUSER:$DEBUSER" | chpasswd
+echo "$DEBUSER:$DEBUSERPW" | chpasswd
 usermod -a -G sudo,adm,input,video,plugdev $DEBUSER
 apt-get -y autoremove
 apt-get clean
