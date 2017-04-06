@@ -70,25 +70,18 @@ fi
 flash_upgt()
 {
 	if [ "${CHIP}" == "rk3288" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk32/RK3288UbootLoader_V2.30.06.bin
+		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_v1.01.06.bin
 	elif [ "${CHIP}" == "rk3036" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk30//RK3036MiniLoaderAll_V2.19.bin
+		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk30/rk3036_loader_v1.07.219.bin
 	elif [ "${CHIP}" == "rk3399" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/RK3399MiniLoaderAll_V1.05.bin
+		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/rk3399_loader_v1.08.106.bin
 	elif [ "${CHIP}" == "rk3228" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/RK3328MiniLoaderAll_V1.05.bin
+		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/rk3328_loader_v1.00.238.bin
 	fi
 
 	sudo upgrade_tool wl ${SEEK} ${IMAGE}
 
 	sudo upgrade_tool rd
-
-	if [ "${CHIP}" == "rk3399" ] ; then
-		echo "Please enter maskrom agagin to flash bootloader"
-		read -p "Press any key to continue... " -n1 -s
-		sudo upgrade_tool ul  ${LOCALPATH}/rkbin/rk33/RK3399MiniLoaderAll_V1.05.bin
-		sudo upgrade_tool rd
-	fi
 }
 
 flash_sdcard()
