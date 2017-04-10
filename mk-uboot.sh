@@ -37,13 +37,13 @@ make ${UBOOT_DEFCONFIG} all
 
 if [ "${CHIP}" == "rk3288" ] ; then
 	tools/mkimage -n rk3288 -T \
-		 rksd -d spl/u-boot-spl-dtb.bin u-boot.out
-	cat u-boot-dtb.bin >> u-boot.out
-	cp u-boot.out ${OUT}/u-boot/
+		 rksd -d spl/u-boot-spl-dtb.bin idbloader.img
+	cat u-boot-dtb.bin >> idbloader.img
+	cp idbloader.img ${OUT}/u-boot/
 elif [ "${CHIP}" == "rk3036" ] ; then
-	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl.bin u-boot.out
-	cat u-boot-dtb.bin >> u-boot.out
-	cp  u-boot.out ${OUT}/u-boot/
+	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl.bin idbloader.img
+	cat u-boot-dtb.bin >> idbloader.img
+	cp  idbloader.img ${OUT}/u-boot/
 elif [ "${CHIP}" == "rk3399" ] ; then
 	loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
 
