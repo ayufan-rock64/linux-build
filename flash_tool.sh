@@ -70,18 +70,18 @@ fi
 flash_upgt()
 {
 	if [ "${CHIP}" == "rk3288" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_v1.01.06.bin
+		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_v1.01.06.bin
 	elif [ "${CHIP}" == "rk3036" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk30/rk3036_loader_v1.07.219.bin
+		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk30/rk3036_loader_v1.07.219.bin
 	elif [ "${CHIP}" == "rk3399" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/rk3399_loader_v1.08.106.bin
+		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk33/rk3399_loader_v1.08.106.bin
 	elif [ "${CHIP}" == "rk3228" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/rk3328_loader_v1.00.238.bin
+		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk33/rk3328_loader_v1.00.238.bin
 	fi
 
-	sudo upgrade_tool wl ${SEEK} ${IMAGE}
+	sudo $TOOLPATH/rkdeveloptool wl ${SEEK} ${IMAGE}
 
-	sudo upgrade_tool rd
+	sudo $TOOLPATH/rkdeveloptool rd
 }
 
 flash_sdcard()
