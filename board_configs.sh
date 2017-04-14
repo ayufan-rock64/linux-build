@@ -51,6 +51,12 @@ case ${BOARD} in
 		DTB=rk3288-miniarm.dtb
 		CHIP="rk3288"
 	;;
+	"phytec")
+		DEFCONFIG=rockchip_linux_defconfig
+		UBOOT_DEFCONFIG=phycore-rk3288_defconfig # Workaround : ddr3
+		DTB=rk3288-phycore-rdk.dtb
+		CHIP="rk3288"
+	;;
 	"kylin")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=kylin-rk3036_defconfig
