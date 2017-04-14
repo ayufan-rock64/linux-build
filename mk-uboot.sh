@@ -45,19 +45,36 @@ elif [ "${CHIP}" == "rk3036" ] ; then
 	cat u-boot-dtb.bin >> idbloader.img
 	cp  idbloader.img ${OUT}/u-boot/
 elif [ "${CHIP}" == "rk3328" ] ; then
-	loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
+	$TOOLPATH/loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
 
 	dd if=../rkbin/rk33/rk3328_ddr_800MHz_v1.00.bin of=DDRTEMP bs=4 skip=1
 	tools/mkimage -n rk3328 -T rksd -d DDRTEMP idbloader.img
 	cat ../rkbin/rk33/rk3328_miniloader_v2.38.bin >> idbloader.img
 	cp idbloader.img ${OUT}/u-boot/	
-     	#cp ../rkbin/rk33/rk3328_loader_v1.00.238.bin ${OUT}/u-boot/
+	# cp ../rkbin/rk33/rk3328_loader_v1.00.238.bin ${OUT}/u-boot/
 
-	cd ../
-	$TOOLPATH/trust_merger $TOOLPATH/RK3328TRUST.ini
-	cd ${LOCALPATH}/u-boot
+	cat > trust.ini << EOF
+[VERSION]
+MAJOR=1
+MINOR=2
+[BL30_OPTION]
+SEC=0
+[BL31_OPTION]
+SEC=1
+PATH=../rkbin/rk33/rk3328_bl31_v1.10.bin
+ADDR=0x10000
+[BL32_OPTION]
+SEC=0
+[BL33_OPTION]
+SEC=0
+[OUTPUT]
+PATH=trust.img
+EOF
+
+	$TOOLPATH/trust_merger trust.ini
 
 	cp  uboot.img ${OUT}/u-boot/
-	mv  ../trust.img ${OUT}/u-boot/
+	mv  trust.img ${OUT}/u-boot/
 fi
+
 echo -e "\e[36m U-boot IMAGE READY! \e[0m"
