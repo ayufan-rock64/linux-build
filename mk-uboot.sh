@@ -29,8 +29,8 @@ if [ $? -ne 0 ]; then
 	exit
 fi
 
-echo Building U-boot for ${BOARD} board!
-echo Using ${UBOOT_DEFCONFIG}
+echo -e "\e[36m Building U-boot for ${BOARD} board! \e[0m"
+echo -e "\e[36m Using ${UBOOT_DEFCONFIG} \e[0m"
 
 cd ${LOCALPATH}/u-boot
 make ${UBOOT_DEFCONFIG} all
@@ -55,6 +55,13 @@ elif [ "${CHIP}" == "rk3399" ] ; then
 	mv  ../trust.img ${OUT}/u-boot/
 elif [ "${CHIP}" == "rk3328" ] ; then
 	loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
+
+	dd if=../rkbin/rk33/rk3328_ddr_800MHz_v1.00.bin of=DDRTEMP bs=4 skip=1
+	tools/mkimage -n rk3328 -T rksd -d DDRTEMP idbloader.img
+	cat ../rkbin/rk33/rk3328_miniloader_v2.38.bin >> idbloader.img
+	cp idbloader.img ${OUT}/u-boot/	
+     	#cp ../rkbin/rk33/rk3328_loader_v1.00.238.bin ${OUT}/u-boot/
+
 	cd ../
 	$TOOLPATH/trust_merger $TOOLPATH/RK3328TRUST.ini
 	cd ${LOCALPATH}/u-boot
@@ -62,3 +69,4 @@ elif [ "${CHIP}" == "rk3328" ] ; then
 	cp  uboot.img ${OUT}/u-boot/
 	mv  ../trust.img ${OUT}/u-boot/
 fi
+echo -e "\e[36m U-boot IMAGE READY! \e[0m"

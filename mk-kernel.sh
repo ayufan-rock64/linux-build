@@ -24,12 +24,13 @@ if [ $? -ne 0 ]; then
 	exit
 fi
 
-echo Building kernel for ${BOARD} board!
-echo Using ${DEFCONFIG}
+echo -e "\e[36m Building kernel for ${BOARD} board! \e[0m"
+echo -e "\e[36m Using ${DEFCONFIG} \e[0m"
 
 cd ${LOCALPATH}/kernel
 make ${DEFCONFIG}
 make -j8
+cd ${LOCALPATH}
 
 if [ "${ARCH}" == "arm" ] ; then
 	cp ${LOCALPATH}/kernel/arch/arm/boot/zImage ${OUT}/kernel/
@@ -42,3 +43,7 @@ fi
 # Change extlinux.conf according board
 sed -e "s,fdt .*,fdt /$DTB,g" \
     -i ${EXTLINUXPATH}/${CHIP}.conf
+
+./build/mk-image.sh -c ${CHIP} -t boot
+
+echo -e "\e[36m Kernel build success! \e[0m"
