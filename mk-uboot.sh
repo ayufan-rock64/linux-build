@@ -51,7 +51,7 @@ elif [ "${CHIP}" == "rk3328" ] ; then
 	tools/mkimage -n rk3328 -T rksd -d DDRTEMP idbloader.img
 	cat ../rkbin/rk33/rk3328_miniloader_v2.38.bin >> idbloader.img
 	cp idbloader.img ${OUT}/u-boot/	
-	# cp ../rkbin/rk33/rk3328_loader_v1.00.238.bin ${OUT}/u-boot/
+	cp ../rkbin/rk33/rk3328_loader_v1.00.238.bin ${OUT}/u-boot/
 
 	cat > trust.ini << EOF
 [VERSION]
