@@ -16,8 +16,8 @@ finish() {
 }
 trap finish ERR
 
-if [ $# != 1 ] ; then
-    BOARD=rk3288-evb
+if [ $# != 1 ]; then
+	BOARD=rk3288-evb
 fi
 
 [ ! -d ${OUT} ] && mkdir ${OUT}
@@ -35,16 +35,16 @@ echo -e "\e[36m Using ${UBOOT_DEFCONFIG} \e[0m"
 cd ${LOCALPATH}/u-boot
 make ${UBOOT_DEFCONFIG} all
 
-if [ "${CHIP}" == "rk3288" ] ; then
+if [ "${CHIP}" == "rk3288" ]; then
 	tools/mkimage -n rk3288 -T \
-		 rksd -d spl/u-boot-spl-dtb.bin idbloader.img
-	cat u-boot-dtb.bin >> idbloader.img
+		rksd -d spl/u-boot-spl-dtb.bin idbloader.img
+	cat u-boot-dtb.bin >>idbloader.img
 	cp idbloader.img ${OUT}/u-boot/
-elif [ "${CHIP}" == "rk3036" ] ; then
+elif [ "${CHIP}" == "rk3036" ]; then
 	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl.bin idbloader.img
-	cat u-boot-dtb.bin >> idbloader.img
-	cp  idbloader.img ${OUT}/u-boot/
-elif [ "${CHIP}" == "rk3328" ] ; then
+	cat u-boot-dtb.bin >>idbloader.img
+	cp idbloader.img ${OUT}/u-boot/
+elif [ "${CHIP}" == "rk3328" ]; then
 	$TOOLPATH/loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
 
 	dd if=../rkbin/rk33/rk3328_ddr_800MHz_v1.00.bin of=DDRTEMP bs=4 skip=1
@@ -53,7 +53,7 @@ elif [ "${CHIP}" == "rk3328" ] ; then
 	cp idbloader.img ${OUT}/u-boot/	
 	cp ../rkbin/rk33/rk3328_loader_v1.00.238.bin ${OUT}/u-boot/
 
-	cat > trust.ini << EOF
+	cat >trust.ini <<EOF
 [VERSION]
 MAJOR=1
 MINOR=2
@@ -75,8 +75,8 @@ EOF
 
 	$TOOLPATH/trust_merger trust.ini
 
-	cp  uboot.img ${OUT}/u-boot/
-	mv  trust.img ${OUT}/u-boot/
+	cp uboot.img ${OUT}/u-boot/
+	mv trust.img ${OUT}/u-boot/
 fi
 
 echo -e "\e[36m U-boot IMAGE READY! \e[0m"

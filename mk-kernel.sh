@@ -11,8 +11,8 @@ finish() {
 }
 trap finish ERR
 
-if [ $# != 1 ] ; then
-   	BOARD=rk3288-evb
+if [ $# != 1 ]; then
+	BOARD=rk3288-evb
 fi
 
 [ ! -d ${OUT} ] && mkdir ${OUT}
@@ -32,7 +32,7 @@ make ${DEFCONFIG}
 make -j8
 cd ${LOCALPATH}
 
-if [ "${ARCH}" == "arm" ] ; then
+if [ "${ARCH}" == "arm" ]; then
 	cp ${LOCALPATH}/kernel/arch/arm/boot/zImage ${OUT}/kernel/
 	cp ${LOCALPATH}/kernel/arch/arm/boot/dts/${DTB} ${OUT}/kernel/
 else
@@ -42,7 +42,7 @@ fi
 
 # Change extlinux.conf according board
 sed -e "s,fdt .*,fdt /$DTB,g" \
-    -i ${EXTLINUXPATH}/${CHIP}.conf
+	-i ${EXTLINUXPATH}/${CHIP}.conf
 
 ./build/mk-image.sh -c ${CHIP} -t boot
 

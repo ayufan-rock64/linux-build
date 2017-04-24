@@ -25,8 +25,7 @@ finish() {
 }
 trap finish ERR
 
-while getopts "c:t:s:d:p:r:d:i:h" flag
-do
+while getopts "c:t:s:d:p:r:d:i:h" flag; do
 	case $flag in
 		c)
 			CHIP="$OPTARG"
@@ -36,7 +35,7 @@ do
 			;;
 		i)
 			IMAGE="$OPTARG"
-			if [ ! -e ${IMAGE} ] ; then
+			if [ ! -e ${IMAGE} ]; then
 				echo -e "\e[31m CAN'T FIND IMAGE \e[0m"
 				usage
 				exit
@@ -44,11 +43,11 @@ do
 			;;
 		p)
 			PARTITIONS="$OPTARG"
-			BPARTITIONS=`echo $PARTITIONS| tr 'a-z' 'A-Z'`
+			BPARTITIONS=$(echo $PARTITIONS | tr 'a-z' 'A-Z')
 			SEEK=${BPARTITIONS}_START
 			eval SEEK=\$$SEEK
 
-			if [ -n "$(echo $SEEK| sed -n "/^[0-9]\+$/p")" ];then
+			if [ -n "$(echo $SEEK | sed -n "/^[0-9]\+$/p")" ]; then
 				echo "PARTITIONS OFFSET: $SEEK sectors."
 			else
 				echo -e "\e[31m INVAILD PARTITION.\e[0m"
@@ -58,25 +57,24 @@ do
 	esac
 done
 
-if [ ! $IMAGE ] ; then
+if [ ! $IMAGE ]; then
 	usage
 	exit
 fi
 
-if [ ! -e ${EXTLINUXPATH}/${CHIP}.conf ] ; then
+if [ ! -e ${EXTLINUXPATH}/${CHIP}.conf ]; then
 	CHIP="rk3288"
 fi
 
-flash_upgt()
-{
-	if [ "${CHIP}" == "rk3288" ] ; then
-		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_v1.01.06.bin
-	elif [ "${CHIP}" == "rk3036" ] ; then
-		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk30/rk3036_loader_v1.07.219.bin
-	elif [ "${CHIP}" == "rk3399" ] ; then
-		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk33/rk3399_loader_v1.08.106.bin
-	elif [ "${CHIP}" == "rk3228" ] ; then
-		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk33/rk3328_loader_v1.00.238.bin
+flash_upgt() {
+	if [ "${CHIP}" == "rk3288" ]; then
+		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_v1.01.06.bin
+	elif [ "${CHIP}" == "rk3036" ]; then
+		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk30/rk3036_loader_v1.07.219.bin
+	elif [ "${CHIP}" == "rk3399" ]; then
+		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3399_loader_v1.08.106.bin
+	elif [ "${CHIP}" == "rk3228" ]; then
+		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3328_loader_v1.00.238.bin
 	fi
 
 	sudo $TOOLPATH/rkdeveloptool wl ${SEEK} ${IMAGE}
@@ -84,12 +82,11 @@ flash_upgt()
 	sudo $TOOLPATH/rkdeveloptool rd
 }
 
-flash_sdcard()
-{
+flash_sdcard() {
 	sudo dd if=${IMAGE} of=${DEVICE} seek=${SEEK} conv=notrunc
 }
 
-if [ ! $DEVICE ] ; then
+if [ ! $DEVICE ]; then
 	flash_upgt
 else
 	flash_sdcard
