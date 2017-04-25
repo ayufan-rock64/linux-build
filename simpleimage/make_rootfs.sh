@@ -308,8 +308,6 @@ sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=en_US.utf8
 localectl set-keymap us
-echo -e "\n[pine64]\nServer = https://andreascarpino.it/pine64/" >> /etc/pacman.conf
-pacman -Sy --noconfirm sunxi-disp-tool
 yes | pacman -Scc
 EOF
 		chmod +x "$DEST/second-phase"
