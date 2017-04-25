@@ -77,6 +77,36 @@ EOF
 
 	cp uboot.img ${OUT}/u-boot/
 	mv trust.img ${OUT}/u-boot/
+elif [ "${CHIP}" == "rk3399" ]; then
+	$TOOLPATH/loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
+
+	dd if=../rkbin/rk33/rk3399_ddr_800MHz_v1.08.bin of=DDRTEMP bs=4 skip=1
+	tools/mkimage -n rk3399 -T rksd -d DDRTEMP idbloader.img
+	cat ../rkbin/rk33/rk3399_miniloader_v1.06.bin >> idbloader.img
+	cp idbloader.img ${OUT}/u-boot/
+
+	cat >trust.ini <<EOF
+[VERSION]
+MAJOR=1
+MINOR=0
+[BL30_OPTION]
+SEC=0
+[BL31_OPTION]
+SEC=1
+PATH=../rkbin/rk33/rk3399_bl31_v1.00.elf
+ADDR=0x10000
+[BL32_OPTION]
+SEC=0
+[BL33_OPTION]
+SEC=0
+[OUTPUT]
+PATH=trust.img
+EOF
+
+	$TOOLPATH/trust_merger trust.ini
+
+	cp uboot.img ${OUT}/u-boot/
+	mv trust.img ${OUT}/u-boot/
 fi
 
 echo -e "\e[36m U-boot IMAGE READY! \e[0m"
