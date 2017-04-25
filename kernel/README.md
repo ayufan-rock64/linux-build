@@ -4,35 +4,6 @@ This scripting helps in configuring and compiling the Kernel for Pine64. To
 compile, you need a properly set up gcc-aarch64-linux-gnu toolchain. The
 recommended version to compile the Kernel is 5.3.
 
-## Mainline Kernel
-
-There is a mainlining process in the works. The first set of patches has been
-created.  If you are a developer work on this tree and get in touch with the
-linux-sunxi community on IRC (http://linux-sunxi.org/IRC). Else scroll down to
- Kernel 3.10 from BSP section.
-
-```bash
-git clone --depth 1 --branch a64-v4 --single-branch https://github.com/apritzel/linux.git linux-a64
-```
-
-### Configure mainline Kernel
-
-```bash
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- defconfig
-```
-
-### Compile mainline Kernel
-
-```bash
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- clean
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 Image
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 modules
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4 dtbs
-```
-
-This creates the Kernel image in `arch/arm64/boot/Image` and the binary
-device trees in `arch/arm64/boot/dts/allwinner`.
-
 ## Kernel 3.10 from BSP
 
 While mainlining is in the works you might want to try the Kernel which is
