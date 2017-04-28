@@ -290,6 +290,12 @@ hdmi
 EOF
 }
 
+add_hall_module_autoload() {
+	cat > "$DEST/etc/modules-load.d/pinebook-hall.conf" <<EOF
+hall
+EOF
+}
+
 add_asound_state() {
 	mkdir -p "$DEST/var/lib/alsa"
 	cp -vf ../blobs/asound.state "$DEST/var/lib/alsa/asound.state"
@@ -311,6 +317,7 @@ case $DISTRO in
 		add_disp_udev_rules
 		add_wifi_module_autoload
 		add_disp_module_autoload
+		add_hall_module_autoload
 		add_asound_state
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
@@ -334,7 +341,7 @@ EOF
 		if [ "$DISTRO" = "xenial" ]; then
 			DEB=ubuntu
 			DEBUSER=ubuntu
-			EXTRADEBS="software-properties-common zram-config ubuntu-minimal"
+			EXTRADEBS="software-properties-common zram-config ubuntu-minimal nano"
 			ADDPPACMD="apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers"
 			DISPTOOLCMD="apt-get -y install sunxi-disp-tool"
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
@@ -392,12 +399,15 @@ EOF
 		add_disp_udev_rules
 		add_wifi_module_autoload
 		add_disp_module_autoload
+		add_hall_module_autoload
 		add_asound_state
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
 		rm -f "$DEST"/etc/ssh/ssh_host_*
 		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
+		do_chroot /usr/local/sbin/install_mate_desktop.sh
+		do_chroot systemctl set-default graphical.target
 		;;
 	*)
 		;;
