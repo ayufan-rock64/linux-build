@@ -1,7 +1,7 @@
 LOCALVERSION ?=
 export VERSION ?= dev
 export DATE ?= $(VERSION)
-BRANCH ?= master
+BRANCH ?= my-hacks-1.2
 
 all: xenial-pinebook
 
