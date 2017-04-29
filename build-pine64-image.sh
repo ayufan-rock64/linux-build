@@ -38,7 +38,7 @@ fi
 SIMPLEIMAGE=$(readlink -f "$SIMPLEIMAGE")
 KERNELTAR=$(readlink -f "$KERNELTAR")
 
-SIZE=3650 # MiB
+SIZE=7300 # MiB
 if [[ -z "$DATE" ]]; then
   DATE=$(date +%Y%m%H)
 fi
@@ -91,3 +91,5 @@ sleep 2
 (cd simpleimage && sh ./make_rootfs.sh "$TEMP/rootfs" "$KERNELTAR" "$DISTRO" "$TEMP/boot")
 
 mv -v "$TEMP/$IMAGE" .
+
+fstrim "$TEMP/rootfs"

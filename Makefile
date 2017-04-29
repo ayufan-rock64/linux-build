@@ -1,6 +1,7 @@
 LOCALVERSION ?=
 export VERSION ?= dev
 export DATE ?= $(VERSION)
+export RELEASE ?= 1
 BRANCH ?= my-hacks-1.2
 
 all: xenial-pinebook
@@ -55,12 +56,12 @@ simple-image-pinebook.img: linux-pine64-$(VERSION).tar.xz boot-tools
 %.img.xz: %.img
 	xz -3 $<
 
-xenial-pinebook-bspkernel-$(DATE)-1.img: simple-image-pinebook.img.xz linux-pine64-$(VERSION).tar.xz boot-tools
+xenial-pinebook-bspkernel-$(DATE)-$(RELEASE).img: simple-image-pinebook.img.xz linux-pine64-$(VERSION).tar.xz boot-tools
 	sudo MODEL=pinebook DATE=$(DATE) bash \
 		./build-pine64-image.sh \
 		$(shell readlink -f simple-image-pinebook.img.xz) \
 		$(shell readlink -f linux-pine64-$(VERSION).tar.xz) \
 		xenial \
-		1
+		$(RELEASE)
 
 xenial-pinebook: xenial-pinebook-bspkernel-$(DATE)-1.img.xz
