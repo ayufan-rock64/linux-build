@@ -7,9 +7,16 @@ if [ "$(id -u)" -ne "0" ]; then
 	exit 1
 fi
 
-VERSION="latest"
-if [ -n "$1" ]; then
-	VERSION="$1"
+VERSION="$1"
+
+if [ -z "$1" ]; then
+	VERSION=$(curl -s https://api.github.com/repos/ayufan-pine64/linux-build/releases/latest | jq -r ".tag_name")
+	if [ -z "$VERSION" ]; then
+		echo "Latest release was not found. Please go to: $LATEST_LIST"
+		exit 1
+	fi
+
+	echo "Using latest release: $VERSION."
 fi
 
 VARIANTFILE="/var/lib/misc/pine64_update_kernel.variant"
@@ -29,8 +36,9 @@ if [ -n "$VARIANT" ]; then
 	echo "Using Kernel variant: $VARIANT"
 fi
 
-URL="https://www.stdin.xyz/downloads/people/longsleep/pine64-images/linux/linux-pine64$VARIANT-$VERSION.tar.xz"
-PUBKEY="https://www.stdin.xyz/downloads/people/longsleep/longsleep.asc"
+URL="https://github.com/ayufan-pine64/linux-build/releases/download/$1/linux-pine64-$1.tar.xz"
+# URL="https://www.stdin.xyz/downloads/people/longsleep/pine64-images/linux/linux-pine64$VARIANT-$VERSION.tar.xz"
+# PUBKEY="https://www.stdin.xyz/downloads/people/longsleep/longsleep.asc"
 CURRENTFILE="/var/lib/misc/pine64_update_kernel.status"
 
 TEMP=$(mktemp -d -p /var/tmp)
@@ -65,15 +73,15 @@ FILENAME=$TEMP/$(basename ${URL})
 
 downloadAndApply() {
 	echo "Downloading Linux Kernel ..."
-	curl "${URL}" -f --progress-bar --output "${FILENAME}"
-	echo "Downloading signature ..."
-	curl "${URL}.asc" -f --progress-bar --output "${FILENAME}.asc"
-	echo "Downloading public key ..."
-	curl "${PUBKEY}" -f --progress-bar --output "${TEMP}/pub.asc"
+	curl -L "${URL}" -f --progress-bar --output "${FILENAME}"
+	# echo "Downloading signature ..."
+	# curl "${URL}.asc" -f --progress-bar --output "${FILENAME}.asc"
+	# echo "Downloading public key ..."
+	# curl "${PUBKEY}" -f --progress-bar --output "${TEMP}/pub.asc"
 
-	echo "Verifying signature ..."
-	gpg --homedir "${TEMP}" --yes -o "${TEMP}/pub.gpg" --dearmor "${TEMP}/pub.asc"
-	gpg --homedir "${TEMP}" --status-fd 1 --no-default-keyring --keyring "${TEMP}/pub.gpg" --trust-model always --verify "${FILENAME}.asc" 2>/dev/null
+	# echo "Verifying signature ..."
+	# gpg --homedir "${TEMP}" --yes -o "${TEMP}/pub.gpg" --dearmor "${TEMP}/pub.asc"
+	# gpg --homedir "${TEMP}" --status-fd 1 --no-default-keyring --keyring "${TEMP}/pub.gpg" --trust-model always --verify "${FILENAME}.asc" 2>/dev/null
 
 	echo "Extracting ..."
 	mkdir $TEMP/update
