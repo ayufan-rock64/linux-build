@@ -16,6 +16,10 @@ LINUX="$2"
 DISTRO="$3"
 BOOT="$4"
 
+if [[ -z "$MODEL" ]]; then
+  MODEL="pine64"
+fi
+
 if [ -z "$DEST" -o -z "$LINUX" ]; then
 	echo "Usage: $0 <destination-folder> <linux-folder> [distro] [<boot-folder>]"
 	exit 1
@@ -298,7 +302,7 @@ EOF
 
 add_asound_state() {
 	mkdir -p "$DEST/var/lib/alsa"
-	cp -vf ../blobs/asound.state "$DEST/var/lib/alsa/asound.state"
+	cp -vf ../blobs/asound.state.$MODEL "$DEST/var/lib/alsa/asound.state"
 }
 
 # Run stuff in new system.
@@ -379,11 +383,11 @@ auto eth0
 iface eth0 inet dhcp
 EOF
 		cat > "$DEST/etc/hostname" <<EOF
-pinebook
+$MODEL
 EOF
 		cat > "$DEST/etc/hosts" <<EOF
 127.0.0.1 localhost
-127.0.1.1 pine64
+127.0.1.1 $MODEL
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback

@@ -56,6 +56,11 @@ simple-image-pinebook.img: linux-pine64-$(VERSION).tar.xz boot-tools
 	xz -3 $<
 
 xenial-pinebook-bspkernel-$(DATE)-1.img: simple-image-pinebook.img.xz linux-pine64-$(VERSION).tar.xz boot-tools
-	sudo MODEL=pinebook DATE=$(DATE) bash ./build-pine64-image.sh $(shell readlink -f simple-image-pinebook.img.xz) $(shell readlink -f linux-pine64-$(VERSION).tar.xz) xenial 1
+	sudo MODEL=pinebook DATE=$(DATE) bash \
+		./build-pine64-image.sh \
+		$(shell readlink -f simple-image-pinebook.img.xz) \
+		$(shell readlink -f linux-pine64-$(VERSION).tar.xz) \
+		xenial \
+		1
 
 xenial-pinebook: xenial-pinebook-bspkernel-$(DATE)-1.img.xz

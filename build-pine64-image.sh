@@ -15,6 +15,7 @@ COUNT="$4"
 if [[ -z "$MODEL" ]]; then
   MODEL="pine64"
 fi
+export MODEL
 
 if [ -z "$SIMPLEIMAGE" -o -z "$KERNELTAR" ]; then
 	echo "Usage: $0 <simpleimage.img.xz> <kernel.tar.xz> [distro] [count]"
