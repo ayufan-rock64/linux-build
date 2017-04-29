@@ -43,7 +43,8 @@ boot-tools/.git:
 boot-tools: boot-tools/.git
 
 linux-pine64-$(DATE).tar.xz: linux/arch/arm64/boot/Image boot-tools kernel/initrd.gz
-	cd kernel && bash ./make_kernel_tarball.sh $(shell dirname $(shell readlink -f "$@"))
+	cd kernel && \
+		bash ./make_kernel_tarball.sh $(shell readlink -f "$@")
 
 kernel-tarball: linux-pine64-$(DATE).tar.xz
 
@@ -54,14 +55,14 @@ simple-image-pinebook-$(DATE).img: linux-pine64-$(DATE).tar.xz boot-tools
 		bash ./make_simpleimage.sh $(shell readlink -f "$@") 100 $(shell readlink -f linux-pine64-$(DATE).tar.xz)
 
 %.img.xz: %.img
-	xz -3 $<
+	xz -f -3 $<
 
 xenial-pinebook-bspkernel-$(DATE)-$(RELEASE).img: simple-image-pinebook-$(DATE).img.xz linux-pine64-$(DATE).tar.xz boot-tools
-	sudo MODEL=pinebook DATE=$(DATE) bash \
-		./build-pine64-image.sh \
-		$(shell readlink -f simple-image-pinebook.img.xz) \
+	sudo bash ./build-pine64-image.sh \
+		$(shell readlink -f $@) \
+		$(shell readlink -f simple-image-pinebook-$(DATE).img.xz) \
 		$(shell readlink -f linux-pine64-$(DATE).tar.xz) \
 		xenial \
-		$(RELEASE)
+		pinebook
 
 xenial-pinebook: xenial-pinebook-bspkernel-$(DATE)-$(RELEASE).img.xz

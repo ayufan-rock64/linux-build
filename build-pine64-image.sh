@@ -8,17 +8,18 @@
 # -  https://www.stdin.xyz/downloads/people/longsleep/pine64-images/simpleimage-pine64-latest.img.xz
 # -  https://www.stdin.xyz/downloads/people/longsleep/pine64-images/linux/linux-pine64-latest.tar.xz"
 
-SIMPLEIMAGE="$1"
-KERNELTAR="$2"
-DISTRO="$3"
-COUNT="$4"
+OUT_IMAGE="$1"
+SIMPLEIMAGE="$2"
+KERNELTAR="$3"
+DISTRO="$4"
+MODEL="$5"
 if [[ -z "$MODEL" ]]; then
   MODEL="pine64"
 fi
 export MODEL
 
 if [ -z "$SIMPLEIMAGE" -o -z "$KERNELTAR" ]; then
-	echo "Usage: $0 <simpleimage.img.xz> <kernel.tar.xz> [distro] [count]"
+	echo "Usage: $0 <result.img> <simpleimage.img.xz> <kernel.tar.xz> [distro] [model]"
 	exit 1
 fi
 
@@ -31,21 +32,15 @@ if [ -z "$DISTRO" ]; then
 	DISTRO="xenial"
 fi
 
-if [ -z "$COUNT" ]; then
-	COUNT=1
-fi
-
 SIMPLEIMAGE=$(readlink -f "$SIMPLEIMAGE")
 KERNELTAR=$(readlink -f "$KERNELTAR")
 
 SIZE=7300 # MiB
-if [[ -z "$DATE" ]]; then
-  DATE=$(date +%Y%m%d_%H%M%S_%Z)
-fi
 
 PWD=$(readlink -f .)
 TEMP=$(mktemp -p $PWD -d -t "$MODEL-build-XXXXXXXXXX")
-IMAGE="$DISTRO-$MODEL-bspkernel-$DATE-$COUNT.img"
+IMAGE="$(basename "$OUT_IMAGE")"
+OUT_IMAGE="$(readlink -f "$IMAGE")"
 echo "> Building in $TEMP ..."
 
 cleanup() {
@@ -55,7 +50,7 @@ cleanup() {
     umount $TEMP/rootfs/* || true
     umount "$TEMP/rootfs" || true
     kpartx -sd "$TEMP/$IMAGE" || true
-    kpartx -sd "$IMAGE" || true
+    kpartx -sd "$OUT_IMAGE" || true
     rmdir "$TEMP/boot"
     rmdir "$TEMP/rootfs"
     rm -r "$TEMP"
@@ -90,6 +85,6 @@ mount /dev/mapper/${DEVICENAME}p2 "$TEMP/rootfs"
 sleep 2
 (cd simpleimage && sh ./make_rootfs.sh "$TEMP/rootfs" "$KERNELTAR" "$DISTRO" "$TEMP/boot")
 
-mv -v "$TEMP/$IMAGE" .
+mv -v "$TEMP/$IMAGE" "$OUT_IMAGE"
 
 fstrim "$TEMP/rootfs"

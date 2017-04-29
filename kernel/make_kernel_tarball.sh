@@ -5,7 +5,7 @@ set -e
 DEST="$1"
 
 if [ -z "$DEST" ]; then
-	echo "Usage: $0 <destination-folder> [linux-folder] [extra-version]"
+	echo "Usage: $0 <destination-path> [linux-folder] [extra-version]"
 	exit 1
 fi
 
@@ -41,17 +41,7 @@ cp -rv "$BOOT_TOOLS/boot/" "$TEMP/"
 # Use uEnv.txt.in so we do not overwrite customizations on next update.
 mv "$TEMP/boot/uEnv.txt" "$TEMP/boot/uEnv.txt.in"
 
-if [ -z "$EXTRAVERSION" -a -e "$LINUX/.version" ]; then
-	EXTRAVERSION=$(cat "$LINUX/.version")
-else
-	EXTRAVERSION=$(date +%s)
-fi
+echo "Building $DEST ..."
+tar -C "$TEMP" -cJ --owner=0 --group=0 --xform='s,./,,' -f "$DEST" .
 
-if [ -z "$VERSION" ]; then
-  VERSION="$(ls -1tr $TEMP/lib/modules/|tail -n1)-$EXTRAVERSION"
-fi
-
-echo "Building $VERSION ..."
-tar -C "$TEMP" -cJ --owner=0 --group=0 --xform='s,./,,' -f "$DEST/linux-pine64-$VERSION.tar.xz" .
-
-echo "Done - $DEST/linux-pine64-$VERSION.tar.xz"
+echo "Done - $DEST"
