@@ -64,4 +64,4 @@ xenial-pinebook-bspkernel-$(DATE)-$(RELEASE).img: simple-image-pinebook.img.xz l
 		xenial \
 		$(RELEASE)
 
-xenial-pinebook: xenial-pinebook-bspkernel-$(DATE)-1.img.xz
+xenial-pinebook: xenial-pinebook-bspkernel-$(DATE)-$(RELEASE).img.xz

@@ -26,12 +26,14 @@ node('docker && linux-build') {
         ]) {
             stage 'Prepare'
             sh '''#!/bin/bash
+              set +xe
               ccache -M 0 -F 0
             '''
 
             stage 'Build'
             sh '''#!/bin/bash
-              make VERSION=$BUILD_ID RELEASE=$BUILD_NUMBER
+              set +xe
+              make VERSION="$BUILD_ID" RELEASE="$BUILD_NUMBER"
             '''
         }
   
