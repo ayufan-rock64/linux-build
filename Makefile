@@ -46,6 +46,9 @@ linux-pine64-$(RELEASE_NAME).tar: linux/arch/arm64/boot/Image boot-tools kernel/
 	cd kernel && \
 		bash ./make_kernel_tarball.sh $(shell readlink -f "$@")
 
+%.tar.xz: %.tar
+	pxz -f -3 $<
+
 %.img.xz: %.img
 	pxz -f -3 $<
 
