@@ -1,8 +1,8 @@
 export RELEASE_NAME ?= dev
 export RELEASE ?= 1
-LOCALVERSION ?= -ayufan-$(RELEASE)
-LINUX_BRANCH ?= my-hacks-3.0
-BOOT_TOOLS_BRANCH ?= master
+export LINUX_BRANCH ?= my-hacks-3.0
+export BOOT_TOOLS_BRANCH ?= master
+LINUX_LOCALVERSION ?= -ayufan-$(RELEASE)
 
 all: xenial-pinebook
 
@@ -11,14 +11,14 @@ linux/.git:
 		https://github.com/ayufan-pine64/linux-pine64.git linux
 
 linux/.config: linux/.git
-	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" LOCALVERSION=$(LOCALVERSION) clean CONFIG_ARCH_SUN50IW1P1=y
+	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" clean CONFIG_ARCH_SUN50IW1P1=y
 	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" sun50iw1p1smp_linux_defconfig
 	touch linux/.config
 
 linux/arch/arm64/boot/Image: linux/.config
-	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" -j4 LOCALVERSION=$(LOCALVERSION) Image
-	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" -j4 LOCALVERSION=$(LOCALVERSION) modules
-	make -C linux M=modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali \
+	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" -j4 LOCALVERSION=$(LINUX_LOCALVERSION) Image
+	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" -j4 LOCALVERSION=$(LINUX_LOCALVERSION) modules
+	make -C linux LOCALVERSION=$(LINUX_LOCALVERSION) M=modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali \
 		ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" \
 		CONFIG_MALI400=m CONFIG_MALI450=y CONFIG_MALI400_PROFILING=y \
 		CONFIG_MALI_DMA_BUF_MAP_ON_ATTACH=y CONFIG_MALI_DT=y \
