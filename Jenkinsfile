@@ -14,9 +14,8 @@ node('docker && linux-build') {
   timestamps {
     wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
       stage "Environment"
-      dir('build-environment') {
-        checkout scm
-      }
+      checkout scm
+
       def environment = docker.build('build-environment:build-pine64-image', 'build-environment')
 
       environment.inside("--privileged") {
