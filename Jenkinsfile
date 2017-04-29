@@ -22,17 +22,19 @@ node('docker && linux-build') {
         withEnv([
           "VERSION=$VERSION",
           'USE_CCACHE=true',
-          'CCACHE_DIR=$WORKSPACE/ccache',
         ]) {
             stage 'Prepare'
             sh '''#!/bin/bash
               set +xe
+              export CCACHE_DIR=$WORKSPACE/ccache
               ccache -M 0 -F 0
+              git clean -ffdx
             '''
 
             stage 'Build'
             sh '''#!/bin/bash
               set +xe
+              export CCACHE_DIR=$WORKSPACE/ccache
               make VERSION="$BUILD_ID" RELEASE="$BUILD_NUMBER"
             '''
         }
