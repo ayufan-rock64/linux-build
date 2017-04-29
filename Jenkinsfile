@@ -20,7 +20,9 @@ node('docker && linux-build') {
 
       environment.inside("--privileged -u 0:0") {
         withEnv([
-          'USE_CCACHE=true',
+          "USE_CCACHE=true",
+          "RELEASE_NAME=$VERSION",
+          "RELEASE=$BUILD_NUMBER"
         ]) {
             stage 'Prepare'
             sh '''#!/bin/bash
@@ -34,7 +36,7 @@ node('docker && linux-build') {
             sh '''#!/bin/bash
               set +xe
               export CCACHE_DIR=$WORKSPACE/ccache
-              make DATE="$DATE" RELEASE="$BUILD_NUMBER"
+              make
             '''
         }
   

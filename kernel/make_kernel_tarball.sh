@@ -42,6 +42,6 @@ cp -rv "$BOOT_TOOLS/boot/" "$TEMP/"
 mv "$TEMP/boot/uEnv.txt" "$TEMP/boot/uEnv.txt.in"
 
 echo "Building $DEST ..."
-tar -C "$TEMP" -cJ --owner=0 --group=0 --xform='s,./,,' -f "$DEST" .
+tar -C "$TEMP" -ca --owner=0 --group=0 --xform='s,./,,' -f "$DEST" .
 
 echo "Done - $DEST"

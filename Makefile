@@ -1,6 +1,6 @@
-export DATE ?= dev
+export RELEASE_NAME ?= dev
 export RELEASE ?= 1
-LOCALVERSION ?= ayufan-$(RELEASE)
+LOCALVERSION ?= -ayufan-$(RELEASE)
 LINUX_BRANCH ?= my-hacks-1.2
 BOOT_TOOLS_BRANCH ?= master
 
@@ -42,27 +42,32 @@ boot-tools/.git:
 
 boot-tools: boot-tools/.git
 
-linux-pine64-$(DATE).tar.xz: linux/arch/arm64/boot/Image boot-tools kernel/initrd.gz
+linux-pine64-$(RELEASE_NAME).tar: linux/arch/arm64/boot/Image boot-tools kernel/initrd.gz
 	cd kernel && \
 		bash ./make_kernel_tarball.sh $(shell readlink -f "$@")
 
-kernel-tarball: linux-pine64-$(DATE).tar.xz
+%.img.xz: %.img
+	pxz -f -3 $<
 
-simple-image-pinebook-$(DATE).img: linux-pine64-$(DATE).tar.xz boot-tools
+simple-image-pinebook-$(RELEASE_NAME).img: boot-tools/build/boot0_pinebook.bin boot-tools/build/u-boot-sun50iw1p1-secure-with-pinebook-dtb.bin linux-pine64-$(RELEASE_NAME).tar.xz boot-tools
 	cd simpleimage && \
 		export boot0=../boot-tools/build/boot0_pinebook.bin && \
 		export uboot=../boot-tools/build/u-boot-sun50iw1p1-secure-with-pinebook-dtb.bin && \
-		bash ./make_simpleimage.sh $(shell readlink -f "$@") 100 $(shell readlink -f linux-pine64-$(DATE).tar.xz)
+		bash ./make_simpleimage.sh $(shell readlink -f "$@") 100 $(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz)
 
-%.img.xz: %.img
-	xz -f -3 $<
-
-xenial-pinebook-bspkernel-$(DATE)-$(RELEASE).img: simple-image-pinebook-$(DATE).img.xz linux-pine64-$(DATE).tar.xz boot-tools
+xenial-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz boot-tools
 	sudo bash ./build-pine64-image.sh \
 		$(shell readlink -f $@) \
-		$(shell readlink -f simple-image-pinebook-$(DATE).img.xz) \
-		$(shell readlink -f linux-pine64-$(DATE).tar.xz) \
+		$(shell readlink -f simple-image-pinebook-$(RELEASE_NAME).img.xz) \
+		$(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz) \
 		xenial \
 		pinebook
 
-xenial-pinebook: xenial-pinebook-bspkernel-$(DATE)-$(RELEASE).img.xz
+.PHONY: kernel-tarball
+kernel-tarball: linux-pine64-$(RELEASE_NAME).tar.xz
+
+.PHONY: simple-image-pinebook-$(RELEASE_NAME).img
+simple-image-pinebook: simple-image-pinebook-$(RELEASE_NAME).img
+
+.PHONY: xenial-pinebook
+xenial-pinebook: xenial-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img.xz
