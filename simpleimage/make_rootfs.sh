@@ -163,10 +163,6 @@ add_platform_scripts() {
 	cp -av ./platform-scripts/* "$DEST/usr/local/sbin"
 	chown root.root "$DEST/usr/local/sbin/"*
 	chmod 755 "$DEST/usr/local/sbin/"*
-
-	# Set Kernel and U-boot update version
-	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_kernel.sh
-	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_uboot.sh
 }
 
 add_mackeeper_service() {
