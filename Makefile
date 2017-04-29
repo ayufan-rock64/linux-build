@@ -1,7 +1,7 @@
-LOCALVERSION ?=
 export VERSION ?= dev
 export DATE ?= $(VERSION)
 export RELEASE ?= 1
+LOCALVERSION ?= ayufan-$(RELEASE)
 LINUX_BRANCH ?= my-hacks-1.2
 BOOT_TOOLS_BRANCH ?= master
 
@@ -17,13 +17,13 @@ linux/.config: linux/.git
 	touch linux/.config
 
 linux/arch/arm64/boot/Image: linux/.config
+	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" -j4 LOCALVERSION=$(LOCALVERSION) Image
 	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" -j4 LOCALVERSION=$(LOCALVERSION) modules
 	make -C linux M=modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali \
 		ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" \
 		CONFIG_MALI400=m CONFIG_MALI450=y CONFIG_MALI400_PROFILING=y \
 		CONFIG_MALI_DMA_BUF_MAP_ON_ATTACH=y CONFIG_MALI_DT=y \
 		EXTRA_DEFINES="-DCONFIG_MALI400=1 -DCONFIG_MALI450=1 -DCONFIG_MALI400_PROFILING=1 -DCONFIG_MALI_DMA_BUF_MAP_ON_ATTACH -DCONFIG_MALI_DT"
-	make -C linux ARCH=arm64 CROSS_COMPILE="ccache aarch64-linux-gnu-" -j4 LOCALVERSION=$(LOCALVERSION) Image
 
 busybox/.git:
 	git clone --depth 1 --branch 1_24_stable --single-branch git://git.busybox.net/busybox busybox
