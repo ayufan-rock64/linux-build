@@ -10,7 +10,7 @@ RUN apt-get install -y python git-core gnupg flex bison gperf build-essential \
     gcc-arm-linux-gnueabi g++-arm-linux-gnueabi ccache \
     sudo
 
-RUN apt-get install -y cpio nano vim
+RUN apt-get install -y cpio nano vim kmod
 
 RUN curl -L https://github.com/aktau/github-release/releases/download/v0.6.2/linux-amd64-github-release.tar.bz2 | tar -C /tmp -jx && \
     mv /tmp/bin/linux/amd64/github-release /usr/local/bin/
