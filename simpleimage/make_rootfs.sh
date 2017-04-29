@@ -360,8 +360,6 @@ export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils jq $EXTRADEBS
-/usr/local/sbin/install_mate_desktop.sh
-systemctl set-default graphical.target
 apt-get -y remove --purge ureadahead
 $ADDPPACMD
 apt-get -y update
@@ -410,6 +408,10 @@ EOF
 		rm -f "$DEST/etc/resolv.conf"
 		rm -f "$DEST"/etc/ssh/ssh_host_*
 		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
+		do_chroot /usr/local/sbin/install_mate_desktop.sh
+		do_chroot systemctl set-default graphical.target
+		do_chroot apt-get -y autoremove
+		do_chroot apt-get clean
 		;;
 	*)
 		;;
