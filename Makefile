@@ -1,7 +1,7 @@
 export RELEASE_NAME ?= dev
 export RELEASE ?= 1
 LOCALVERSION ?= -ayufan-$(RELEASE)
-LINUX_BRANCH ?= my-hacks-1.2
+LINUX_BRANCH ?= my-hacks-3.0
 BOOT_TOOLS_BRANCH ?= master
 
 all: xenial-pinebook
