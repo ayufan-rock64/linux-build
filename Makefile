@@ -49,7 +49,7 @@ linux-pine64-$(RELEASE_NAME).tar: linux/arch/arm64/boot/Image boot-tools kernel/
 %.img.xz: %.img
 	pxz -f -3 $<
 
-simple-image-pinebook-$(RELEASE_NAME).img: boot-tools/build/boot0_pinebook.bin boot-tools/build/u-boot-sun50iw1p1-secure-with-pinebook-dtb.bin linux-pine64-$(RELEASE_NAME).tar.xz boot-tools
+simple-image-pinebook-$(RELEASE_NAME).img: linux-pine64-$(RELEASE_NAME).tar.xz boot-tools
 	cd simpleimage && \
 		export boot0=../boot-tools/build/boot0_pinebook.bin && \
 		export uboot=../boot-tools/build/u-boot-sun50iw1p1-secure-with-pinebook-dtb.bin && \
