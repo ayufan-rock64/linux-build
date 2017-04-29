@@ -14,6 +14,7 @@
 /kernel/initrd.gz
 /kernel/*.dtb
 /kernel/uEnv.txt
+/kernel/releases
 /busybox
 /blobs/*.dtb
 *.snap

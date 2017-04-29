@@ -40,7 +40,7 @@ KERNELTAR=$(readlink -f "$KERNELTAR")
 
 SIZE=7300 # MiB
 if [[ -z "$DATE" ]]; then
-  DATE=$(date +%Y%m%H)
+  DATE=$(date +%Y%m%d_%H%M%S_%Z)
 fi
 
 PWD=$(readlink -f .)

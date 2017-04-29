@@ -37,7 +37,7 @@ cp -a arch/$LINUX_ARCH/Makefile "$TARGET/arch/$LINUX_ARCH"
 cp -a Module.symvers "$TARGET"
 
 # Install Kernel headers
-make -C $LINUX ARCH=$LINUX_ARCH CROSS_COMPILE=$CROSS_COMPILE headers_install INSTALL_HDR_PATH="$TARGET"
+make ARCH=$LINUX_ARCH CROSS_COMPILE=$CROSS_COMPILE headers_install INSTALL_HDR_PATH="$TARGET"
 
 tar cfh - include | (cd "$TARGET"; umask 000; tar xsf -)
 tar cfh - scripts | (cd "$TARGET"; umask 000; tar xsf -)

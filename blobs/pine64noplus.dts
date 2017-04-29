@@ -1848,6 +1848,12 @@
             spi0_cs_bitmap = <0x00000001>;
             status = "disabled";
             pinctrl-0 = <0x000000a7 0x000000a8>;
+
+            spidev@0 {
+                compatible = "spidev";
+                reg = <0x0>;
+                spi-max-frequency = <0x2faf080>;
+            };
         };
         spi@01c69000 {
             #address-cells = <0x00000001>;

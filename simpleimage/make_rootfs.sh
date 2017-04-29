@@ -74,7 +74,7 @@ case $DISTRO in
 		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
 		;;
 	xenial)
-		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.1/release/ubuntu-base-16.04.1-base-arm64.tar.gz"
+		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base-arm64.tar.gz"
 		;;
 	sid|jessie)
 		ROOTFS="${DISTRO}-base-arm64.tar.gz"
@@ -94,7 +94,7 @@ deboostrap_rootfs() {
 	cd $TEMP && pwd
 
 	# this is updated very seldom, so is ok to hardcode
-	debian_archive_keyring_deb='http://httpredir.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2014.3_all.deb'
+	debian_archive_keyring_deb='https://ftp.de.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2014.3_all.deb'
 	wget -O keyring.deb "$debian_archive_keyring_deb"
 	ar -x keyring.deb && rm -f control.tar.gz debian-binary && rm -f keyring.deb
 	DATA=$(ls data.tar.*) && compress=${DATA#data.tar.}
@@ -115,10 +115,9 @@ deboostrap_rootfs() {
 	rm -fr $TEMP/rootfs
 
 	cd -
-
 }
 
-
+mkdir -p $BUILD
 TARBALL="$BUILD/$(basename $ROOTFS)"
 mkdir -p "$BUILD"
 if [ ! -e "$TARBALL" ]; then
@@ -329,8 +328,6 @@ sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=en_US.utf8
 localectl set-keymap us
-echo -e "\n[pine64]\nServer = https://andreascarpino.it/pine64/" >> /etc/pacman.conf
-pacman -Sy --noconfirm sunxi-disp-tool
 yes | pacman -Scc
 EOF
 		chmod +x "$DEST/second-phase"
@@ -345,12 +342,14 @@ EOF
 		if [ "$DISTRO" = "xenial" ]; then
 			DEB=ubuntu
 			DEBUSER=ubuntu
+			DEBUSERPW=ubuntu
 			EXTRADEBS="software-properties-common zram-config ubuntu-minimal nano"
 			ADDPPACMD="apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers"
 			DISPTOOLCMD="apt-get -y install sunxi-disp-tool"
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
 			DEB=debian
 			DEBUSER=debian
+			DEBUSERPW=debian
 			EXTRADEBS="sudo"
 			ADDPPACMD=
 			DISPTOOLCMD=
@@ -371,7 +370,7 @@ apt-get -y update
 $DISPTOOLCMD
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
-echo "$DEBUSER:$DEBUSER" | chpasswd
+echo "$DEBUSER:$DEBUSERPW" | chpasswd
 usermod -a -G sudo,adm,input,video,plugdev $DEBUSER
 apt-get -y autoremove
 apt-get clean
