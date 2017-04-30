@@ -19,7 +19,7 @@ TRUSTED_FIRMWARE="../arm-trusted-firmware-pine64"
 SUNXI_PACK_TOOLS="../sunxi-pack-tools/bin"
 
 if [ "$1" = "-h" -o "$1" = "--help" ]; then
-    echo "Usage: $0 [<pine64|pinebook>] [<trusted-firmware-build>]"
+    echo "Usage: $0 [<pine64|pine64pinebook>] [<trusted-firmware-build>]"
     exit 1
 fi
 MODEL="$1"
