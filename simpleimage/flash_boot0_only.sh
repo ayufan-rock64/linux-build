@@ -3,7 +3,7 @@
 # Simple script to replace boot0.bin in an existing image.
 #
 
-set -ex
+set -e
 
 out="$1"
 boot0="$2"
