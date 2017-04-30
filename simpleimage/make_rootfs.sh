@@ -269,7 +269,6 @@ EOF
 		cp $PACKAGEDEB $DEST/package.deb
 		do_chroot dpkg -i "package.deb"
 		do_chroot rm "package.deb"
-		add_platform_scripts
 		do_chroot /usr/local/sbin/install_mate_desktop.sh
 		do_chroot systemctl set-default graphical.target
 		do_chroot systemctl enable eth0-mackeeper
