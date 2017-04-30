@@ -19,23 +19,6 @@ if [ -z "$1" ]; then
 	echo "Using latest release: $VERSION."
 fi
 
-VARIANTFILE="/var/lib/misc/pine64_update_kernel.variant"
-VARIANT=""
-if [ -e "$VARIANTFILE" ]; then
-	VARIANT=$(cat $VARIANTFILE)
-fi
-
-if [ -n "$2" ]; then
-	VARIANT="$2"
-	if [ "$VARIANT" = "default" ]; then
-		VARIANT=""
-	fi
-fi
-
-if [ -n "$VARIANT" ]; then
-	echo "Using Kernel variant: $VARIANT"
-fi
-
 URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/linux-pine64-$VERSION.tar.xz"
 # URL="https://www.stdin.xyz/downloads/people/longsleep/pine64-images/linux/linux-pine64$VARIANT-$VERSION.tar.xz"
 # PUBKEY="https://www.stdin.xyz/downloads/people/longsleep/longsleep.asc"
@@ -53,20 +36,6 @@ trap cleanup EXIT INT
 CURRENT=""
 if [ -e "${CURRENTFILE}" ]; then
 	CURRENT=$(cat $CURRENTFILE)
-fi
-
-echo "Checking for update ..."
-ETAG=$(curl -f -I -H "If-None-Match: \"${CURRENT}\"" -s "${URL}"|grep ETag|awk -F'"' '{print $2}')
-
-if [ -z "$ETAG" ]; then
-	echo "Version $VERSION$VARIANT not found."
-	exit 1
-fi
-
-ETAG="$ETAG$VARIANT"
-if [ "$ETAG" = "$CURRENT" ]; then
-	echo "You are already on $VERSION version - abort."
-	exit 0
 fi
 
 FILENAME=$TEMP/$(basename ${URL})
@@ -126,5 +95,4 @@ else
 	echo "Mark only."
 fi
 echo "$ETAG" > "$CURRENTFILE"
-echo "$VARIANT" > "$VARIANTFILE"
 sync

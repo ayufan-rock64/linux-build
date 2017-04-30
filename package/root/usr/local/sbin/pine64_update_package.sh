@@ -15,8 +15,7 @@ if [ -z "$1" ]; then
 fi
 
 DEVICE="/dev/mmcblk0"
-URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/linux-pine64-package-$(cat /etc/pine64_model)-$VERSION.deb"
-CURRENTFILE="/var/lib/misc/pine64_update_package.status"
+URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/linux-pine64-package-$VERSION.deb"
 
 if [ "$(id -u)" -ne "0" ]; then
 	echo "This script requires root."
@@ -38,18 +37,6 @@ if [ -e "${CURRENTFILE}" ]; then
 fi
 
 echo "Checking for update ..."
-ETAG=$(curl -L -f -I -H "If-None-Match: \"${CURRENT}\"" -s "${URL}"|grep ETag|awk -F'"' '{print $2}')
-
-if [ -z "$ETAG" ]; then
-	echo "Version $VERSION not found."
-	exit 1
-fi
-
-if [ "$ETAG" = "$CURRENT" ]; then
-	echo "You are already on $VERSION version - abort."
-	exit 0
-fi
-
 FILENAME=$TEMP/$(basename ${URL})
 
 if [ -z "$MARK_ONLY" ]; then
@@ -57,7 +44,7 @@ if [ -z "$MARK_ONLY" ]; then
 	curl -L "${URL}" -f --progress-bar --output "${FILENAME}"
 
     echo "Installing model package ..."
-    dpkg -i "${FILENAME}"
+    sudo dpkg -i "${FILENAME}"
 
 	echo "Done - you should reboot now."
 else

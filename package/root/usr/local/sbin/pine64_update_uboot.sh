@@ -39,19 +39,6 @@ if [ -e "${CURRENTFILE}" ]; then
 	CURRENT=$(cat $CURRENTFILE)
 fi
 
-echo "Checking for update ..."
-ETAG=$(curl -f -I -H "If-None-Match: \"${CURRENT}\"" -s "${URL}"|grep ETag|awk -F'"' '{print $2}')
-
-if [ -z "$ETAG" ]; then
-	echo "Version $VERSION not found."
-	exit 1
-fi
-
-if [ "$ETAG" = "$CURRENT" ]; then
-	echo "You are already on $VERSION version - abort."
-	exit 0
-fi
-
 FILENAME=$TEMP/$(basename ${URL})
 
 downloadAndApply() {
