@@ -181,6 +181,22 @@ EOF
 	do_chroot systemctl enable eth0-mackeeper
 }
 
+add_enable_headphones_service() {
+	cat > "$DEST/etc/systemd/system/pinebook-headphones.service" <<EOF
+[Unit]
+Description=Enable headpohones
+After=systemd-modules-load.service local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/pinebook_enable_headphones.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+	do_chroot systemctl enable pinebook-headphones
+}
+
 add_corekeeper_service() {
 	cat > "$DEST/etc/systemd/system/cpu-corekeeper.service" <<EOF
 [Unit]
@@ -398,10 +414,13 @@ EOF
 		add_mackeeper_service
 		add_corekeeper_service
 		add_ssh_keygen_service
+		if [ "$MODEL" == "pinebook" ]; then
+			add_enable_headphones_service
+			add_hall_module_autoload
+		fi
 		add_disp_udev_rules
 		add_wifi_module_autoload
 		add_disp_module_autoload
-		add_hall_module_autoload
 		add_asound_state
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
