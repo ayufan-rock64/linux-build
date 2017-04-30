@@ -1,6 +1,6 @@
 export RELEASE_NAME ?= dev
 export RELEASE ?= 1
-export LINUX_BRANCH ?= my-hacks-3.0
+export LINUX_BRANCH ?= my-hacks-1.2
 export BOOT_TOOLS_BRANCH ?= master
 LINUX_LOCALVERSION ?= -ayufan-$(RELEASE)
 
