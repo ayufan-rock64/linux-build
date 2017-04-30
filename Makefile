@@ -1,4 +1,4 @@
-export RELEASE_NAME ?= dev
+export RELEASE_NAME ?= 0.1~dev
 export RELEASE ?= 1
 export LINUX_BRANCH ?= my-hacks-1.2
 export BOOT_TOOLS_BRANCH ?= master
