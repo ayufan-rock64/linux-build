@@ -13,15 +13,17 @@ set -e
 BUILD="../build"
 DEST="$1"
 LINUX="$2"
-DISTRO="$3"
-BOOT="$4"
+PACKAGEDEB="$3"
+DISTRO="$4"
+BOOT="$5"
+MODEL="$6"
 
 if [[ -z "$MODEL" ]]; then
   MODEL="pine64"
 fi
 
 if [ -z "$DEST" -o -z "$LINUX" ]; then
-	echo "Usage: $0 <destination-folder> <linux-folder> [distro] [<boot-folder>]"
+	echo "Usage: $0 <destination-folder> <linux-folder> <package.deb> [distro] [<boot-folder>] [model]"
 	exit 1
 fi
 
@@ -157,96 +159,6 @@ do_chroot() {
 	chroot "$DEST" umount /proc
 }
 
-add_platform_scripts() {
-	# Install platform scripts
-	mkdir -p "$DEST/usr/local/sbin"
-	cp -av ./platform-scripts/* "$DEST/usr/local/sbin"
-	chown root.root "$DEST/usr/local/sbin/"*
-	chmod 755 "$DEST/usr/local/sbin/"*
-}
-
-add_mackeeper_service() {
-	cat > "$DEST/etc/systemd/system/eth0-mackeeper.service" <<EOF
-[Unit]
-Description=Fix eth0 mac address to uEnv.txt
-After=systemd-modules-load.service local-fs.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/sbin/pine64_eth0-mackeeper.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-	do_chroot systemctl enable eth0-mackeeper
-}
-
-add_enable_headphones_service() {
-	cat > "$DEST/etc/systemd/system/pinebook-headphones.service" <<EOF
-[Unit]
-Description=Enable headpohones
-After=systemd-modules-load.service local-fs.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/sbin/pinebook_enable_headphones.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-	do_chroot systemctl enable pinebook-headphones
-}
-
-add_corekeeper_service() {
-	cat > "$DEST/etc/systemd/system/cpu-corekeeper.service" <<EOF
-[Unit]
-Description=CPU corekeeper
-
-[Service]
-ExecStart=/usr/local/sbin/pine64_corekeeper.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-	do_chroot systemctl enable cpu-corekeeper
-}
-
-add_ssh_keygen_service() {
-	cat > "$DEST/etc/systemd/system/ssh-keygen.service" <<EOF
-[Unit]
-Description=Generate SSH keys if not there
-Before=ssh.service
-ConditionPathExists=|!/etc/ssh/ssh_host_key
-ConditionPathExists=|!/etc/ssh/ssh_host_key.pub
-ConditionPathExists=|!/etc/ssh/ssh_host_rsa_key
-ConditionPathExists=|!/etc/ssh/ssh_host_rsa_key.pub
-ConditionPathExists=|!/etc/ssh/ssh_host_dsa_key
-ConditionPathExists=|!/etc/ssh/ssh_host_dsa_key.pub
-ConditionPathExists=|!/etc/ssh/ssh_host_ecdsa_key
-ConditionPathExists=|!/etc/ssh/ssh_host_ecdsa_key.pub
-ConditionPathExists=|!/etc/ssh/ssh_host_ed25519_key
-ConditionPathExists=|!/etc/ssh/ssh_host_ed25519_key.pub
-
-[Service]
-ExecStart=/usr/bin/ssh-keygen -A
-Type=oneshot
-RemainAfterExit=yes
-
-[Install]
-WantedBy=ssh.service
-EOF
-	do_chroot systemctl enable ssh-keygen
-}
-
-add_disp_udev_rules() {
-	cat > "$DEST/etc/udev/rules.d/90-sunxi-disp-permission.rules" <<EOF
-KERNEL=="disp", MODE="0770", GROUP="video"
-KERNEL=="cedar_dev", MODE="0770", GROUP="video"
-KERNEL=="ion", MODE="0770", GROUP="video"
-KERNEL=="mali", MODE="0770", GROUP="video"
-EOF
-}
-
 add_debian_apt_sources() {
 	local release="$1"
 	local aptsrcfile="$DEST/etc/apt/sources.list"
@@ -281,36 +193,6 @@ deb-src http://ports.ubuntu.com/ ${release}-security main restricted universe mu
 EOF
 }
 
-add_wifi_module_autoload() {
-	cat > "$DEST/etc/modules-load.d/pine64-wifi.conf" <<EOF
-8723bs
-8723cs
-EOF
-	cat > "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
-blacklist 8723bs_vq0
-EOF
-	if [ -e "$DEST/etc/network/interfaces" ]; then
-		cat >> "$DEST/etc/network/interfaces" <<EOF
-
-# Disable wlan1 by default (8723bs has two intefaces)
-iface wlan1 inet manual
-EOF
-	fi
-}
-
-add_disp_module_autoload() {
-	cat > "$DEST/etc/modules-load.d/pine64-disp.conf" <<EOF
-disp
-hdmi
-EOF
-}
-
-add_hall_module_autoload() {
-	cat > "$DEST/etc/modules-load.d/pinebook-hall.conf" <<EOF
-hall
-EOF
-}
-
 add_asound_state() {
 	mkdir -p "$DEST/var/lib/alsa"
 	cp -vf ../blobs/asound.state.$MODEL "$DEST/var/lib/alsa/asound.state"
@@ -319,34 +201,8 @@ add_asound_state() {
 # Run stuff in new system.
 case $DISTRO in
 	arch)
-		# Cleanup preinstalled Kernel
-		mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
-		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
-		sed -i 's|CheckSpace|#CheckSpace|' "$DEST/etc/pacman.conf"
-		do_chroot pacman -Syu --noconfirm || true
-		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
-		do_chroot pacman -S --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant alsa-utils || true
-		add_platform_scripts
-		add_mackeeper_service
-		add_corekeeper_service
-		add_disp_udev_rules
-		add_wifi_module_autoload
-		add_disp_module_autoload
-		add_hall_module_autoload
-		add_asound_state
-		cat > "$DEST/second-phase" <<EOF
-#!/bin/sh
-sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
-locale-gen
-localectl set-locale LANG=en_US.utf8
-localectl set-keymap us
-yes | pacman -Scc
-EOF
-		chmod +x "$DEST/second-phase"
-		do_chroot /second-phase
-		sed -i 's|#CheckSpace|CheckSpace|' "$DEST/etc/pacman.conf"
-		rm -f "$DEST/etc/resolv.conf"
-		mv "$DEST/etc/resolv.conf.dist" "$DEST/etc/resolv.conf"
+		echo "No longer supported"
+		exit 1
 		;;
 	xenial|sid|jessie)
 		rm "$DEST/etc/resolv.conf"
@@ -396,7 +252,7 @@ EOF
 		cat > "$DEST/etc/hostname" <<EOF
 $MODEL
 EOF
-		cat > "$DEST/etc/pine_model" <<EOF
+		cat > "$DEST/etc/pine64_model" <<EOF
 $MODEL
 EOF
 		cat > "$DEST/etc/hosts" <<EOF
@@ -410,25 +266,23 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
+		cp $PACKAGEDEB $DEST/package.deb
+		do_chroot dpkg -i "package.deb"
+		do_chroot rm "package.deb"
 		add_platform_scripts
-		add_mackeeper_service
-		add_corekeeper_service
-		add_ssh_keygen_service
-		if [ "$MODEL" == "pinebook" ]; then
-			add_enable_headphones_service
-			add_hall_module_autoload
+		do_chroot /usr/local/sbin/install_mate_desktop.sh
+		do_chroot systemctl set-default graphical.target
+		do_chroot systemctl enable eth0-mackeeper
+		do_chroot systemctl enable cpu-corekeeper
+		do_chroot systemctl enable ssh-keygen
+		if [ "$MODEL" -eq "pinebook" ]; then
+			do_chroot systemctl enable pinebook-headphones
 		fi
-		add_disp_udev_rules
-		add_wifi_module_autoload
-		add_disp_module_autoload
-		add_asound_state
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
 		rm -f "$DEST"/etc/ssh/ssh_host_*
 		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
-		do_chroot /usr/local/sbin/install_mate_desktop.sh
-		do_chroot systemctl set-default graphical.target
 		do_chroot apt-get -y autoremove
 		do_chroot apt-get clean
 		;;

@@ -15,7 +15,7 @@ if [ -z "$1" ]; then
 fi
 
 DEVICE="/dev/mmcblk0"
-URL="https://github.com/ayufan-pine64/linux-build/releases/download/$1/simple-image-$(cat /etc/pine_model)-$1.tar.xz"
+URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/simple-image-$(cat /etc/pine64_model)-$VERSION.tar.xz"
 # URL="https://www.stdin.xyz/downloads/people/longsleep/pine64-images/simpleimage-pine64-$VERSION.img.xz"
 # PUBKEY="https://www.stdin.xyz/downloads/people/longsleep/longsleep.asc"
 CURRENTFILE="/var/lib/misc/pine64_update_uboot.status"

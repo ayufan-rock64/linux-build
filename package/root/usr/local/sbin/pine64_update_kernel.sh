@@ -36,7 +36,7 @@ if [ -n "$VARIANT" ]; then
 	echo "Using Kernel variant: $VARIANT"
 fi
 
-URL="https://github.com/ayufan-pine64/linux-build/releases/download/$1/linux-pine64-$1.tar.xz"
+URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/linux-pine64-$VERSION.tar.xz"
 # URL="https://www.stdin.xyz/downloads/people/longsleep/pine64-images/linux/linux-pine64$VARIANT-$VERSION.tar.xz"
 # PUBKEY="https://www.stdin.xyz/downloads/people/longsleep/longsleep.asc"
 CURRENTFILE="/var/lib/misc/pine64_update_kernel.status"

@@ -1,0 +1,10 @@
+[Unit]
+Description=Enable headpohones
+After=systemd-modules-load.service local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/pinebook_enable_headphones.sh
+
+[Install]
+WantedBy=multi-user.target

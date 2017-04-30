@@ -8,10 +8,10 @@ RUN apt-get install -y python git-core gnupg flex bison gperf build-essential \
     htop iotop sysstat iftop pigz bc device-tree-compiler lunzip \
     dosfstools gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
     gcc-arm-linux-gnueabi g++-arm-linux-gnueabi ccache \
-    sudo
+    sudo cpio nano vim kmod kpartx wget bsdtar qemu-user-static \
+    pxz ruby-dev
 
-RUN apt-get install -y cpio nano vim kmod kpartx wget bsdtar qemu-user-static
-RUN apt-get install -y pxz
+RUN gem install fpm
 
 RUN curl -L https://github.com/aktau/github-release/releases/download/v0.6.2/linux-amd64-github-release.tar.bz2 | tar -C /tmp -jx && \
     mv /tmp/bin/linux/amd64/github-release /usr/local/bin/

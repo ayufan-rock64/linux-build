@@ -15,8 +15,8 @@ if [ -z "$1" ]; then
 fi
 
 DEVICE="/dev/mmcblk0"
-URL="https://github.com/ayufan-pine64/linux-build/releases/download/$1/linux-model-$(cat /etc/pine_model)-$1.deb"
-CURRENTFILE="/var/lib/misc/pine64_update_model.status"
+URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/linux-pine64-package-$(cat /etc/pine64_model)-$VERSION.deb"
+CURRENTFILE="/var/lib/misc/pine64_update_package.status"
 
 if [ "$(id -u)" -ne "0" ]; then
 	echo "This script requires root."

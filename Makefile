@@ -46,6 +46,22 @@ linux-pine64-$(RELEASE_NAME).tar: linux/arch/arm64/boot/Image boot-tools kernel/
 	cd kernel && \
 		bash ./make_kernel_tarball.sh $(shell readlink -f "$@")
 
+linux-pine64-package-$(RELEASE_NAME).deb: package
+	fpm -s dir -t deb -n linux-pine64-package -v $(RELEASE_NAME) \
+		-p $@ \
+		--deb-priority optional --category admin \
+		--force \
+		--deb-compression bzip2 \
+		--after-install package/scripts/postinst.deb \
+		--before-remove package/scripts/prerm.deb \
+		--url https://gitlab.com/ayufan-pine64/linux-build \
+		--description "GitLab Runner" \
+		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
+		--license "MIT" \
+		--vendor "Kamil Trzciński" \
+		-a arm64 \
+		package/root/=/
+
 %.tar.xz: %.tar
 	pxz -f -3 $<
 
@@ -58,16 +74,20 @@ simple-image-pinebook-$(RELEASE_NAME).img: linux-pine64-$(RELEASE_NAME).tar.xz b
 		export uboot=../boot-tools/build/u-boot-sun50iw1p1-secure-with-pinebook-dtb.bin && \
 		bash ./make_simpleimage.sh $(shell readlink -f "$@") 100 $(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz)
 
-xenial-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz boot-tools
+xenial-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz linux-pine64-package-$(RELEASE_NAME).deb boot-tools
 	sudo bash ./build-pine64-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f simple-image-pinebook-$(RELEASE_NAME).img.xz) \
 		$(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz) \
+		$(shell readlink -f linux-pine64-package-$(RELEASE_NAME).deb) \
 		xenial \
 		pinebook
 
 .PHONY: kernel-tarball
 kernel-tarball: linux-pine64-$(RELEASE_NAME).tar.xz
+
+.PHONY: linux-package
+linux-package: linux-pine64-package-$(RELEASE_NAME).deb
 
 .PHONY: simple-image-pinebook-$(RELEASE_NAME).img
 simple-image-pinebook: simple-image-pinebook-$(RELEASE_NAME).img

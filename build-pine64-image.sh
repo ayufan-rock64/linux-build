@@ -11,15 +11,16 @@
 OUT_IMAGE="$1"
 SIMPLEIMAGE="$2"
 KERNELTAR="$3"
-DISTRO="$4"
-MODEL="$5"
+PACKAGEDEB="$4"
+DISTRO="$5"
+MODEL="$6"
 if [[ -z "$MODEL" ]]; then
   MODEL="pine64"
 fi
 export MODEL
 
 if [ -z "$SIMPLEIMAGE" -o -z "$KERNELTAR" ]; then
-	echo "Usage: $0 <result.img> <simpleimage.img.xz> <kernel.tar.xz> [distro] [model]"
+	echo "Usage: $0 <result.img> <simpleimage.img.xz> <kernel.tar.xz> <package.deb> [distro] [model]"
 	exit 1
 fi
 
@@ -83,7 +84,7 @@ mount /dev/mapper/${DEVICENAME}p1 "$TEMP/boot"
 mount /dev/mapper/${DEVICENAME}p2 "$TEMP/rootfs"
 
 sleep 2
-(cd simpleimage && sh ./make_rootfs.sh "$TEMP/rootfs" "$KERNELTAR" "$DISTRO" "$TEMP/boot")
+(cd simpleimage && sh ./make_rootfs.sh "$TEMP/rootfs" "$KERNELTAR" "$PACKAGEDEB" "$DISTRO" "$TEMP/boot" "$MODEL")
 
 mv -v "$TEMP/$IMAGE" "$OUT_IMAGE"
 

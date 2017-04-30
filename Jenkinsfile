@@ -58,7 +58,7 @@ node('docker && linux-build') {
                 --description "${CHANGES}\n\n${BUILD_URL}" \
                 --draft
 
-            for file in *.xz; do
+            for file in *.xz *.deb; do
               github-release upload \
                   --tag "${VERSION}" \
                   --name "$(basename "$file")" \

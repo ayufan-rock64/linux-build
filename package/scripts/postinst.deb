@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+  configure)
+    if [ ! -e /var/lib/alsa/asound.state ] && [ -e /etc/pine64_model ]; then
+      cp /var/lib/alsa/asound.state.$(cat /etc/pine64_model) /var/lib/alsa/asound.state
+    fi
+    ;;
+
+  *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

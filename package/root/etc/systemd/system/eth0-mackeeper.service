@@ -1,0 +1,10 @@
+[Unit]
+Description=Fix eth0 mac address to uEnv.txt
+After=systemd-modules-load.service local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/pine64_eth0-mackeeper.sh
+
+[Install]
+WantedBy=multi-user.target
