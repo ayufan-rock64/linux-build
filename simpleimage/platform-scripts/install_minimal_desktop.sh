@@ -33,7 +33,10 @@ case $DISTRO in
 		;;
 esac
 
-cat > "/etc/X11/xorg.conf" <<EOF
+mkdir -p /etc/X11/xorg.conf.d
+
+# Make X11 use fbturbo driver.
+cat > "/etc/X11/xorg.conf.d/40-pine64-fbturbo.conf" <<EOF
 Section "Device"
         Identifier      "Allwinner A10/A13 FBDEV"
         Driver          "fbturbo"
@@ -42,3 +45,19 @@ Section "Device"
         Option          "SwapbuffersWait" "true"
 EndSection
 EOF
+
+# Add configuration for Pinebook touchpad so it is usable.
+cat > "/etc/X11/xorg.conf.d/50-pine64-pinebook-touchpad.conf" <<EOF
+Section "InputClass"
+   Identifier "HAILUCK CO.,LTD USB KEYBOARD"
+   MatchIsPointer "1"
+   MatchDevicePath "/dev/input/event*"
+
+   Option "AccelerationProfile" "2"
+   Option "AdaptiveDeceleration" "1"
+   Option "ConstantDeceleration" "2.4" # Pinebook 14"
+   #Option "ConstantDeceleration" "1.2" # Pinebook 11"
+EndSection
+EOF
+
+echo "Done - you should reboot now."

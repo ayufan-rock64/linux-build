@@ -51,13 +51,30 @@ case $DISTRO in
 		;;
 esac
 
-cat > "/etc/X11/xorg.conf" <<EOF
+mkdir -p /etc/X11/xorg.conf.d
+
+# Make X11 use fbturbo driver.
+cat > "/etc/X11/xorg.conf.d/40-pine64-fbturbo.conf" <<EOF
 Section "Device"
         Identifier      "Allwinner A10/A13 FBDEV"
         Driver          "fbturbo"
         Option          "fbdev" "/dev/fb0"
 
         Option          "SwapbuffersWait" "true"
+EndSection
+EOF
+
+# Add configuration for Pinebook touchpad so it is usable.
+cat > "/etc/X11/xorg.conf.d/50-pine64-pinebook-touchpad.conf" <<EOF
+Section "InputClass"
+   Identifier "HAILUCK CO.,LTD USB KEYBOARD"
+   MatchIsPointer "1"
+   MatchDevicePath "/dev/input/event*"
+
+   Option "AccelerationProfile" "2"
+   Option "AdaptiveDeceleration" "1"
+   Option "ConstantDeceleration" "2.4" # Pinebook 14"
+   #Option "ConstantDeceleration" "1.2" # Pinebook 11"
 EndSection
 EOF
 
@@ -71,7 +88,5 @@ if [ -e "/etc/pulse/default.pa" ]; then
 	sed -i 's/load-module module-udev-detect$/& tsched=0/g' /etc/pulse/default.pa
 fi
 
-# Mail blobs can be downloaded from the following URL. Does not help much
-# for now, as fbturbo requires mali-drm module to enable this in X11. Might
-# be of some use for framebuffer.
-#wget http://malideveloper.arm.com/downloads/drivers/binary/utgard/r5p0-01rel0/mali-450_r5p0-01rel0_linux_1+fbdev+arm64-v8a.tar.gz
+
+echo "Done - you should reboot now."
