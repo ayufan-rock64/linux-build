@@ -20,9 +20,10 @@ set -e
 out="$1"
 disk_size="$2"
 kernel_tarball="$3"
+model="$4"
 
 if [ -z "$out" ]; then
-	echo "Usage: $0 <image-file.img> [disk size in MiB] [<kernel-tarball>]"
+	echo "Usage: $0 <image-file.img> [disk size in MiB] [<kernel-tarball>] [<pine64|so|pinebook>]"
 	exit 1
 fi
 
@@ -35,10 +36,22 @@ if [ "$disk_size" -lt 60 ]; then
 	exit 2
 fi
 
-echo "Creating image $out of size $disk_size MiB ..."
+if [ -z "$model" = "" ]; then
+    model="pine64"
+fi
 
-boot0="../blobs/boot0.bin"
-uboot="../build/u-boot-with-dtb.bin"
+echo "Creating $model image $out of size $disk_size MiB ..."
+
+if [ "$model" = "pine64" ]; then
+    model=""
+fi
+suffix=""
+if [ -n "$model" ]; then
+    suffix="-$model"
+fi
+
+boot0="../blobs/boot0$model.bin"
+uboot="../build/u-boot-with-dtb$suffix.bin"
 kernel="../build"
 
 temp=$(mktemp -d)
@@ -50,7 +63,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-if [ -n "$kernel_tarball" ]; then
+if [ -n "$kernel_tarball" -a "$kernel_tarball" != "-" ]; then
 	echo "Using Kernel from $kernel_tarball ..."
 	tar -C $temp -xJf "$kernel_tarball"
 	kernel=$temp/boot
@@ -61,8 +74,6 @@ boot0_position=8      # KiB
 uboot_position=19096  # KiB
 part_position=20480   # KiB
 boot_size=50          # MiB
-
-set -x
 
 # Create beginning of disk
 dd if=/dev/zero bs=1M count=$((part_position/1024)) of="$out"
