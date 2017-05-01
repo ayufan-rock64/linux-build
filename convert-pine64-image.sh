@@ -23,6 +23,8 @@ if [ -n "$MODEL" ]; then
     SUFFIX="-$MODEL"
 fi
 
+DISKIMAGE=$(readlink -f "$DISKIMAGE")
+
 # check image for boot0
 boot0headerpos=$((8*1024+4))
 boot0header=$(xxd -p -s $boot0headerpos -l 4 "$DISKIMAGE")
