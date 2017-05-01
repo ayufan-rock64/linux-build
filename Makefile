@@ -77,8 +77,8 @@ linux-pine64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 
 simple-image-pinebook-$(RELEASE_NAME).img: linux-pine64-$(RELEASE_NAME).tar.xz boot-tools
 	cd simpleimage && \
-		export boot0=../boot-tools/build/boot0_pinebook.bin && \
-		export uboot=../boot-tools/build/u-boot-sun50iw1p1-secure-with-pinebook-dtb.bin && \
+		export boot0=../boot-tools/boot/pine64/boot0-pine64-pinebook.bin && \
+		export uboot=../boot-tools/boot/pine64/u-boot-pine64-pinebook.bin && \
 		bash ./make_simpleimage.sh $(shell readlink -f "$@") 100 $(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz)
 
 xenial-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz linux-pine64-package-$(RELEASE_NAME).deb boot-tools
