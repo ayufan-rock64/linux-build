@@ -7,7 +7,7 @@
 /memreserve/	0x0000000040104000 0x0000000000001000;
 /memreserve/	0x0000000040105000 0x0000000000001000;
 / {
-	model = "sun50iw1";
+	model = "sun50iw1p1";
 	compatible = "arm,sun50iw1p1";
 	interrupt-parent = <0x1>;
 	#address-cells = <0x2>;
