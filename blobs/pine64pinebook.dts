@@ -7,8 +7,8 @@
 /memreserve/	0x0000000040104000 0x0000000000001000;
 /memreserve/	0x0000000040105000 0x0000000000001000;
 / {
-	model = "sun50iw1p1";
-	compatible = "arm,sun50iw1p1";
+	model = "Pinebook";
+	compatible = "pine64,pine64-plus,pinebook64";
 	interrupt-parent = <0x1>;
 	#address-cells = <0x2>;
 	#size-cells = <0x2>;
