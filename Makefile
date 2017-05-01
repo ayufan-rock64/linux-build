@@ -46,7 +46,13 @@ linux-pine64-$(RELEASE_NAME).tar: linux/arch/arm64/boot/Image boot-tools kernel/
 	cd kernel && \
 		bash ./make_kernel_tarball.sh $(shell readlink -f "$@")
 
-linux-pine64-package-$(RELEASE_NAME).deb: package
+package/rtk_bt/.git:
+	git clone --single-branch --depth=1 https://github.com/NextThingCo/rtl8723ds_bt package/rtk_bt
+
+package/rtk_bt/rtk_hciattach/rtk_hciattach: package/rtk_bt/.git
+	make -C package/rtk_bt/rtk_hciattach CC="ccache aarch64-linux-gnu-gcc"
+
+linux-pine64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/rtk_hciattach
 	fpm -s dir -t deb -n linux-pine64-package -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
@@ -60,7 +66,8 @@ linux-pine64-package-$(RELEASE_NAME).deb: package
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
 		-a arm64 \
-		package/root/=/
+		package/root/=/ \
+		package/rtk_bt/rtk_hciattach/rtk_hciattach=/usr/local/sbin/rtk_hciattach
 
 %.tar.xz: %.tar
 	pxz -f -3 $<

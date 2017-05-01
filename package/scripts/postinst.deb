@@ -9,6 +9,9 @@ case "$1" in
     if [ ! -e /var/lib/alsa/asound.state ] && [ -e /etc/pine64_model ]; then
       cp /var/lib/alsa/asound.state.$(cat /etc/pine64_model) /var/lib/alsa/asound.state
     fi
+
+    systemctl enable rtk-hciattach
+    systemctl start rtk-hciattach
     ;;
 
   *)
