@@ -7,8 +7,15 @@ if [ -n "$1" ]; then
 	VERSION="$1"
 fi
 
+MODEL="pine64"
+# Detect Pinebook.
+if [ -e "/proc/device-tree/soc@01c00000/lcd0@01c0c000/lcd_driver_name" \
+     -a "$(cat /proc/device-tree/soc\@01c00000/lcd0\@01c0c000/lcd_driver_name)" = "anx9804_panel" ]; then
+    MODEL="pinebook"
+fi
+
 DEVICE="/dev/mmcblk0"
-URL="https://www.stdin.xyz/downloads/people/longsleep/pine64-images/simpleimage-pine64-$VERSION.img.xz"
+URL="https://www.stdin.xyz/downloads/people/longsleep/pine64-images/simpleimage-$MODEL-$VERSION.img.xz"
 PUBKEY="https://www.stdin.xyz/downloads/people/longsleep/longsleep.asc"
 CURRENTFILE="/var/lib/misc/pine64_update_uboot.status"
 
