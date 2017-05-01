@@ -24,9 +24,13 @@ case $DISTRO in
 		apt-get -y --no-install-recommends install \
 			xserver-xorg-video-fbturbo \
 			xserver-xorg-input-all \
+			xfonts-base \
 			slim \
-			xvt \
-			openbox
+			rxvt-unicode-lite \
+			i3 \
+			i3status \
+			i3lock \
+			suckless-tools
 		;;
 	*)
 		;;
