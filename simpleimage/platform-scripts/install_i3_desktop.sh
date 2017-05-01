@@ -30,7 +30,8 @@ case $DISTRO in
 			i3 \
 			i3status \
 			i3lock \
-			suckless-tools
+			suckless-tools \
+			network-manager
 		;;
 	*)
 		;;
