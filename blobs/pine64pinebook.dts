@@ -3147,7 +3147,7 @@
 
 		serial_feature {
 			device_type = "serial_feature";
-			sn_filename = "ULI/factory/snum.txt";
+			sn_filename = "sn.txt";
 		};
 
 		gsensor_list {
@@ -3276,8 +3276,8 @@
 
 	chosen {
 		bootargs = "earlyprintk=sunxi-uart,0x01c28000 loglevel=8 initcall_debug=1 console=ttyS0 init=/init";
-		1,initrd-start = <0x0 0x0>;
-		1,initrd-end = <0x0 0x0>;
+		linux,initrd-start = <0x0 0x0>;
+		linux,initrd-end = <0x0 0x0>;
 	};
 
 	cpus {
