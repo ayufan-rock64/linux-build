@@ -51,19 +51,6 @@ case $DISTRO in
 		;;
 esac
 
-mkdir -p /etc/X11/xorg.conf.d
-
-# Make X11 use fbturbo driver.
-cat > "/etc/X11/xorg.conf.d/40-pine64-fbturbo.conf" <<EOF
-Section "Device"
-        Identifier      "Allwinner A10/A13 FBDEV"
-        Driver          "fbturbo"
-        Option          "fbdev" "/dev/fb0"
-        Option          "Backlight" "lcd0"
-        Option          "SwapbuffersWait" "true"
-EndSection
-EOF
-
 # Kill parport module loading, not available on arm64.
 if [ -e "/etc/modules-load.d/cups-filters.conf" ]; then
 	echo "" >/etc/modules-load.d/cups-filters.conf
