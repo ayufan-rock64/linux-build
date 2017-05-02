@@ -21,11 +21,13 @@ fi
 BLOBS="../blobs"
 LINUX="../linux"
 INITRD="./initrd.gz"
+BOOTLOGO="../bootlogo/bootlogo-pine64-1366x768.bmp"
 
 # Targets file names as loaded by U-Boot.
 SUBFOLDER="pine64"
 KERNEL="kernel"
 INITRD_IMG="initrd.img"
+BOOTLOGO_TARGET="bootlogo.bmp"
 
 if [ "$DEST" = "-" ]; then
 	DEST="../build"
@@ -85,6 +87,9 @@ else
 	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-so.dtb" "$BLOBS/${basename}so.dts"
 	echo "Compiling device tree from $BLOBS/${basename}pinebook.dts"
 	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-pinebook.dtb" "$BLOBS/${basename}pinebook.dts"
+
+	# Add bootlogo.
+	cp -v "$BOOTLOGO" "$DEST/$BOOTLOGO_TARGET"
 fi
 
 if [ ! -e "$DEST/uEnv.txt" ]; then

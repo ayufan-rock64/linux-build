@@ -14,6 +14,13 @@ if [ -z "$1" ]; then
 	echo "Using latest release: $VERSION."
 fi
 
+MODEL="pine64"
+# Detect Pinebook.
+if [ -e "/proc/device-tree/soc@01c00000/lcd0@01c0c000/lcd_driver_name" \
+     -a "$(cat /proc/device-tree/soc\@01c00000/lcd0\@01c0c000/lcd_driver_name)" = "anx9804_panel" ]; then
+    MODEL="pinebook"
+fi
+
 DEVICE="/dev/mmcblk0"
 URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/simple-image-$(cat /etc/pine64_model)-$VERSION.img.xz"
 # URL="https://www.stdin.xyz/downloads/people/longsleep/pine64-images/simpleimage-pine64-$VERSION.img.xz"

@@ -20,9 +20,10 @@ set -e
 out="$1"
 disk_size="$2"
 kernel_tarball="$3"
+model="$4"
 
 if [ -z "$out" ]; then
-	echo "Usage: $0 <image-file.img> [disk size in MiB] [<kernel-tarball>]"
+	echo "Usage: $0 <image-file.img> [disk size in MiB] [<kernel-tarball>] [<pine64|so|pinebook>]"
 	exit 1
 fi
 
@@ -35,14 +36,26 @@ if [ "$disk_size" -lt 60 ]; then
 	exit 2
 fi
 
-echo "Creating image $out of size $disk_size MiB ..."
+if [ -z "$model" = "" ]; then
+    model="pine64"
+fi
+
+echo "Creating $model image $out of size $disk_size MiB ..."
+
+if [ "$model" = "pine64" ]; then
+    model=""
+fi
+suffix=""
+if [ -n "$model" ]; then
+    suffix="-$model"
+fi
 
 if [[ -z "$boot0" ]]; then
-  boot0="../blobs/boot0.bin"
+  boot0="../blobs/boot0$model.bin"
 fi
 
 if [[ -z "$uboot" ]]; then
-  uboot="../build/u-boot-with-dtb.bin"
+  uboot="../build/u-boot-with-dtb$suffix.bin"
 fi
 kernel="../build"
 
@@ -55,12 +68,17 @@ cleanup() {
 }
 trap cleanup EXIT
 
+if [ -n "$kernel_tarball" -a "$kernel_tarball" != "-" ]; then
+	echo "Using Kernel from $kernel_tarball ..."
+	tar -C $temp -xJf "$kernel_tarball"
+	kernel=$temp/boot
+	mv $temp/boot/uEnv.txt.in $temp/boot/uEnv.txt
+fi
+
 boot0_position=8      # KiB
 uboot_position=19096  # KiB
 part_position=20480   # KiB
 boot_size=50          # MiB
-
-set -x
 
 # Create beginning of disk
 dd if=/dev/zero bs=1M count=$((part_position/1024)) of="$out"
@@ -72,12 +90,7 @@ dd if=/dev/zero bs=1M count=${boot_size} of=${out}1
 mkfs.vfat -n BOOT ${out}1
 
 # Add boot support if there
-if [ -n "$kernel_tarball" ]; then
-	echo "Using Kernel from $kernel_tarball ..."
-	tar -C $temp -xJf "$kernel_tarball"
-	mv $temp/boot/uEnv.txt.in $temp/boot/uEnv.txt
-	mcopy -sm -i ${out}1 ${temp}/boot/* ::
-elif [ -e "${kernel}/pine64/Image" -a -e "${kernel}/pine64/sun50i-a64-pine64-plus.dtb" ]; then
+if [ -e "${kernel}/pine64/Image" -a -e "${kernel}/pine64/sun50i-a64-pine64-plus.dtb" ]; then
 	mcopy -sm -i ${out}1 ${kernel}/pine64 ::
 	mcopy -m -i ${out}1 ${kernel}/initrd.img :: || true
 	mcopy -m -i ${out}1 ${kernel}/uEnv.txt :: || true
