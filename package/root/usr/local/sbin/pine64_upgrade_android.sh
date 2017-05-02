@@ -33,7 +33,7 @@ if [[ "$2" != "android-7.0" ]] && [[ "$2" != "android-7.1" ]]; then
 fi
 
 REPO="ayufan-pine64/$2"
-if [[ "$(cat /etc/pine64_model)" -eq "pinebook" ]]; then
+if [[ "$(cat /etc/pine64_model)" == "pinebook" ]]; then
     PREFIX="$2-pine-a64-pinebook-v"
 else
     PREFIX="$2-pine-a64-v"

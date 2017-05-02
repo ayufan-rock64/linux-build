@@ -51,7 +51,7 @@ case "$1" in
 
     android-7.0|android-7.1)
         REPO="ayufan-pine64/$1"
-        if [[ "$(cat /etc/pine64_model)" -eq "pinebook" ]]; then
+        if [[ "$(cat /etc/pine64_model)" == "pinebook" ]]; then
             PREFIX="$1-pine-a64-pinebook-v"
         else
             PREFIX="$1-pine-a64-v"

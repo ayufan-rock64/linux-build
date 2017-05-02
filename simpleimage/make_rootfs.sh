@@ -19,7 +19,7 @@ BOOT="$5"
 MODEL="$6"
 VARIANT="$7"
 
-if [[ -z "$MODEL" ]]; then
+if [ -z "$MODEL" ]; then
   MODEL="pine64"
 fi
 
@@ -283,7 +283,7 @@ EOF
 		esac
 		do_chroot systemctl enable cpu-corekeeper
 		do_chroot systemctl enable ssh-keygen
-		if [ "$MODEL" -eq "pinebook" ]; then
+		if [ "$MODEL" = "pinebook" ]; then
 			do_chroot systemctl enable pinebook-headphones
 		fi
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
