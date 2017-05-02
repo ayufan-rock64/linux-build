@@ -18,7 +18,7 @@ usage() {
     echo "Systems:"
     echo " - ubuntu-xenial (https://github.com/ayufan-pine64/linux-build/releases)"
     echo " - android-7.0 (https://github.com/ayufan-pine64/android-7.0/releases)"
-    echo " - android-7.1 (https://github.com/ayufan-pine64/android-7.0/releases)"
+    echo " - android-7.1 (https://github.com/ayufan-pine64/android-7.1/releases)"
     echo ""
     echo "Version:"
     echo " - latest will be used if version is not defined"
