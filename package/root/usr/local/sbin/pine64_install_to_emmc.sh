@@ -16,7 +16,9 @@ usage() {
     echo "$ $0 <system> [version]"
     echo ""
     echo "Systems:"
-    echo " - ubuntu-xenial (https://github.com/ayufan-pine64/linux-build/releases)"
+    echo " - xenial-minimal (https://github.com/ayufan-pine64/linux-build/releases)"
+    echo " - xenial-mate (https://github.com/ayufan-pine64/linux-build/releases)"
+    echo " - xenial-i3 (https://github.com/ayufan-pine64/linux-build/releases)"
     echo " - android-7.0 (https://github.com/ayufan-pine64/android-7.0/releases)"
     echo " - android-7.1 (https://github.com/ayufan-pine64/android-7.1/releases)"
     echo ""
@@ -40,9 +42,9 @@ if [[ ! -e /dev/mmcblk1 ]]; then
 fi
 
 case "$1" in
-    ubuntu-xenial)
+    xenial-minimal|xenial-mate|xenial-i3)
         REPO="ayufan-pine64/linux-build"
-        PREFIX="xenial-$(cat /etc/pine64_model)-bspkernel-"
+        PREFIX="$1-$(cat /etc/pine64_model)-bspkernel-"
         SUFFIX="-[0-9]*.img.xz"
         ARCHIVER="xz -d"
         ;;

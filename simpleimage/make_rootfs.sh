@@ -17,13 +17,14 @@ PACKAGEDEB="$3"
 DISTRO="$4"
 BOOT="$5"
 MODEL="$6"
+VARIANT="$7"
 
 if [[ -z "$MODEL" ]]; then
   MODEL="pine64"
 fi
 
 if [ -z "$DEST" -o -z "$LINUX" ]; then
-	echo "Usage: $0 <destination-folder> <linux-folder> <package.deb> [distro] [<boot-folder>] [model]"
+	echo "Usage: $0 <destination-folder> <linux-folder> <package.deb> [distro] [<boot-folder>] [model] [variant: mate, i3 or empty]"
 	exit 1
 fi
 
@@ -269,8 +270,17 @@ EOF
 		cp $PACKAGEDEB $DEST/package.deb
 		do_chroot dpkg -i "package.deb"
 		do_chroot rm "package.deb"
-		do_chroot /usr/local/sbin/install_mate_desktop.sh
-		do_chroot systemctl set-default graphical.target
+		case "$VARIANT" in
+			mate)
+				do_chroot /usr/local/sbin/install_mate_desktop.sh
+				do_chroot systemctl set-default graphical.target
+				;;
+			
+			i3)
+				do_chroot /usr/local/sbin/install_i3_desktop.sh
+				do_chroot systemctl set-default graphical.target
+				;;
+		esac
 		do_chroot systemctl enable cpu-corekeeper
 		do_chroot systemctl enable ssh-keygen
 		if [ "$MODEL" -eq "pinebook" ]; then

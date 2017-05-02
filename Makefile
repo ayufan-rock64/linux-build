@@ -81,14 +81,36 @@ simple-image-pinebook-$(RELEASE_NAME).img: linux-pine64-$(RELEASE_NAME).tar.xz b
 		export uboot=../boot-tools/boot/pine64/u-boot-pine64-pinebook.bin && \
 		bash ./make_simpleimage.sh $(shell readlink -f "$@") 100 $(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz)
 
-xenial-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz linux-pine64-package-$(RELEASE_NAME).deb boot-tools
+xenial-minimal-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz linux-pine64-package-$(RELEASE_NAME).deb boot-tools
 	sudo bash ./build-pine64-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f simple-image-pinebook-$(RELEASE_NAME).img.xz) \
 		$(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz) \
 		$(shell readlink -f linux-pine64-package-$(RELEASE_NAME).deb) \
 		xenial \
-		pinebook
+		pinebook \
+		minimal
+
+xenial-mate-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz linux-pine64-package-$(RELEASE_NAME).deb boot-tools
+	sudo bash ./build-pine64-image.sh \
+		$(shell readlink -f $@) \
+		$(shell readlink -f simple-image-pinebook-$(RELEASE_NAME).img.xz) \
+		$(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz) \
+		$(shell readlink -f linux-pine64-package-$(RELEASE_NAME).deb) \
+		xenial \
+		pinebook \
+		mate \
+		7300
+
+xenial-i3-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz linux-pine64-package-$(RELEASE_NAME).deb boot-tools
+	sudo bash ./build-pine64-image.sh \
+		$(shell readlink -f $@) \
+		$(shell readlink -f simple-image-pinebook-$(RELEASE_NAME).img.xz) \
+		$(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz) \
+		$(shell readlink -f linux-pine64-package-$(RELEASE_NAME).deb) \
+		xenial \
+		pinebook \
+		i3
 
 .PHONY: kernel-tarball
 kernel-tarball: linux-pine64-$(RELEASE_NAME).tar.xz
@@ -99,5 +121,14 @@ linux-package: linux-pine64-package-$(RELEASE_NAME).deb
 .PHONY: simple-image-pinebook-$(RELEASE_NAME).img
 simple-image-pinebook: simple-image-pinebook-$(RELEASE_NAME).img
 
+.PHONY: xenial-minimal-pinebook
+xenial-minimal-pinebook: xenial-minimal-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img.xz
+
+.PHONY: xenial-mate-pinebook
+xenial-mate-pinebook: xenial-mate-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img.xz
+
+.PHONY: xenial-i3-pinebook
+xenial-i3-pinebook: xenial-i3-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img.xz
+
 .PHONY: xenial-pinebook
-xenial-pinebook: xenial-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img.xz
+xenial-pinebook: xenial-minimal-pinebook xenial-mate-pinebook xenial-i3-pinebook
