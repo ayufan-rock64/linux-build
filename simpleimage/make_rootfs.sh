@@ -271,7 +271,6 @@ EOF
 		do_chroot rm "package.deb"
 		do_chroot /usr/local/sbin/install_mate_desktop.sh
 		do_chroot systemctl set-default graphical.target
-		do_chroot systemctl enable eth0-mackeeper
 		do_chroot systemctl enable cpu-corekeeper
 		do_chroot systemctl enable ssh-keygen
 		if [ "$MODEL" -eq "pinebook" ]; then
