@@ -12,6 +12,8 @@ case "$1" in
 
     systemctl enable rtk-hciattach
     systemctl start rtk-hciattach
+
+    systemctl enable restore-sound-after-resume
     ;;
 
   *)

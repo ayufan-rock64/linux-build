@@ -1,0 +1,10 @@
+[Unit]
+Description=Restore sound after resume
+After=suspend.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/pinebook_restore_sound.sh
+
+[Install]
+WantedBy=suspend.target
