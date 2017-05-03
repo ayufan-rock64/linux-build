@@ -37,6 +37,14 @@ while true; do
     fi
 done
 
+# Taken from: https://github.com/longsleep/build-pine64-image/blob/master/convert-pine64-image.sh#L28
+boot0headerpos=$((8*1024+4))
+boot0header=$(xxd -p -s "$boot0headerpos" -l 4 "$DISK")
+if [ "$boot0header" != "65474f4e" ]; then
+    echo "Error: Target image has no eGON header, aborting!"
+    exit 1
+fi
+
 echo ""
 dd conv=notrunc bs=1k seek=8 count=32 oflag=direct if=/dev/zero of="$DISK"
 
