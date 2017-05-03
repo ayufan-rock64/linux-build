@@ -115,5 +115,7 @@ echo "Downloading and writing to /dev/mmcblk1..."
 curl -L -f "$DOWNLOAD_URL" | $ARCHIVER | dd bs=30M of=/dev/mmcblk1
 sync
 echo ""
+echo "You may want to run now pine64_remove_boot.sh to make the current device unbootable."
+echo ""
 
 echo "Done."
