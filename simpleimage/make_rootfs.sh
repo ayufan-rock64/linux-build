@@ -281,7 +281,6 @@ EOF
 				do_chroot systemctl set-default graphical.target
 				;;
 		esac
-		do_chroot systemctl enable cpu-corekeeper
 		do_chroot systemctl enable ssh-keygen
 		if [ "$MODEL" = "pinebook" ]; then
 			do_chroot systemctl enable pinebook-headphones

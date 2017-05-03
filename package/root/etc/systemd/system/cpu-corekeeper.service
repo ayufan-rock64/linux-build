@@ -1,8 +1,0 @@
-[Unit]
-Description=CPU corekeeper
-
-[Service]
-ExecStart=/usr/local/sbin/pine64_corekeeper.sh
-
-[Install]
-WantedBy=multi-user.target
