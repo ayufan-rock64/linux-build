@@ -8,7 +8,7 @@ if hash apt-get 2>/dev/null; then
 	DISTRO=debian
 fi
 
-if [[ -z "$DISTRO" ]]; then
+if [ -z "$DISTRO" ]; then
 	echo "This script requires a Debian based Linux distribution."
 	exit 1
 fi
