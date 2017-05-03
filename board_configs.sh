@@ -53,7 +53,7 @@ case ${BOARD} in
 		;;
 	"phytec")
 		DEFCONFIG=rockchip_linux_defconfig
-		UBOOT_DEFCONFIG=phycore-rk3288_defconfig # Workaround : ddr3
+		UBOOT_DEFCONFIG=phycore-rk3288_defconfig
 		DTB=rk3288-phycore-rdk.dtb
 		CHIP="rk3288"
 		;;
