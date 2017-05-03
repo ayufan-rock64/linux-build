@@ -41,7 +41,7 @@ if [ ! -d /usr/share/slim/themes/pine64 ]; then
 	cp -ra /usr/share/slim/themes/default /usr/share/slim/themes/pine64
 	wget -O /usr/share/slim/themes/pine64/background.png \
 		https://github.com/longsleep/build-pine64-image/raw/master/bootlogo/bootlogo-pine64-1366x768.png
-	sed s/^current_theme(.*)/current_theme pine64/g /etc/slim.conf
+	sed -i "s/^current_theme(.*)/current_theme pine64/g" /etc/slim.conf
 fi
 
 mkdir -p /etc/X11/xorg.conf.d
