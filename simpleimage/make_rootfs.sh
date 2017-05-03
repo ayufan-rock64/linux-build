@@ -164,20 +164,6 @@ add_platform_scripts() {
 	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_uboot.sh
 }
 
-add_corekeeper_service() {
-	cat > "$DEST/etc/systemd/system/cpu-corekeeper.service" <<EOF
-[Unit]
-Description=CPU corekeeper
-
-[Service]
-ExecStart=/usr/local/sbin/pine64_corekeeper.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-	do_chroot systemctl enable cpu-corekeeper
-}
-
 add_ssh_keygen_service() {
 	cat > "$DEST/etc/systemd/system/ssh-keygen.service" <<EOF
 [Unit]
@@ -283,7 +269,6 @@ case $DISTRO in
 		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
 		do_chroot pacman -S --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant alsa-utils || true
 		add_platform_scripts
-		add_corekeeper_service
 		add_disp_udev_rules
 		add_wifi_module_autoload
 		add_asound_state
@@ -361,7 +346,6 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
 		add_platform_scripts
-		add_corekeeper_service
 		add_ssh_keygen_service
 		add_disp_udev_rules
 		add_wifi_module_autoload
