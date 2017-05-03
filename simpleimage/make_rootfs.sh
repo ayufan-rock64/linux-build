@@ -271,11 +271,14 @@ EOF
 	cat > "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
 blacklist 8723bs_vq0
 EOF
-	if [ -e "$DEST/etc/network/interfaces" ]; then
-		cat >> "$DEST/etc/network/interfaces" <<EOF
-
-# Disable wlan1 by default (8723bs has two intefaces)
-iface wlan1 inet manual
+	if [ -d "$DEST/etc/modprobe.d" ]; then
+		# Based on https://github.com/ayufan-pine64/linux-build/commit/e03970dfd0a9b894037ecdd5a8b70ab7ad5107ea
+		# 8723bs is used in Pine64
+		# 8723cs is used in Pinebook
+		cat > "$DEST/etc/modprobe.d/wifi-rt8723-pine64.conf" <<EOF
+# Disable secondary interface and power management.
+options 8723bs if2name=p2p0 rtw_power_mgnt=0
+options 8723cs if2name=p2p0 rtw_power_mgnt=0
 EOF
 	fi
 }
