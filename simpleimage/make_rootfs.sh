@@ -253,9 +253,18 @@ EOF
 	fi
 }
 
+add_sndcodec_module_autoload() {
+	cat > "$DEST/etc/modules-load.d/pine64-speakers-jack.conf" <<EOF
+# Auto load the sndcodec driver (Audio jack, speakers) when not commented.
+#sunxi_codec
+#sunxi_i2s
+#sunxi_sndcodec
+EOF
+}
+
 add_asound_state() {
 	mkdir -p "$DEST/var/lib/alsa"
-	cp -vf ../blobs/asound-pin64.state "$DEST/var/lib/alsa/asound.state"
+	cp -vf ../blobs/asound-pine64.state "$DEST/var/lib/alsa/asound.state"
 }
 
 # Run stuff in new system.
@@ -271,6 +280,7 @@ case $DISTRO in
 		add_platform_scripts
 		add_disp_udev_rules
 		add_wifi_module_autoload
+		add_sndcodec_module_autoload
 		add_asound_state
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
@@ -349,6 +359,7 @@ EOF
 		add_ssh_keygen_service
 		add_disp_udev_rules
 		add_wifi_module_autoload
+		add_sndcodec_module_autoload
 		add_asound_state
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
