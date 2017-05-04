@@ -31,7 +31,9 @@ case $DISTRO in
 			i3status \
 			i3lock \
 			suckless-tools \
-			network-manager
+			network-manager \
+			pulseaudio \
+			pulseaudio-module-x11
 		;;
 	*)
 		;;
@@ -70,5 +72,10 @@ Section "InputClass"
 	#Option "ConstantDeceleration" "1.2" # Pinebook 11"
 EndSection
 EOF
+
+# Disable Pulseaudio timer scheduling which does not work with sndhdmi driver.
+if [ -e "/etc/pulse/default.pa" ]; then
+	sed -i 's/load-module module-udev-detect$/& tsched=0/g' /etc/pulse/default.pa
+fi
 
 echo "Done - you should reboot now."
