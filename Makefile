@@ -4,7 +4,7 @@ export LINUX_BRANCH ?= my-hacks-1.2
 export BOOT_TOOLS_BRANCH ?= master
 LINUX_LOCALVERSION ?= -ayufan-$(RELEASE)
 
-all: xenial-pinebook
+all: linux-pinebook
 
 linux/.git:
 	git clone --depth=1 --branch=$(LINUX_BRANCH) --single-branch \
@@ -112,6 +112,16 @@ xenial-i3-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebo
 		pinebook \
 		i3
 
+stretch-i3-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz linux-pine64-package-$(RELEASE_NAME).deb boot-tools
+	sudo bash ./build-pine64-image.sh \
+		$(shell readlink -f $@) \
+		$(shell readlink -f simple-image-pinebook-$(RELEASE_NAME).img.xz) \
+		$(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz) \
+		$(shell readlink -f linux-pine64-package-$(RELEASE_NAME).deb) \
+		stretch \
+		pinebook \
+		i3
+
 .PHONY: kernel-tarball
 kernel-tarball: linux-pine64-$(RELEASE_NAME).tar.xz
 
@@ -130,5 +140,11 @@ xenial-mate-pinebook: xenial-mate-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).
 .PHONY: xenial-i3-pinebook
 xenial-i3-pinebook: xenial-i3-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img.xz
 
+.PHONY: stretch-i3-pinebook
+stretch-i3-pinebook: stretch-i3-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img.xz
+
 .PHONY: xenial-pinebook
 xenial-pinebook: xenial-minimal-pinebook xenial-mate-pinebook xenial-i3-pinebook
+
+.PHONY: linux-pinebook
+linux-pinebook: xenial-minimal-pinebook xenial-mate-pinebook xenial-i3-pinebook stretch-i3-pinebook
