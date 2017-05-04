@@ -110,8 +110,6 @@ deboostrap_rootfs() {
 	bsdtar --include ./usr/share/keyrings/$KR --strip-components 4 -xvf "$DATA"
 	rm -f "$DATA"
 
-	apt-get -y install debootstrap qemu-user-static
-
 	qemu-debootstrap --arch=arm64 --keyring=$TEMP/$KR $dist rootfs http://httpredir.debian.org/debian
 	rm -f $KR
 
@@ -150,8 +148,6 @@ suite=stretch
 # Networking packages
 packages=netbase net-tools ethtool iproute iputils-ping ifupdown dhcpcd5 firmware-brcm80211 wpasupplicant ssh avahi-daemon ntp wireless-tools
 EOF
-
-	apt-get install -y multistrap qemu-user-static
 
 	multistrap -a arm64 -d rootfs -f multistrap.conf
 
