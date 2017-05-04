@@ -264,7 +264,7 @@ EOF
 
 add_asound_state() {
 	mkdir -p "$DEST/var/lib/alsa"
-	cp -vf ../blobs/asound-pine64.state "$DEST/var/lib/alsa/asound.state"
+	cp -vf ../blobs/asound.state "$DEST/var/lib/alsa/asound.state"
 }
 
 # Run stuff in new system.
