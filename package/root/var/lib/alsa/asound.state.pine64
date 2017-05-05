@@ -222,7 +222,7 @@ state.audiocodec {
 	control.15 {
 		iface MIXER
 		name 'speaker volume'
-		value 24
+		value 23
 		comment {
 			access 'read write'
 			type INTEGER
@@ -230,7 +230,7 @@ state.audiocodec {
 			range '0 - 31'
 			dbmin -4800
 			dbmax -150
-			dbvalue.0 -1200
+			dbvalue.0 -1350
 		}
 	}
 	control.16 {

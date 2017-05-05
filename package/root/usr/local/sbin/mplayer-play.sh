@@ -20,5 +20,8 @@ if [ ! -w /dev/disp ]; then
 	exit 1
 fi
 
-export VDPAU_DRIVER=sunxi
+if [ -z "VDPAU_DRIVER" ]; then
+	export VDPAU_DRIVER=sunxi
+fi
+
 exec mplayer -vo vdpau -vc ffmpeg12vdpau,ffh264vdpau,ffhevcvdpau, "$@"

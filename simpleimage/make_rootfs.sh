@@ -334,12 +334,12 @@ EOF
 		do_chroot rm "package.deb"
 		case "$VARIANT" in
 			mate)
-				do_chroot /usr/local/sbin/install_mate_desktop.sh
+				do_chroot /usr/local/sbin/install_desktop.sh mate
 				do_chroot systemctl set-default graphical.target
 				;;
 			
 			i3)
-				do_chroot /usr/local/sbin/install_i3_desktop.sh
+				do_chroot /usr/local/sbin/install_desktop.sh i3
 				do_chroot systemctl set-default graphical.target
 				;;
 		esac
