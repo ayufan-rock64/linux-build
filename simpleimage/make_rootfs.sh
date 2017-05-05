@@ -274,7 +274,7 @@ EOF
 			mate)
 				do_chroot /usr/local/sbin/install_mate_desktop.sh
 				do_chroot systemctl set-default graphical.target
-				do_chroot /usr/loca/sbin/pinebook_preinstall_apps.sh
+				do_chroot /usr/local/sbin/pinebook_preinstall_apps.sh
 				;;
 			
 			i3)
