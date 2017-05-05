@@ -45,7 +45,9 @@ case $DISTRO in
 			ubuntu-mate-desktop \
 			ubuntu-mate-lightdm-theme \
 			ubuntu-mate-wallpapers-xenial \
-			lightdm
+			lightdm \
+			libvdpau-sunxi1 \
+			vdpauinfo
 		;;
 	*)
 		;;
@@ -88,5 +90,11 @@ if [ -e "/etc/pulse/default.pa" ]; then
 	sed -i 's/load-module module-udev-detect$/& tsched=0/g' /etc/pulse/default.pa
 fi
 
+# Enable VDPAU_SUNXI globally.
+if [ -d "/etc/X11/Xsession.d" -a ! -e "/etc/X11/Xsession.d/30pine64-vdpau-sunxi" ]; then
+	cat > "/etc/X11/Xsession.d/30pine64-vdpau-sunxi" <<EOF
+export VDPAU_DRIVER=sunxi
+EOF
+fi
 
 echo "Done - you should reboot now."

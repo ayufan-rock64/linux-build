@@ -33,7 +33,9 @@ case $DISTRO in
 			suckless-tools \
 			network-manager \
 			pulseaudio \
-			pulseaudio-module-x11
+			pulseaudio-module-x11 \
+			libvdpau-sunxi1 \
+			vdpauinfo
 		;;
 	*)
 		;;
@@ -76,6 +78,13 @@ EOF
 # Disable Pulseaudio timer scheduling which does not work with sndhdmi driver.
 if [ -e "/etc/pulse/default.pa" ]; then
 	sed -i 's/load-module module-udev-detect$/& tsched=0/g' /etc/pulse/default.pa
+fi
+
+# Enable VDPAU_SUNXI globally.
+if [ -d "/etc/X11/Xsession.d" -a ! -e "/etc/X11/Xsession.d/30pine64-vdpau-sunxi" ]; then
+	cat > "/etc/X11/Xsession.d/30pine64-vdpau-sunxi" <<EOF
+export VDPAU_DRIVER=sunxi
+EOF
 fi
 
 echo "Done - you should reboot now."
