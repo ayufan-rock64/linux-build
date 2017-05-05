@@ -177,7 +177,7 @@ deb http://security.debian.org/ ${release}/updates main contrib non-free
 EOF
 }
 
-add_ubuntu_apt_sources() {
+add_pine64_apt_sources() {
 	local release="$1"
 	cat > "$DEST/etc/apt/sources.list" <<EOF
 deb http://ports.ubuntu.com/ ${release} main restricted universe multiverse
@@ -209,9 +209,9 @@ case $DISTRO in
 		rm "$DEST/etc/resolv.conf"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		if [ "$DISTRO" = "xenial" ]; then
-			DEB=ubuntu
-			DEBUSER=ubuntu
-			DEBUSERPW=ubuntu
+			DEB=pine64
+			DEBUSER=pine64
+			DEBUSERPW=pine64
 			EXTRADEBS="software-properties-common zram-config ubuntu-minimal nano"
 			ADDPPACMD="apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers"
 			DISPTOOLCMD="apt-get -y install sunxi-disp-tool"
@@ -274,6 +274,7 @@ EOF
 			mate)
 				do_chroot /usr/local/sbin/install_mate_desktop.sh
 				do_chroot systemctl set-default graphical.target
+				do_chroot /usr/loca/sbin/pinebook_preinstall_apps.sh
 				;;
 			
 			i3)
@@ -289,6 +290,7 @@ EOF
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
 		rm -f "$DEST"/etc/ssh/ssh_host_*
+		rm -f "$DEST/usr/local/sbin/pinebook_preinstall_apps.sh"
 		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 		do_chroot apt-get -y autoremove
 		do_chroot apt-get clean
