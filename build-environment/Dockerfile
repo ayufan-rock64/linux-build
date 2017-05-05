@@ -9,7 +9,7 @@ RUN apt-get install -y python git-core gnupg flex bison gperf build-essential \
     dosfstools gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
     gcc-arm-linux-gnueabi g++-arm-linux-gnueabi ccache \
     sudo cpio nano vim kmod kpartx wget bsdtar qemu-user-static \
-    pxz ruby-dev
+    pxz ruby-dev debootstrap multistrap
 
 RUN gem install fpm
 

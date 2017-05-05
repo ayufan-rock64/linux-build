@@ -83,6 +83,10 @@ case $DISTRO in
 		ROOTFS="${DISTRO}-base-arm64.tar.gz"
 		METHOD="debootstrap"
 		;;
+	stretch)
+		ROOTFS="${DISTRO}-base-arm64.tar.gz"
+		METHOD="multistrap"
+		;;
 	*)
 		echo "Unknown distribution: $DISTRO"
 		exit 1
@@ -106,10 +110,46 @@ deboostrap_rootfs() {
 	bsdtar --include ./usr/share/keyrings/$KR --strip-components 4 -xvf "$DATA"
 	rm -f "$DATA"
 
-	apt-get -y install debootstrap qemu-user-static
-
 	qemu-debootstrap --arch=arm64 --keyring=$TEMP/$KR $dist rootfs http://httpredir.debian.org/debian
 	rm -f $KR
+
+	# keeping things clean as this is copied later again
+	rm -f rootfs/usr/bin/qemu-aarch64-static
+
+	bsdtar -C $TEMP/rootfs -a -cf $tgz .
+	rm -fr $TEMP/rootfs
+
+	cd -
+}
+
+multistrap_rootfs() {
+	dist="$1"
+	tgz="$(readlink -f "$2")"
+
+	[ "$TEMP" ] || exit 1
+	cd $TEMP && pwd
+
+	cat > multistrap.conf <<EOF
+[General]
+noauth=true
+unpack=true
+debootstrap=Debian Net
+aptsources=Debian
+
+[Debian]
+# Base packages
+packages=systemd systemd-sysv udev apt kmod locales sudo
+source=http://deb.debian.org/debian/
+keyring=debian-archive-keyring
+components=main non-free
+suite=stretch
+
+[Net]
+# Networking packages
+packages=netbase net-tools ethtool iproute iputils-ping ifupdown dhcpcd5 firmware-brcm80211 wpasupplicant ssh avahi-daemon ntp wireless-tools
+EOF
+
+	multistrap -a arm64 -d rootfs -f multistrap.conf
 
 	# keeping things clean as this is copied later again
 	rm -f rootfs/usr/bin/qemu-aarch64-static
@@ -129,6 +169,8 @@ if [ ! -e "$TARBALL" ]; then
 		wget -O "$TARBALL" "$ROOTFS"
 	elif [ "$METHOD" = "debootstrap" ]; then
 		deboostrap_rootfs "$DISTRO" "$TARBALL"
+	elif [ "$METHOD" = "multistrap" ]; then
+		multistrap_rootfs "$DISTRO" "$TARBALL"
 	else
 		echo "Unknown rootfs creation method"
 		exit 1
@@ -177,6 +219,19 @@ deb http://security.debian.org/ ${release}/updates main contrib non-free
 EOF
 }
 
+add_stretch_apt_sources() {
+	local release="$1"
+	local aptsrcfile="$DEST/etc/apt/sources.list"
+	cat > "$aptsrcfile" <<EOF
+deb http://deb.debian.org/debian stretch main contrib non-free
+deb-src http://deb.debian.org/debian stretch main contrib non-free
+deb http://deb.debian.org/debian stretch-updates main contrib non-free
+deb-src http://deb.debian.org/debian stretch-updates main contrib non-free
+deb http://security.debian.org/ stretch/updates main contrib non-free
+deb-src http://security.debian.org/ stretch/updates main contrib non-free
+EOF
+}
+
 add_ubuntu_apt_sources() {
 	local release="$1"
 	cat > "$DEST/etc/apt/sources.list" <<EOF
@@ -205,7 +260,7 @@ case $DISTRO in
 		echo "No longer supported"
 		exit 1
 		;;
-	xenial|sid|jessie)
+	xenial|sid|jessie|stretch)
 		rm "$DEST/etc/resolv.conf"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		if [ "$DISTRO" = "xenial" ]; then
@@ -217,6 +272,13 @@ case $DISTRO in
 			DISPTOOLCMD="apt-get -y install sunxi-disp-tool"
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
 			DEB=debian
+			DEBUSER=debian
+			DEBUSERPW=debian
+			EXTRADEBS="sudo"
+			ADDPPACMD=
+			DISPTOOLCMD=
+		elif [ "$DISTRO" = "stretch" ]; then
+			DEB=stretch
 			DEBUSER=debian
 			DEBUSERPW=debian
 			EXTRADEBS="sudo"
