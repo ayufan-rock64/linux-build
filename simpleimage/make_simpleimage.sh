@@ -36,7 +36,7 @@ if [ "$disk_size" -lt 60 ]; then
 	exit 2
 fi
 
-if [ -z "$model" = "" ]; then
+if [ -z "$model" ]; then
     model="pine64"
 fi
 
