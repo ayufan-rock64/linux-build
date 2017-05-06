@@ -147,4 +147,4 @@ stretch-i3-pinebook: stretch-i3-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).im
 xenial-pinebook: xenial-minimal-pinebook xenial-mate-pinebook xenial-i3-pinebook
 
 .PHONY: linux-pinebook
-linux-pinebook: xenial-minimal-pinebook xenial-mate-pinebook xenial-i3-pinebook stretch-i3-pinebook
+linux-pinebook: xenial-minimal-pinebook xenial-mate-pinebook xenial-i3-pinebook
