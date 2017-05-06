@@ -22,12 +22,14 @@ BLOBS="../blobs"
 LINUX="../linux"
 INITRD="./initrd.gz"
 BOOTLOGO="../bootlogo/bootlogo-pine64-1366x768.bmp"
+BATTERY="../bootlogo/battery"
 
 # Targets file names as loaded by U-Boot.
 SUBFOLDER="pine64"
 KERNEL="$SUBFOLDER/Image"
 INITRD_IMG="initrd.img"
 BOOTLOGO_TARGET="bootlogo.bmp"
+BATTERY_TARGET="bat"
 
 if [ "$DEST" = "-" ]; then
 	DEST="../build"
@@ -90,6 +92,11 @@ else
 
 	# Add bootlogo.
 	cp -v "$BOOTLOGO" "$DEST/$BOOTLOGO_TARGET"
+	# Add battery icons.
+	mkdir "$DEST/$BATTERY_TARGET"
+	cp -v "$BATTERY/bempty.bmp" "$DEST/$BATTERY_TARGET"
+	cp -v "$BATTERY/low_pwr.bmp" "$DEST/$BATTERY_TARGET"
+	cp -v "$BATTERY/battery_charge.bmp" "$DEST/$BATTERY_TARGET"
 fi
 
 if [ ! -e "$DEST/uEnv.txt" ]; then
