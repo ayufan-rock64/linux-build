@@ -93,7 +93,7 @@ else
 	# Add bootlogo.
 	cp -v "$BOOTLOGO" "$DEST/$BOOTLOGO_TARGET"
 	# Add battery icons.
-	mkdir "$DEST/$BATTERY_TARGET"
+	mkdir -p "$DEST/$BATTERY_TARGET"
 	cp -v "$BATTERY/bempty.bmp" "$DEST/$BATTERY_TARGET"
 	cp -v "$BATTERY/low_pwr.bmp" "$DEST/$BATTERY_TARGET"
 	cp -v "$BATTERY/battery_charge.bmp" "$DEST/$BATTERY_TARGET"
