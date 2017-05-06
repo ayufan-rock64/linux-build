@@ -161,7 +161,7 @@ EOF
 }
 
 mkdir -p $BUILD
-TARBALL="$BUILD/$(basename $ROOTFS)"
+TARBALL="$TEMP/$(basename $ROOTFS)"
 mkdir -p "$BUILD"
 if [ ! -e "$TARBALL" ]; then
 	if [ "$METHOD" = "download" ]; then
@@ -182,6 +182,7 @@ echo -n "Extracting ... "
 set -x
 $UNTAR "$TARBALL" -C "$DEST"
 echo "OK"
+rm -f "$TARBALL"
 
 # Add qemu emulation.
 cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
