@@ -3365,7 +3365,7 @@
 		lv3_volt = <0x4d8>;
 		lv4_freq = <0x3c14dc00>;
 		lv4_volt = <0x4b0>;
-		lv5_freq = "98p";
+		lv5_freq = <0x39387000>;
 		lv5_volt = <0x488>;
 		lv6_freq = <0x365c0400>;
 		lv6_volt = <0x460>;
