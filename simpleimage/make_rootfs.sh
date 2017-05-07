@@ -57,6 +57,7 @@ cleanup() {
 	if [ -d "$DEST/sys/kernel" ]; then
 		umount "$DEST/sys"
 	fi
+	umount "$DEST/tmp" || true
 	if [ -d "$TEMP" ]; then
 		rm -rf "$TEMP"
 	fi
@@ -147,11 +148,13 @@ chmod a+x "$DEST/usr/sbin/policy-rc.d"
 
 do_chroot() {
 	cmd="$@"
-	chroot "$DEST" mount -t proc proc /proc || true
-	chroot "$DEST" mount -t sysfs sys /sys || true
+	mount -o bind /tmp "$DEST/tmp"
+	chroot "$DEST" mount -t proc proc /proc
+	chroot "$DEST" mount -t sysfs sys /sys
 	chroot "$DEST" $cmd
 	chroot "$DEST" umount /sys
 	chroot "$DEST" umount /proc
+	umount "$DEST/tmp"
 }
 
 add_platform_scripts() {
@@ -298,8 +301,7 @@ case $DISTRO in
 		add_asound_state
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
-export TMP=/tmp
-export TMPDIR=$TEMP
+set -ex
 sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=en_US.utf8
@@ -319,16 +321,21 @@ EOF
 			DEB=ubuntu
 			DEBUSER=ubuntu
 			DEBUSERPW=ubuntu
-			EXTRADEBS="software-properties-common zram-config ubuntu-minimal"
-			ADDPPACMD="apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers"
-			DISPTOOLCMD="apt-get -y install sunxi-disp-tool"
+			ADDPPACMD="apt-get -y update && \
+				apt-get install -y software-properties-common && \
+				apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers \
+			"
+			EXTRADEBS="\
+				zram-config \
+				ubuntu-minimal \
+				sunxi-disp-tool \
+			"
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
 			DEB=debian
 			DEBUSER=debian
 			DEBUSERPW=debian
+			ADDPPACMD=""
 			EXTRADEBS="sudo"
-			ADDPPACMD=
-			DISPTOOLCMD=
 		else
 			echo "Unknown DISTRO=$DISTRO"
 			exit 2
@@ -336,16 +343,14 @@ EOF
 		add_${DEB}_apt_sources $DISTRO
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
+set -ex
 export DEBIAN_FRONTEND=noninteractive
-export TMP=/tmp
-export TMPDIR=$TEMP
 locale-gen en_US.UTF-8
+$ADDPPACMD
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils $EXTRADEBS
 apt-get -y remove --purge ureadahead
-$ADDPPACMD
 apt-get -y update
-$DISPTOOLCMD
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
