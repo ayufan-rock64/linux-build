@@ -298,6 +298,8 @@ case $DISTRO in
 		add_asound_state
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
+export TEMP=/tmp
+export TEMPDIR=$TEMP
 sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=en_US.utf8
@@ -335,6 +337,8 @@ EOF
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 export DEBIAN_FRONTEND=noninteractive
+export TEMP=/tmp
+export TEMPDIR=$TEMP
 locale-gen en_US.UTF-8
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils $EXTRADEBS
