@@ -16,8 +16,8 @@ LINUX="$2"
 DISTRO="$3"
 BOOT="$4"
 
-if [ -z "$DEST" -o -z "$LINUX" ]; then
-	echo "Usage: $0 <destination-folder> <linux-folder> [distro] [<boot-folder>]"
+if [ -z "$DEST" ]; then
+	echo "Usage: $0 <destination-folder> [<linux-tarball>] [<distro>] [<boot-folder>]"
 	exit 1
 fi
 
@@ -27,7 +27,9 @@ if [ "$(id -u)" -ne "0" ]; then
 fi
 
 DEST=$(readlink -f "$DEST")
-LINUX=$(readlink -f "$LINUX")
+if [ -n "$LINUX" -a "$LINUX" != "-" ]; then
+	LINUX=$(readlink -f "$LINUX")
+fi
 
 if [ ! -d "$DEST" ]; then
 	echo "Destination $DEST not found or not a directory."
@@ -158,10 +160,6 @@ add_platform_scripts() {
 	cp -av ./platform-scripts/* "$DEST/usr/local/sbin"
 	chown root.root "$DEST/usr/local/sbin/"*
 	chmod 755 "$DEST/usr/local/sbin/"*
-
-	# Set Kernel and U-boot update version
-	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_kernel.sh
-	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_uboot.sh
 }
 
 add_ssh_keygen_service() {
@@ -400,7 +398,9 @@ cat <<EOF > "$DEST/etc/fstab"
 /dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
 EOF
 
-if [ -d "$LINUX" ]; then
+if [ -n "$LINUX" -a "$LINUX" != "-" -a -d "$LINUX" ]; then
+	# NOTE(longsleep): Passing Kernel as folder is deprecated. Pass a tarball!
+
 	mkdir "$DEST/lib/modules"
 	# Install Kernel modules
 	make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH="$DEST"
@@ -416,7 +416,7 @@ if [ -d "$LINUX" ]; then
 		cp -v $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
 		depmod -b $DEST $v
 	fi
-else
+elif [ -n "$LINUX" -a "$LINUX" != "-" ]; then
 	# Install Kernel modules from tarball
 	mkdir $TEMP/kernel
 	tar -C $TEMP/kernel --numeric-owner -xJf "$LINUX"
@@ -444,6 +444,10 @@ else
 
 		depmod -b $DEST $VERSION
 	fi
+
+	# Set Kernel and U-boot update version to current.
+	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_kernel.sh
+	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_uboot.sh
 fi
 
 # Clean up
