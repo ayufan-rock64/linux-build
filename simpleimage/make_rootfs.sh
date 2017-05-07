@@ -192,6 +192,41 @@ EOF
 	do_chroot systemctl enable ssh-keygen
 }
 
+add_restore_sound_service() {
+	cat > "$DEST/etc/systemd/system/restore-sound-after-resume.service" <<EOF
+[Unit]
+Description=Restore sound after resume
+After=suspend.target
+After=tmp.mount
+ConditionPathExists=/tmp/.before-suspend-asound.state
+ConditionFileIsExecutable=/usr/sbin/alsactl
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/alsactl -f /tmp/.before-suspend-asound.state restore
+ExecStart=/bin/rm -f /tmp/.before-suspend-asound.state
+
+[Install]
+WantedBy=suspend.target
+EOF
+	do_chroot systemctl enable restore-sound-after-resume
+
+	cat > "$DEST/etc/systemd/system/store-sound-on-suspend.service" <<EOF
+[Unit]
+Description=Store sound on suspend
+ConditionFileIsExecutable=/usr/sbin/alsactl
+
+[Service]
+Type=oneshot
+UMask=0077
+ExecStart=/usr/sbin/alsactl -f /tmp/.before-suspend-asound.state store
+
+[Install]
+WantedBy=sleep.target
+EOF
+	do_chroot systemctl enable store-sound-on-suspend.service
+}
+
 add_disp_udev_rules() {
 	cat > "$DEST/etc/udev/rules.d/90-sunxi-disp-permission.rules" <<EOF
 KERNEL=="disp", MODE="0770", GROUP="video"
@@ -298,6 +333,7 @@ case $DISTRO in
 		add_wifi_module_autoload
 		add_sndcodec_module_autoload
 		add_hall_module_autoload
+		add_restore_sound_service
 		add_asound_state
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
@@ -385,6 +421,7 @@ EOF
 		add_wifi_module_autoload
 		add_sndcodec_module_autoload
 		add_hall_module_autoload
+		add_restore_sound_service
 		add_asound_state
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
