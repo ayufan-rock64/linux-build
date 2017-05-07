@@ -234,6 +234,13 @@ deb-src http://ports.ubuntu.com/ ${release}-security main restricted universe mu
 EOF
 }
 
+add_blacklisted_modules() {
+	cat >> "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
+blacklist vfe_v4l2
+blacklist vfe_io
+EOF
+}
+
 add_wifi_module_autoload() {
 	cat > "$DEST/etc/modules-load.d/pine64-wifi.conf" <<EOF
 8723bs
@@ -286,6 +293,7 @@ case $DISTRO in
 		do_chroot pacman -S --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant alsa-utils || true
 		add_platform_scripts
 		add_disp_udev_rules
+		add_blacklisted_modules
 		add_wifi_module_autoload
 		add_sndcodec_module_autoload
 		add_hall_module_autoload
@@ -366,6 +374,7 @@ EOF
 		add_platform_scripts
 		add_ssh_keygen_service
 		add_disp_udev_rules
+		add_blacklisted_modules
 		add_wifi_module_autoload
 		add_sndcodec_module_autoload
 		add_hall_module_autoload
