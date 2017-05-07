@@ -23,8 +23,8 @@ if [ -z "$MODEL" ]; then
   MODEL="pine64"
 fi
 
-if [ -z "$DEST" -o -z "$LINUX" ]; then
-	echo "Usage: $0 <destination-folder> <linux-folder> <package.deb> [distro] [<boot-folder>] [model] [variant: mate, i3 or empty]"
+if [ -z "$DEST" ]; then
+	echo "Usage: $0 <destination-folder> [<linux-tarball>] <package.deb> [distro] [<boot-folder>] [model] [variant: mate, i3 or empty]"
 	exit 1
 fi
 
@@ -34,7 +34,9 @@ if [ "$(id -u)" -ne "0" ]; then
 fi
 
 DEST=$(readlink -f "$DEST")
-LINUX=$(readlink -f "$LINUX")
+if [ -n "$LINUX" -a "$LINUX" != "-" ]; then
+	LINUX=$(readlink -f "$LINUX")
+fi
 
 if [ ! -d "$DEST" ]; then
 	echo "Destination $DEST not found or not a directory."
@@ -62,6 +64,7 @@ cleanup() {
 	if [ -d "$DEST/sys/kernel" ]; then
 		umount "$DEST/sys"
 	fi
+	umount "$DEST/tmp" || true
 	if [ -d "$TEMP" ]; then
 		rm -rf "$TEMP"
 	fi
@@ -196,11 +199,13 @@ chmod a+x "$DEST/usr/sbin/policy-rc.d"
 
 do_chroot() {
 	cmd="$@"
-	chroot "$DEST" mount -t proc proc /proc || true
-	chroot "$DEST" mount -t sysfs sys /sys || true
+	mount -o bind /tmp "$DEST/tmp"
+	chroot "$DEST" mount -t proc proc /proc
+	chroot "$DEST" mount -t sysfs sys /sys
 	chroot "$DEST" $cmd
 	chroot "$DEST" umount /sys
 	chroot "$DEST" umount /proc
+	umount "$DEST/tmp"
 }
 
 add_debian_apt_sources() {
@@ -268,13 +273,21 @@ case $DISTRO in
 			DEB=ubuntu
 			DEBUSER=ubuntu
 			DEBUSERPW=ubuntu
-			EXTRADEBS="software-properties-common zram-config ubuntu-minimal nano"
-			ADDPPACMD="apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers"
-			DISPTOOLCMD="apt-get -y install sunxi-disp-tool"
+			ADDPPACMD="apt-get -y update && \
+				apt-get install -y software-properties-common && \
+				apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers \
+			"
+			EXTRADEBS="\
+				zram-config \
+				ubuntu-minimal \
+				sunxi-disp-tool \
+				nano \
+			"
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
 			DEB=debian
 			DEBUSER=debian
 			DEBUSERPW=debian
+			ADDPPACMD=""
 			EXTRADEBS="sudo"
 			ADDPPACMD=
 			DISPTOOLCMD=
@@ -292,14 +305,14 @@ case $DISTRO in
 		add_${DEB}_apt_sources $DISTRO
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
+set -ex
 export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
+$ADDPPACMD
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils jq $EXTRADEBS
 apt-get -y remove --purge ureadahead
-$ADDPPACMD
 apt-get -y update
-$DISPTOOLCMD
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
@@ -371,7 +384,9 @@ cat <<EOF > "$DEST/etc/fstab"
 /dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
 EOF
 
-if [ -d "$LINUX" ]; then
+if [ -n "$LINUX" -a "$LINUX" != "-" -a -d "$LINUX" ]; then
+	# NOTE(longsleep): Passing Kernel as folder is deprecated. Pass a tarball!
+
 	mkdir "$DEST/lib/modules"
 	# Install Kernel modules
 	make -C $LINUX ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- modules_install INSTALL_MOD_PATH="$DEST"
@@ -387,7 +402,7 @@ if [ -d "$LINUX" ]; then
 		cp -v $LINUX/modules/gpu/mali400/kernel_mode/driver/src/devicedrv/mali/mali.ko $DEST/lib/modules/$v/kernel/extramodules
 		depmod -b $DEST $v
 	fi
-else
+elif [ -n "$LINUX" -a "$LINUX" != "-" ]; then
 	# Install Kernel modules from tarball
 	mkdir $TEMP/kernel
 	tar -C $TEMP/kernel --numeric-owner -xJf "$LINUX"
@@ -415,6 +430,10 @@ else
 
 		depmod -b $DEST $VERSION
 	fi
+
+	# Set Kernel and U-boot update version to current.
+	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_kernel.sh
+	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_uboot.sh
 fi
 
 # Clean up
