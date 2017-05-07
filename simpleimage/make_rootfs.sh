@@ -238,7 +238,7 @@ add_wifi_module_autoload() {
 	cat > "$DEST/etc/modules-load.d/pine64-wifi.conf" <<EOF
 8723bs
 EOF
-	cat > "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
+	cat >> "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
 blacklist 8723bs_vq0
 EOF
 	if [ -d "$DEST/etc/modprobe.d" ]; then
@@ -262,6 +262,13 @@ add_sndcodec_module_autoload() {
 EOF
 }
 
+add_hall_module_autoload() {
+	cat > "$DEST/etc/modules-load.d/pine64-pinebook-hall.conf" <<EOF
+# Auto load hall driver (LID close).
+#hall
+EOF
+}
+
 add_asound_state() {
 	mkdir -p "$DEST/var/lib/alsa"
 	cp -vf ../blobs/asound.state "$DEST/var/lib/alsa/asound.state"
@@ -281,6 +288,7 @@ case $DISTRO in
 		add_disp_udev_rules
 		add_wifi_module_autoload
 		add_sndcodec_module_autoload
+		add_hall_module_autoload
 		add_asound_state
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
@@ -360,6 +368,7 @@ EOF
 		add_disp_udev_rules
 		add_wifi_module_autoload
 		add_sndcodec_module_autoload
+		add_hall_module_autoload
 		add_asound_state
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
