@@ -266,8 +266,8 @@ case $DISTRO in
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		if [ "$DISTRO" = "xenial" ]; then
 			DEB=ubuntu
-			DEBUSER=ubuntu
-			DEBUSERPW=ubuntu
+			DEBUSER=pine64
+			DEBUSERPW=pine64
 			ADDPPACMD="apt-get -y update && \
 				apt-get install -y software-properties-common && \
 				apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers \
@@ -279,16 +279,16 @@ case $DISTRO in
 			"
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
 			DEB=debian
-			DEBUSER=debian
-			DEBUSERPW=debian
+			DEBUSER=pine64
+			DEBUSERPW=pine64
 			ADDPPACMD=""
 			EXTRADEBS="sudo"
 			ADDPPACMD=
 			DISPTOOLCMD=
 		elif [ "$DISTRO" = "stretch" ]; then
 			DEB=stretch
-			DEBUSER=debian
-			DEBUSERPW=debian
+			DEBUSER=pine64
+			DEBUSERPW=pine64
 			EXTRADEBS="sudo"
 			ADDPPACMD=
 			DISPTOOLCMD=
