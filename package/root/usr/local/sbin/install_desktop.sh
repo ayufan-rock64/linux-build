@@ -36,7 +36,6 @@ PACKAGES=(
 	mplayer
 	scratch
 	smplayer
-	smplayer-skins
 	smplayer-themes
 	smtube
 )
