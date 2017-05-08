@@ -45,6 +45,13 @@ soc_temp() {
 	print "SOC Temp" $temp "C"
 }
 
+pmic_temp() {
+	local pmictemp=$(cat /sys/class/axppower/ic_temp)
+	if [ "X$pmictemp" != "X" ]; then
+		print "PMIC Temp" $pmictemp "C"
+	fi
+}
+
 cooling_state() {
 	local state=$(cat /sys/devices/virtual/thermal/cooling_device0/cur_state)
 	print "Cooling state" $state
@@ -62,6 +69,7 @@ all() {
 	scaling_govenor
 	vcore_voltage
 	soc_temp
+	pmic_temp
 	cooling_state
 	cooling_limit
 }
