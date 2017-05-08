@@ -46,9 +46,16 @@ soc_temp() {
 }
 
 pmic_temp() {
-	local pmictemp=$(cat /sys/class/axppower/ic_temp)
+	local pmictemp=$(cat /sys/class/axppower/ic_temp 2>/dev/null)
 	if [ "X$pmictemp" != "X" ]; then
 		print "PMIC Temp" $pmictemp "C"
+	fi
+}
+
+bat_capacity() {
+	local bat_capacity=$(cat /sys/class/power_supply/battery/capacity 2>/dev/null)
+	if [ "X$bat_capacity" != "X" ]; then
+		print "Battery" $bat_capacity '%'
 	fi
 }
 
@@ -72,6 +79,7 @@ all() {
 	pmic_temp
 	cooling_state
 	cooling_limit
+	bat_capacity
 }
 
 usage() {
