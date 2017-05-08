@@ -1,10 +1,14 @@
 [Unit]
 Description=Restore sound after resume
 After=suspend.target
+After=tmp.mount
+ConditionPathExists=/tmp/.before-suspend-asound.state
+ConditionFileIsExecutable=/usr/sbin/alsactl
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/sbin/pinebook_restore_sound.sh
+ExecStart=/usr/sbin/alsactl -f /tmp/.before-suspend-asound.state restore
+ExecStart=/bin/rm -f /tmp/.before-suspend-asound.state
 
 [Install]
 WantedBy=suspend.target

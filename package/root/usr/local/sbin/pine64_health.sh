@@ -3,7 +3,8 @@
 # Simple script to print some health data for Pine64. Some details were
 # shamelessly stolen from http://pastebin.com/bSTYCQ5u. Thanks tkaiser.
 #
-# Run this script like `sudo watch -n.5 pine64_health.sh`.
+# Run this script like `sudo watch -n2 pine64_health.sh` for a 2 sec update
+# or call `sudo pine64_health.sh -w` to get updates every 0.5 seconds (default).
 #
 
 set -e
@@ -44,6 +45,20 @@ soc_temp() {
 	print "SOC Temp" $temp "C"
 }
 
+pmic_temp() {
+	local pmictemp=$(cat /sys/class/axppower/ic_temp 2>/dev/null)
+	if [ "X$pmictemp" != "X" ]; then
+		print "PMIC Temp" $pmictemp "C"
+	fi
+}
+
+bat_capacity() {
+	local bat_capacity=$(cat /sys/class/power_supply/battery/capacity 2>/dev/null)
+	if [ "X$bat_capacity" != "X" ]; then
+		print "Battery" $bat_capacity '%'
+	fi
+}
+
 cooling_state() {
 	local state=$(cat /sys/devices/virtual/thermal/cooling_device0/cur_state)
 	print "Cooling state" $state
@@ -61,8 +76,10 @@ all() {
 	scaling_govenor
 	vcore_voltage
 	soc_temp
+	pmic_temp
 	cooling_state
 	cooling_limit
+	bat_capacity
 }
 
 usage() {
