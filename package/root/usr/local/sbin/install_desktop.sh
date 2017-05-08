@@ -29,6 +29,16 @@ PACKAGES=(
 	xserver-xorg-video-fbturbo
 	libvdpau-sunxi1
 	vdpauinfo
+	aisleriot
+	geany
+	gnomine
+	gnome-sudoku
+	mplayer
+	scratch
+	smplayer
+	smplayer-skins
+	smplayer-themes
+	smtube
 )
 
 # Add packages based on desktop selection.
