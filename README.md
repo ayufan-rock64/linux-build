@@ -1,4 +1,4 @@
-Various scripts i created while looking into Pine64 U-Boot and booting.
+Various scripts i created (ayufan) based on @longsleep changes to help with automated Linux building.
 
 ## License
 

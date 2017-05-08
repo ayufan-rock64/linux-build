@@ -51,11 +51,13 @@ if [ -n "$model" ]; then
 fi
 
 if [[ -z "$boot0" ]]; then
-  boot0="../blobs/boot0$model.bin"
+	echo "You must specify boot0 environment variable"
+	exit 2
 fi
 
 if [[ -z "$uboot" ]]; then
-  uboot="../build/u-boot-with-dtb$suffix.bin"
+	echo "You must specify uboot environment variable"
+	exit 2
 fi
 kernel="../build"
 

@@ -255,11 +255,6 @@ deb-src http://ports.ubuntu.com/ ${release}-security main restricted universe mu
 EOF
 }
 
-add_asound_state() {
-	mkdir -p "$DEST/var/lib/alsa"
-	cp -vf ../blobs/asound.state.$MODEL "$DEST/var/lib/alsa/asound.state"
-}
-
 # Run stuff in new system.
 case $DISTRO in
 	arch)

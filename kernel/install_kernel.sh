@@ -18,18 +18,13 @@ if [ -z "$DEST" ]; then
 	exit 1
 fi
 
-BLOBS="../blobs"
 LINUX="../linux"
 INITRD="./initrd.gz"
-BOOTLOGO="../bootlogo/bootlogo-pine64-1366x768.bmp"
-BATTERY="../bootlogo/battery"
 
 # Targets file names as loaded by U-Boot.
 SUBFOLDER="pine64"
 KERNEL="kernel"
 INITRD_IMG="initrd.img"
-BOOTLOGO_TARGET="bootlogo.bmp"
-BATTERY_TARGET="bat"
 
 if [ "$DEST" = "-" ]; then
 	DEST="../build"
@@ -79,32 +74,6 @@ else
 		echo "Kernel with DRM driver!"
 		basename="pine64drm"
 	fi
-
-	# Not found, use device tree from BSP.
-	echo "Compiling device tree from $BLOBS/${basename}.dts"
-	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-plus.dtb" "$BLOBS/${basename}.dts"
-	echo "Compiling device tree from $BLOBS/${basename}noplus.dts"
-	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64.dtb" "$BLOBS/${basename}noplus.dts"
-	echo "Compiling device tree from $BLOBS/${basename}so.dts"
-	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-so.dtb" "$BLOBS/${basename}so.dts"
-	echo "Compiling device tree from $BLOBS/${basename}pinebook.dts"
-	dtc -Odtb -o "$DEST/$SUBFOLDER/sun50i-a64-pine64-pinebook.dtb" "$BLOBS/${basename}pinebook.dts"
-
-	# Add bootlogo.
-	cp -v "$BOOTLOGO" "$DEST/$BOOTLOGO_TARGET"
-	# Add battery icons.
-	mkdir -p "$DEST/$BATTERY_TARGET"
-	cp -v "$BATTERY/bempty.bmp" "$DEST/$BATTERY_TARGET"
-	cp -v "$BATTERY/low_pwr.bmp" "$DEST/$BATTERY_TARGET"
-	cp -v "$BATTERY/battery_charge.bmp" "$DEST/$BATTERY_TARGET"
-fi
-
-if [ ! -e "$DEST/uEnv.txt" ]; then
-	cat <<EOF > "$DEST/uEnv.txt"
-console=tty0 console=ttyS0,115200n8 no_console_suspend
-kernel_filename=$KERNEL
-initrd_filename=$INITRD_IMG
-EOF
 fi
 
 sync
