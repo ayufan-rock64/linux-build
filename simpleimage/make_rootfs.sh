@@ -225,19 +225,6 @@ deb http://security.debian.org/ ${release}/updates main contrib non-free
 EOF
 }
 
-add_stretch_apt_sources() {
-	local release="$1"
-	local aptsrcfile="$DEST/etc/apt/sources.list"
-	cat > "$aptsrcfile" <<EOF
-deb http://deb.debian.org/debian stretch main contrib non-free
-deb-src http://deb.debian.org/debian stretch main contrib non-free
-deb http://deb.debian.org/debian stretch-updates main contrib non-free
-deb-src http://deb.debian.org/debian stretch-updates main contrib non-free
-deb http://security.debian.org/ stretch/updates main contrib non-free
-deb-src http://security.debian.org/ stretch/updates main contrib non-free
-EOF
-}
-
 add_ubuntu_apt_sources() {
 	local release="$1"
 	cat > "$DEST/etc/apt/sources.list" <<EOF
@@ -277,18 +264,11 @@ case $DISTRO in
 				ubuntu-minimal \
 				sunxi-disp-tool \
 			"
-		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" ]; then
+		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" -o "$DISTRO" = "stretch" ]; then
 			DEB=debian
 			DEBUSER=pine64
 			DEBUSERPW=pine64
 			ADDPPACMD=""
-			EXTRADEBS="sudo"
-			ADDPPACMD=
-			DISPTOOLCMD=
-		elif [ "$DISTRO" = "stretch" ]; then
-			DEB=stretch
-			DEBUSER=pine64
-			DEBUSERPW=pine64
 			EXTRADEBS="sudo"
 			ADDPPACMD=
 			DISPTOOLCMD=
