@@ -165,6 +165,14 @@ add_platform_scripts() {
 	chmod 755 "$DEST/usr/local/sbin/"*
 }
 
+add_firstboot_service() {
+	mkdir -p "$DEST/etc/pine64-firstboot.d"
+	cp -av ./firstboot/scripts.d/* "$DEST/etc/pine64-firstboot.d"
+	chown root.root "$DEST/etc/pine64-firstboot.d/"*
+	cp -av ./firstboot/pine64-firstboot.service "$DEST/etc/systemd/system/pine64-firstboot.service"
+	do_chroot systemctl enable pine64-firstboot.service
+}
+
 add_ssh_keygen_service() {
 	cat > "$DEST/etc/systemd/system/ssh-keygen.service" <<EOF
 [Unit]
@@ -280,6 +288,7 @@ EOF
 add_wifi_module_autoload() {
 	cat > "$DEST/etc/modules-load.d/pine64-wifi.conf" <<EOF
 8723bs
+#8723cs
 EOF
 	cat >> "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
 blacklist 8723bs_vq0
@@ -328,6 +337,7 @@ case $DISTRO in
 		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
 		do_chroot pacman -S --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant alsa-utils || true
 		add_platform_scripts
+		add_firstboot_service
 		add_disp_udev_rules
 		add_blacklisted_modules
 		add_wifi_module_autoload
@@ -415,6 +425,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
 		add_platform_scripts
+		add_firstboot_service
 		add_ssh_keygen_service
 		add_disp_udev_rules
 		add_blacklisted_modules
