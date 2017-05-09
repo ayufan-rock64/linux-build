@@ -16,6 +16,7 @@ fi
 
 DEVICE="/dev/mmcblk0"
 URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/linux-pine64-package-$VERSION.deb"
+CURRENTFILE="/var/lib/misc/pine64_update_package.status"
 
 if [ "$(id -u)" -ne "0" ]; then
 	echo "This script requires root."
