@@ -38,6 +38,7 @@ PACKAGES=(
 	smplayer
 	smplayer-themes
 	smtube
+	chromium-browser
 )
 
 # Add packages based on desktop selection.
