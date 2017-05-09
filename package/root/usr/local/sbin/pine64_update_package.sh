@@ -31,11 +31,6 @@ cleanup() {
 }
 trap cleanup EXIT INT
 
-CURRENT=""
-if [ -e "${CURRENTFILE}" ]; then
-	CURRENT=$(cat $CURRENTFILE)
-fi
-
 echo "Checking for update ..."
 FILENAME=$TEMP/$(basename ${URL})
 
@@ -50,5 +45,3 @@ if [ -z "$MARK_ONLY" ]; then
 else
 	echo "Mark only."
 fi
-
-echo $ETAG > "$CURRENTFILE"
