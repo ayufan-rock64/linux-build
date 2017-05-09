@@ -16,7 +16,6 @@ fi
 
 DEVICE="/dev/mmcblk0"
 URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/linux-pine64-package-$VERSION.deb"
-CURRENTFILE="/var/lib/misc/pine64_update_package.status"
 
 if [ "$(id -u)" -ne "0" ]; then
 	echo "This script requires root."
@@ -32,11 +31,6 @@ cleanup() {
 }
 trap cleanup EXIT INT
 
-CURRENT=""
-if [ -e "${CURRENTFILE}" ]; then
-	CURRENT=$(cat $CURRENTFILE)
-fi
-
 echo "Checking for update ..."
 FILENAME=$TEMP/$(basename ${URL})
 
@@ -50,6 +44,4 @@ if [ -z "$MARK_ONLY" ]; then
 	echo "Done - you should reboot now."
 else
 	echo "Mark only."
-fi
-
-echo $ETAG > "$CURRENTFILE"
+ficu
