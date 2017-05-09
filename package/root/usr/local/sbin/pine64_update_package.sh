@@ -44,4 +44,4 @@ if [ -z "$MARK_ONLY" ]; then
 	echo "Done - you should reboot now."
 else
 	echo "Mark only."
-ficu
+fi
