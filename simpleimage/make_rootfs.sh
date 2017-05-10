@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Simple script to create a rootfs for aarch64 platforms including support
 # for Kernel modules created by the rest of the scripting found in this
@@ -15,6 +15,8 @@ DEST="$1"
 LINUX="$2"
 DISTRO="$3"
 BOOT="$4"
+
+export LC_ALL=C
 
 if [ -z "$DEST" ]; then
 	echo "Usage: $0 <destination-folder> [<linux-tarball>] [<distro>] [<boot-folder>]"
@@ -165,83 +167,45 @@ add_platform_scripts() {
 	chmod 755 "$DEST/usr/local/sbin/"*
 }
 
-add_firstboot_service() {
-	mkdir -p "$DEST/etc/pine64-firstboot.d"
-	cp -av ./firstboot/scripts.d/* "$DEST/etc/pine64-firstboot.d"
+add_systemd_services() {
+	# Install and enable all systemd services
+	local services=(./systemd-services/*.service)
+	local servicename
+	for service in "${services[@]}"; do
+		servicename=$(basename $service)
+		cp -av $service "$DEST/etc/systemd/system"
+		chown root.root "$DEST/etc/systemd/system"
+		do_chroot systemctl enable $servicename
+	done
+}
+
+add_udev_rules() {
+	# Install extra udev rules.
+	cp -av ./configuration-files/udev-rules.d/* "$DEST/etc/udev/rules.d"
+	chown root.root "$DEST/etc/udev/rules.d/"*
+}
+
+add_modprobe_d() {
+	# Install modprobe.d.
+	cp -av ./configuration-files/modprobe.d/* "$DEST/etc/modprobe.d"
+	chown root.root "$DEST/etc/modprobe.d/"*
+}
+
+add_modules_load_d() {
+	# Install modules-load.d.
+	cp -av ./configuration-files/modules-load.d/* "$DEST/etc/modules-load.d"
+	chown root.root "$DEST/etc/modules-load.d/"*
+}
+
+add_firstboot_d() {
+	# Install firstboot scripts.
+	cp -av ./configuration-files/pine64-firstboot.d/* "$DEST/etc/pine64-firstboot.d"
 	chown root.root "$DEST/etc/pine64-firstboot.d/"*
-	cp -av ./firstboot/pine64-firstboot.service "$DEST/etc/systemd/system/pine64-firstboot.service"
-	do_chroot systemctl enable pine64-firstboot.service
 }
 
-add_ssh_keygen_service() {
-	cat > "$DEST/etc/systemd/system/ssh-keygen.service" <<EOF
-[Unit]
-Description=Generate SSH keys if not there
-Before=ssh.service
-ConditionPathExists=|!/etc/ssh/ssh_host_key
-ConditionPathExists=|!/etc/ssh/ssh_host_key.pub
-ConditionPathExists=|!/etc/ssh/ssh_host_rsa_key
-ConditionPathExists=|!/etc/ssh/ssh_host_rsa_key.pub
-ConditionPathExists=|!/etc/ssh/ssh_host_dsa_key
-ConditionPathExists=|!/etc/ssh/ssh_host_dsa_key.pub
-ConditionPathExists=|!/etc/ssh/ssh_host_ecdsa_key
-ConditionPathExists=|!/etc/ssh/ssh_host_ecdsa_key.pub
-ConditionPathExists=|!/etc/ssh/ssh_host_ed25519_key
-ConditionPathExists=|!/etc/ssh/ssh_host_ed25519_key.pub
-
-[Service]
-ExecStart=/usr/bin/ssh-keygen -A
-Type=oneshot
-RemainAfterExit=yes
-
-[Install]
-WantedBy=ssh.service
-EOF
-	do_chroot systemctl enable ssh-keygen
-}
-
-add_restore_sound_service() {
-	cat > "$DEST/etc/systemd/system/restore-sound-after-resume.service" <<EOF
-[Unit]
-Description=Restore sound after resume
-After=suspend.target
-After=tmp.mount
-ConditionPathExists=/tmp/.before-suspend-asound.state
-ConditionFileIsExecutable=/usr/sbin/alsactl
-
-[Service]
-Type=oneshot
-ExecStart=/usr/sbin/alsactl -f /tmp/.before-suspend-asound.state restore
-ExecStart=/bin/rm -f /tmp/.before-suspend-asound.state
-
-[Install]
-WantedBy=suspend.target
-EOF
-	do_chroot systemctl enable restore-sound-after-resume
-
-	cat > "$DEST/etc/systemd/system/store-sound-on-suspend.service" <<EOF
-[Unit]
-Description=Store sound on suspend
-ConditionFileIsExecutable=/usr/sbin/alsactl
-
-[Service]
-Type=oneshot
-UMask=0077
-ExecStart=/usr/sbin/alsactl -f /tmp/.before-suspend-asound.state store
-
-[Install]
-WantedBy=sleep.target
-EOF
-	do_chroot systemctl enable store-sound-on-suspend.service
-}
-
-add_disp_udev_rules() {
-	cat > "$DEST/etc/udev/rules.d/90-sunxi-disp-permission.rules" <<EOF
-KERNEL=="disp", MODE="0770", GROUP="video"
-KERNEL=="cedar_dev", MODE="0770", GROUP="video"
-KERNEL=="ion", MODE="0770", GROUP="video"
-KERNEL=="mali", MODE="0770", GROUP="video"
-EOF
+add_asound_state() {
+	mkdir -p "$DEST/var/lib/alsa"
+	cp -vf ../blobs/asound.state "$DEST/var/lib/alsa/asound.state"
 }
 
 add_debian_apt_sources() {
@@ -278,54 +242,6 @@ deb-src http://ports.ubuntu.com/ ${release}-security main restricted universe mu
 EOF
 }
 
-add_blacklisted_modules() {
-	cat >> "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
-blacklist vfe_v4l2
-blacklist vfe_io
-EOF
-}
-
-add_wifi_module_autoload() {
-	cat > "$DEST/etc/modules-load.d/pine64-wifi.conf" <<EOF
-8723bs
-#8723cs
-EOF
-	cat >> "$DEST/etc/modprobe.d/blacklist-pine64.conf" <<EOF
-blacklist 8723bs_vq0
-EOF
-	if [ -d "$DEST/etc/modprobe.d" ]; then
-		# Based on https://github.com/ayufan-pine64/linux-build/commit/e03970dfd0a9b894037ecdd5a8b70ab7ad5107ea
-		# 8723bs is used in Pine64
-		# 8723cs is used in Pinebook
-		cat > "$DEST/etc/modprobe.d/wifi-rt8723-pine64.conf" <<EOF
-# Disable secondary interface and power management.
-options 8723bs if2name=p2p0 rtw_power_mgnt=0
-options 8723cs if2name=p2p0 rtw_power_mgnt=0
-EOF
-	fi
-}
-
-add_sndcodec_module_autoload() {
-	cat > "$DEST/etc/modules-load.d/pine64-speakers-jack.conf" <<EOF
-# Auto load the sndcodec driver (Audio jack, speakers) when not commented.
-#sunxi_codec
-#sunxi_i2s
-#sunxi_sndcodec
-EOF
-}
-
-add_hall_module_autoload() {
-	cat > "$DEST/etc/modules-load.d/pine64-pinebook-hall.conf" <<EOF
-# Auto load hall driver (LID close).
-#hall
-EOF
-}
-
-add_asound_state() {
-	mkdir -p "$DEST/var/lib/alsa"
-	cp -vf ../blobs/asound.state "$DEST/var/lib/alsa/asound.state"
-}
-
 # Run stuff in new system.
 case $DISTRO in
 	arch)
@@ -337,13 +253,11 @@ case $DISTRO in
 		do_chroot pacman -Rsn --noconfirm linux-aarch64 || true
 		do_chroot pacman -S --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_supplicant alsa-utils || true
 		add_platform_scripts
-		add_firstboot_service
-		add_disp_udev_rules
-		add_blacklisted_modules
-		add_wifi_module_autoload
-		add_sndcodec_module_autoload
-		add_hall_module_autoload
-		add_restore_sound_service
+		add_systemd_services
+		add_udev_rules
+		add_modprobe_d
+		add_modules_load_d
+		add_firstboot_d
 		add_asound_state
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
@@ -425,14 +339,11 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
 		add_platform_scripts
-		add_firstboot_service
-		add_ssh_keygen_service
-		add_disp_udev_rules
-		add_blacklisted_modules
-		add_wifi_module_autoload
-		add_sndcodec_module_autoload
-		add_hall_module_autoload
-		add_restore_sound_service
+		add_systemd_services
+		add_udev_rules
+		add_modprobe_d
+		add_modules_load_d
+		add_firstboot_d
 		add_asound_state
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
@@ -449,12 +360,10 @@ mkdir -p "$DEST/lib"
 mkdir -p "$DEST/usr"
 
 # Create fstab
-cat <<EOF > "$DEST/etc/fstab"
-# <file system>	<dir>	<type>	<options>			<dump>	<pass>
-/dev/mmcblk0p1	/boot	vfat	defaults			0		2
-/dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
-EOF
+cp -a ./configuration-files/fstab "$DEST/etc/fstab"
+chown root.root "$DEST/etc/fstab"
 
+# Direct Kernel install
 if [ -n "$LINUX" -a "$LINUX" != "-" -a -d "$LINUX" ]; then
 	# NOTE(longsleep): Passing Kernel as folder is deprecated. Pass a tarball!
 
@@ -510,5 +419,6 @@ fi
 # Clean up
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
 rm -f "$DEST/usr/sbin/policy-rc.d"
+rm -f "$DEST/var/lib/dbus/machine-id"
 
 echo "Done - installed rootfs to $DEST"
