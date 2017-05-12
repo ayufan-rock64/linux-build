@@ -14,6 +14,8 @@ if [ "$(id -u)" -ne "0" ]; then
 	exit 1
 fi
 
+GPU_ADDR="1c40000.gpu"
+
 print() {
 	printf "%-15s: %s %s\n" "$1" "$2 $3" "$4"
 }
@@ -70,12 +72,41 @@ cooling_limit() {
 	print "Cooling limit" $limit
 }
 
+gpu_frequency() {
+	if [ ! -e /sys/devices/$GPU_ADDR/dvfs/manual ]; then
+		return
+	fi
+	local cur=$(cat /sys/devices/$GPU_ADDR/dvfs/manual|awk '{print $1}')
+	local mhz=$(awk "BEGIN {printf \"%.2f\",$cur}")
+	print "GPU freq" $mhz MHz
+}
+
+gpu_temp() {
+	if [ ! -e /sys/devices/$GPU_ADDR/dvfs/tempctrl ]; then
+		return
+	fi
+	local temp=$(cat /sys/devices/$GPU_ADDR/dvfs/tempctrl|awk '{print $6}')
+	print "GPU Temp" $temp "C"
+}
+
+gpu_voltage() {
+	if [ ! -e /sys/devices/$GPU_ADDR/dvfs/voltage ]; then
+		return
+	fi
+	local mv=$(cat /sys/devices/$GPU_ADDR/dvfs/voltage|awk '{print $1}')
+	local v=$(awk "BEGIN {printf \"%.2f\",$mv/1000}")
+	print "GPU voltage" $v "V"
+}
+
 all() {
 	cpu_frequency
+	gpu_frequency
 	cpu_count
 	scaling_govenor
 	vcore_voltage
+	gpu_voltage
 	soc_temp
+	gpu_temp
 	pmic_temp
 	cooling_state
 	cooling_limit
