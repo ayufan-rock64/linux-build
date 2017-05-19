@@ -80,8 +80,7 @@ EOF
 elif [ "${CHIP}" == "rk3399" ]; then
 	$TOOLPATH/loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
 
-	dd if=../rkbin/rk33/rk3399_ddr_800MHz_v1.08.bin of=DDRTEMP bs=4 skip=1
-	tools/mkimage -n rk3399 -T rksd -d DDRTEMP idbloader.img
+	tools/mkimage -n rk3399 -T rksd -d ../rkbin/rk33/rk3399_ddr_800MHz_v1.08.bin idbloader.img
 	cat ../rkbin/rk33/rk3399_miniloader_v1.06.bin >> idbloader.img
 	cp idbloader.img ${OUT}/u-boot/
 
