@@ -68,13 +68,13 @@ fi
 
 flash_upgt() {
 	if [ "${CHIP}" == "rk3288" ]; then
-		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_v1.01.06.bin
+		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_*.bin
 	elif [ "${CHIP}" == "rk3036" ]; then
-		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk30/rk3036_loader_v1.07.219.bin
+		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk30/rk3036_loader_*.bin
 	elif [ "${CHIP}" == "rk3399" ]; then
-		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3399_loader_v1.08.106.bin
+		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3399_loader_*.bin
 	elif [ "${CHIP}" == "rk3228" ]; then
-		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3328_loader_v1.00.238.bin
+		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3328_loader_*.bin
 	fi
 
 	sudo $TOOLPATH/rkdeveloptool wl ${SEEK} ${IMAGE}
