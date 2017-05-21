@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+if [ "$(cat /proc/device-tree/compatible)" != "pine64,pine64-plus,pinebook64" ]; then
+	exit 0
+fi
+
+# Enable sndcodec_module.
+if [ -e /etc/modules-load.d/pine64-speakers-jack.conf ]; then
+	sed -i "\
+		s/^#sunxi_codec$/sunxi_codec/g; \
+		s/^#sunxi_i2s$/sunxi_i2s/g; \
+		s/^#sunxi_sndcodec/sunxi_sndcodec/g; \
+	" /etc/modules-load.d/pine64-speakers-jack.conf
+fi
+
+# Enable hall module.
+if [ -e /etc/modules-load.d/pine64-pinebook-hall.conf ]; then
+	sed -i "s/^#hall$/hall/g" /etc/modules-load.d/pine64-pinebook-hall.conf
+fi
+
+# Disable 8723bs.
+if [ -e /etc/modules-load.d/pine64-wifi.conf ]; then
+	# NOTE(longsleep): Disable loading of bs driver. Unfortunately the module
+	# cannot be removed from the running Kernel without crashing. So this will
+	# become active on next boot.
+	sed -i "\
+		s/^8723bs$/#8723bs/g; \
+		s/^#8723cs$/8723cs/g; \
+	" /etc/modules-load.d/pine64-wifi.conf
+fi
+
+# There is no eth0 on Pinebook, grill it.
+if [ -e /etc/network/interfaces.d/eth0 ]; then
+	rm -f /etc/network/interfaces.d/eth0
+fi
+
+
+# Keep at the end, reload configs - will load configured modules if any.
+/bin/systemctl restart systemd-modules-load

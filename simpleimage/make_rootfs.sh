@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Simple script to create a rootfs for aarch64 platforms including support
 # for Kernel modules created by the rest of the scripting found in this
@@ -22,6 +22,8 @@ VARIANT="$7"
 if [ -z "$MODEL" ]; then
   MODEL="pine64"
 fi
+
+export LC_ALL=C
 
 if [ -z "$DEST" ]; then
 	echo "Usage: $0 <destination-folder> [<linux-tarball>] <package.deb> [distro] [<boot-folder>] [model] [variant: mate, i3 or empty]"
@@ -353,12 +355,10 @@ mkdir -p "$DEST/lib"
 mkdir -p "$DEST/usr"
 
 # Create fstab
-cat <<EOF > "$DEST/etc/fstab"
-# <file system>	<dir>	<type>	<options>			<dump>	<pass>
-/dev/mmcblk0p1	/boot	vfat	defaults			0		2
-/dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
-EOF
+cp -a ./configuration-files/fstab "$DEST/etc/fstab"
+chown root.root "$DEST/etc/fstab"
 
+# Direct Kernel install
 if [ -n "$LINUX" -a "$LINUX" != "-" -a -d "$LINUX" ]; then
 	# NOTE(longsleep): Passing Kernel as folder is deprecated. Pass a tarball!
 
@@ -414,5 +414,6 @@ fi
 # Clean up
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
 rm -f "$DEST/usr/sbin/policy-rc.d"
+rm -f "$DEST/var/lib/dbus/machine-id"
 
 echo "Done - installed rootfs to $DEST"
