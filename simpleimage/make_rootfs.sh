@@ -355,8 +355,11 @@ mkdir -p "$DEST/lib"
 mkdir -p "$DEST/usr"
 
 # Create fstab
-cp -a ./configuration-files/fstab "$DEST/etc/fstab"
-chown root.root "$DEST/etc/fstab"
+cat <<EOF > "$DEST/etc/fstab"
+# <file system>	<dir>	<type>	<options>			<dump>	<pass>
+/dev/mmcblk0p1	/boot	vfat	defaults			0		2
+/dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
+EOF
 
 # Direct Kernel install
 if [ -n "$LINUX" -a "$LINUX" != "-" -a -d "$LINUX" ]; then
