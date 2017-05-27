@@ -77,6 +77,8 @@ flash_upgt() {
 		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3328_loader_*.bin
 	fi
 
+	sleep 1
+
 	sudo $TOOLPATH/rkdeveloptool wl ${SEEK} ${IMAGE}
 
 	sudo $TOOLPATH/rkdeveloptool rd
