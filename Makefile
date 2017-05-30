@@ -4,7 +4,7 @@ export LINUX_BRANCH ?= my-hacks-1.2
 export BOOT_TOOLS_BRANCH ?= master
 LINUX_LOCALVERSION ?= -ayufan-$(RELEASE)
 
-all: linux-pinebook linux-pine64
+all: linux-pinebook linux-pine64 linux-sopine
 
 linux/.git:
 	git clone --depth=1 --branch=$(LINUX_BRANCH) --single-branch \
@@ -81,6 +81,12 @@ simple-image-pine64-$(RELEASE_NAME).img: linux-pine64-$(RELEASE_NAME).tar.xz boo
 		export uboot=../boot-tools/boot/pine64/u-boot-pine64-plus.bin && \
 		bash ./make_simpleimage.sh $(shell readlink -f "$@") 100 $(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz)
 
+simple-image-sopine-$(RELEASE_NAME).img: linux-pine64-$(RELEASE_NAME).tar.xz boot-tools
+	cd simpleimage && \
+		export boot0=../boot-tools/boot/pine64/boot0-pine64-sopine.bin && \
+		export uboot=../boot-tools/boot/pine64/u-boot-pine64-sopine.bin && \
+		bash ./make_simpleimage.sh $(shell readlink -f "$@") 100 $(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz)
+
 simple-image-pinebook-$(RELEASE_NAME).img: linux-pine64-$(RELEASE_NAME).tar.xz boot-tools
 	cd simpleimage && \
 		export boot0=../boot-tools/boot/pine64/boot0-pine64-pinebook.bin && \
@@ -95,6 +101,16 @@ xenial-minimal-pine64-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pin
 		$(shell readlink -f linux-pine64-package-$(RELEASE_NAME).deb) \
 		xenial \
 		pine64 \
+		minimal
+
+xenial-minimal-sopine-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-sopine-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz linux-pine64-package-$(RELEASE_NAME).deb boot-tools
+	sudo bash ./build-pine64-image.sh \
+		$(shell readlink -f $@) \
+		$(shell readlink -f $<) \
+		$(shell readlink -f linux-pine64-$(RELEASE_NAME).tar.xz) \
+		$(shell readlink -f linux-pine64-package-$(RELEASE_NAME).deb) \
+		xenial \
+		sopine \
 		minimal
 
 xenial-minimal-pinebook-bspkernel-$(RELEASE_NAME)-$(RELEASE).img: simple-image-pinebook-$(RELEASE_NAME).img.xz linux-pine64-$(RELEASE_NAME).tar.xz linux-pine64-package-$(RELEASE_NAME).deb boot-tools
@@ -170,3 +186,9 @@ linux-pinebook: xenial-minimal-pinebook xenial-mate-pinebook xenial-i3-pinebook
 
 .PHONY: linux-pine64
 linux-pine64: xenial-minimal-pine64
+
+.PHONY: xenial-minimal-sopine
+ xenial-minimal-sopine: xenial-minimal-sopine-bspkernel-$(RELEASE_NAME)-$(RELEASE).img.xz
+
+.PHONY: linux-sopine
+linux-sopine: xenial-minimal-sopine
