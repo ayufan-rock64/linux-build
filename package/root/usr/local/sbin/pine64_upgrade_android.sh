@@ -35,6 +35,8 @@ fi
 REPO="ayufan-pine64/$2"
 if [[ "$(cat /etc/pine64_model)" == "pinebook" ]]; then
     PREFIX="$2-pine-a64-pinebook-v"
+elif [[ "$(cat /etc/pine64_model)" == "sopine" ]]; then
+    PREFIX="$2-pine-a64-sopine-v"
 else
     PREFIX="$2-pine-a64-v"
 fi
