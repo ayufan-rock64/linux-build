@@ -66,6 +66,7 @@ linux-pine64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
 		-a arm64 \
+		--config-files /var/lib/alsa/asound.state \
 		package/root/=/ \
 		package/rtk_bt/rtk_hciattach/rtk_hciattach=/usr/local/sbin/rtk_hciattach
 
