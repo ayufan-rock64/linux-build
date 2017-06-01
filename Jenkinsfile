@@ -7,7 +7,7 @@ properties([
     string(defaultValue: 'ayufan-pine64', description: 'GitHub username or organization', name: 'GITHUB_USER'),
     string(defaultValue: 'build-pine64-image', description: 'GitHub repository', name: 'GITHUB_REPO'),
     booleanParam(defaultValue: true, description: 'Whether to upload to Github for release or not', name: 'GITHUB_UPLOAD'),
-    string(devaultValue: 'all', description: 'What build type to target', name: 'MAKE_TARGET'),
+    string(devaultValue: 'all', description: 'What makefile build type to target', name: 'MAKE_TARGET'),
   ])
 ])
 */
@@ -86,7 +86,7 @@ node('docker && linux-build') {
           }
           else
           {
-             echo 'Flagged as non-release build'
+             echo 'Flagged as no upload release job'
           }
         }
       }
