@@ -6,6 +6,7 @@ properties([
     booleanParam(defaultValue: false, description: 'If build should be marked as pre-release', name: 'PRERELEASE'),
     string(defaultValue: 'ayufan-pine64', description: 'GitHub username or organization', name: 'GITHUB_USER'),
     string(defaultValue: 'build-pine64-image', description: 'GitHub repository', name: 'GITHUB_REPO'),
+    booleanParam(defaultValue: true, descriptoin: 'Whether to upload to Github for release or not', name: 'GITHUB_RELEASE'),
   ])
 ])
 */
@@ -48,6 +49,7 @@ node('docker && linux-build') {
           "GITHUB_REPO=$GITHUB_REPO"
         ]) {
           stage 'Release'
+          if (GITHUB_UPLOAD == true) { 
           sh '''#!/bin/bash
             set -xe
             shopt -s nullglob
@@ -80,6 +82,11 @@ node('docker && linux-build') {
                 --description "${CHANGES}\n\n${BUILD_URL}"
             fi
           '''
+          }
+          else
+          {
+             echo 'Flagged as non-release build'
+          }
         }
       }
     }
