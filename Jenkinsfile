@@ -6,7 +6,8 @@ properties([
     booleanParam(defaultValue: false, description: 'If build should be marked as pre-release', name: 'PRERELEASE'),
     string(defaultValue: 'ayufan-pine64', description: 'GitHub username or organization', name: 'GITHUB_USER'),
     string(defaultValue: 'build-pine64-image', description: 'GitHub repository', name: 'GITHUB_REPO'),
-    booleanParam(defaultValue: true, descriptoin: 'Whether to upload to Github for release or not', name: 'GITHUB_RELEASE'),
+    booleanParam(defaultValue: true, description: 'Whether to upload to Github for release or not', name: 'GITHUB_UPLOAD'),
+    string(devaultValue: 'all', description: 'What build type to target', name: 'MAKE_TARGET'),
   ])
 ])
 */
@@ -37,7 +38,7 @@ node('docker && linux-build') {
             sh '''#!/bin/bash
               set +xe
               export CCACHE_DIR=$WORKSPACE/ccache
-              make -j4
+              make -j4 $MAKE_TARGET
             '''
         }
   
