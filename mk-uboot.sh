@@ -44,7 +44,7 @@ elif [ "${CHIP}" == "rk3036" ]; then
 	tools/mkimage -n rk3036 -T rksd -d spl/u-boot-spl.bin idbloader.img
 	cat u-boot-dtb.bin >>idbloader.img
 	cp idbloader.img ${OUT}/u-boot/
-elif [ "${CHIP}" == "rk3328" ]; then
+elif [ "${CHIP}" == "rk3328" ] || [ "$CHIP" == "rock64" ]; then
 	$TOOLPATH/loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
 
 	dd if=../rkbin/rk33/rk3328_ddr_786MHz_v1.06.bin of=DDRTEMP bs=4 skip=1
