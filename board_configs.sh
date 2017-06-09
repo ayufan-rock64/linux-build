@@ -35,10 +35,10 @@ case ${BOARD} in
 		export CROSS_COMPILE=aarch64-linux-gnu-
 		CHIP="rk3328"
 	;;
-	"rock64")
+	"rk3328-rock64")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=evb-rk3328_defconfig
-		DTB=rock64.dtb
+		DTB=rk3328-rock64.dtb
 		export ARCH=arm64
 		export CROSS_COMPILE=aarch64-linux-gnu-
 		CHIP="rk3328"
