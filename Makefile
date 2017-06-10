@@ -94,7 +94,7 @@ out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
 	build/mk-uboot.sh rk3328-rock64
 
 %.img: %-system.img
-	build/mk-image.sh -c rk3328 -t system -s 4000 -r "$<" -o "$@"
+	build/mk-image.sh -c rk3328 -t system -r "$<" -o "$@"
 
 .PHONY: kernel
 kernel: out/boot.img
