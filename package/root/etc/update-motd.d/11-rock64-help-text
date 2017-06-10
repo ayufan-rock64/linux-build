@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ $(id -u) -eq 0 ]; then
+    echo ""
+    echo "Update system with:"
+    echo ""
+    echo " * rock64_update_package.sh"
+fi

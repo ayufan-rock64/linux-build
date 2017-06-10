@@ -20,7 +20,7 @@ MODEL="$6"
 VARIANT="$7"
 
 if [ -z "$MODEL" ]; then
-  MODEL="pine64"
+  MODEL="rock64"
 fi
 
 export LC_ALL=C
@@ -255,12 +255,8 @@ case $DISTRO in
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		if [ "$DISTRO" = "xenial" ]; then
 			DEB=ubuntu
-			DEBUSER=pine64
-			DEBUSERPW=pine64
-			ADDPPACMD="apt-get -y update && \
-				apt-get install -y software-properties-common && \
-				apt-add-repository -y ppa:longsleep/ubuntu-pine64-flavour-makers \
-			"
+			DEBUSER=rock64
+			DEBUSERPW=rock64
 			EXTRADEBS="\
 				zram-config \
 				ubuntu-minimal \
@@ -268,8 +264,8 @@ case $DISTRO in
 			"
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" -o "$DISTRO" = "stretch" ]; then
 			DEB=debian
-			DEBUSER=pine64
-			DEBUSERPW=pine64
+			DEBUSER=rock64
+			DEBUSERPW=rock64
 			ADDPPACMD=""
 			EXTRADEBS="sudo"
 			ADDPPACMD=
@@ -304,9 +300,6 @@ auto eth0
 iface eth0 inet dhcp
 EOF
 		cat > "$DEST/etc/hostname" <<EOF
-$MODEL
-EOF
-		cat > "$DEST/etc/pine64_model" <<EOF
 $MODEL
 EOF
 		cat > "$DEST/etc/hosts" <<EOF
@@ -387,7 +380,7 @@ elif [ -n "$LINUX" -a "$LINUX" != "-" ]; then
 	if [ -n "$BOOT" -a -e "$BOOT/uEnv.txt" ]; then
 		# Install Kernel and uEnv.txt too.
 		echo "Installing Kernel to boot $BOOT ..."
-		rm -rf "$BOOT/pine64"
+		rm -rf "$BOOT/rock64"
 		rm -f "$BOOT/uEnv.txt"
 		cp -RLp $TEMP/kernel/boot/* "$BOOT/"
 		mv "$BOOT/uEnv.txt.in" "$BOOT/uEnv.txt"
@@ -410,8 +403,8 @@ elif [ -n "$LINUX" -a "$LINUX" != "-" ]; then
 	fi
 
 	# Set Kernel and U-boot update version to current.
-	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_kernel.sh
-	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_uboot.sh
+	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/rock64_update_kernel.sh
+	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/rock64_update_uboot.sh
 fi
 
 # Clean up

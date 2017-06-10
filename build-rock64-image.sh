@@ -3,10 +3,6 @@
 # This scripts takes a simpleimage and a kernel tarball, resizes the
 # secondary partition and creates a rootfs inside it. Then extracts the
 # Kernel tarball on top of it, resulting in a full Pine64 disk image.
-#
-# Latest stuff can be found at the following locations:
-# -  https://www.stdin.xyz/downloads/people/longsleep/pine64-images/simpleimage-pine64-latest.img.xz
-# -  https://www.stdin.xyz/downloads/people/longsleep/pine64-images/linux/linux-pine64-latest.tar.xz"
 
 OUT_IMAGE="$1"
 SIMPLEIMAGE="$2"
@@ -17,7 +13,7 @@ MODEL="$6"
 VARIANT="$7"
 SIZE="${8:-3650}"
 if [[ -z "$MODEL" ]]; then
-  MODEL="pine64"
+  MODEL="rock64"
 fi
 export MODEL
 
@@ -47,11 +43,8 @@ echo "> Building in $TEMP ..."
 cleanup() {
     local arg=$?
     echo "> Cleaning up ..."
-    umount "$TEMP/boot" || true
-    umount $TEMP/rootfs/* || true
-    umount "$TEMP/rootfs" || true
-    kpartx -sd "$TEMP/$IMAGE" || true
-    kpartx -sd "$OUT_IMAGE" || true
+    umount $TEMP/image/* || true
+    umount "$TEMP/image" || true
     rmdir "$TEMP/boot"
     rmdir "$TEMP/rootfs"
     rm -r "$TEMP"
@@ -61,31 +54,27 @@ trap cleanup EXIT
 
 set -ex
 
-# Unpack
-unxz -k --stdout "$SIMPLEIMAGE" > "$TEMP/$IMAGE"
-# Enlarge
-dd if=/dev/zero bs=1M seek=$(($SIZE-1)) count=1 of="$TEMP/$IMAGE"
-# Resize
-echo ",+,L" | sfdisk -N 2 -L -uS --force "$TEMP/$IMAGE"
+# Create folders
+mkdir -p "$TEMP/rootfs" "$TEMP/boot" "$TEMP/image"
 
-# Device
-mkdir "$TEMP/boot"
-mkdir "$TEMP/rootfs"
-DEVICE=$(losetup --show --find "$TEMP/$IMAGE")
-DEVICENAME=$(basename $DEVICE)
-echo "> Device is $DEVICE ..."
-kpartx -avs $DEVICE
+# Create image
+./make_rootfs.sh "$TEMP/rootfs" "$KERNELTAR" "$PACKAGEDEB" "$DISTRO" "$TEMP/boot" "$MODEL" "$VARIANT"
 
-# Resize filesystem
-resize2fs /dev/mapper/${DEVICENAME}p2 || true
+# Create
+dd if=/dev/zero of="$TEMP/$IMAGE" bs=1M seek=$(($SIZE-1)) count=1
 
-# Mount
-mount /dev/mapper/${DEVICENAME}p1 "$TEMP/boot"
-mount /dev/mapper/${DEVICENAME}p2 "$TEMP/rootfs"
+# Make filesystem
+mkfs.ext4 "$TEMP/$IMAGE"
+
+# Mount filesystem
+mount "$TEMP/$IMAGE" "$TEMP/image"
+
+# Copy all files
+sudo cp -rfp $TEMP/$IMAGE/rootfs/*  "$TEMP/image"
+
+# Umount filesystem
+umount "$TEMP/image"
 
 sleep 2
-(cd simpleimage && sh ./make_rootfs.sh "$TEMP/rootfs" "$KERNELTAR" "$PACKAGEDEB" "$DISTRO" "$TEMP/boot" "$MODEL" "$VARIANT")
 
 mv -v "$TEMP/$IMAGE" "$OUT_IMAGE"
-
-fstrim "$TEMP/rootfs"

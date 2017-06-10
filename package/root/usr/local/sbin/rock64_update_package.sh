@@ -5,7 +5,7 @@ set -e
 VERSION="$1"
 
 if [ -z "$1" ]; then
-	VERSION=$(curl -s https://api.github.com/repos/ayufan-pine64/linux-build/releases/latest | jq -r ".tag_name")
+	VERSION=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-build/releases/latest | jq -r ".tag_name")
 	if [ -z "$VERSION" ]; then
 		echo "Latest release was not found. Please go to: $LATEST_LIST"
 		exit 1
@@ -15,7 +15,7 @@ if [ -z "$1" ]; then
 fi
 
 DEVICE="/dev/mmcblk0"
-URL="https://github.com/ayufan-pine64/linux-build/releases/download/$VERSION/linux-pine64-package-$VERSION.deb"
+URL="https://github.com/ayufan-rock64/linux-build/releases/download/$VERSION/linux-rock64-package-$VERSION.deb"
 
 if [ "$(id -u)" -ne "0" ]; then
 	echo "This script requires root."
