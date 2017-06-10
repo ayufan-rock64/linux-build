@@ -23,6 +23,10 @@ if [ -z "$MODEL" ]; then
   MODEL="rock64"
 fi
 
+if [ -z "$BUILD_ARCH" ]; then
+  BUILD_ARCH=arm64
+fi
+
 export LC_ALL=C
 
 if [ -z "$DEST" ]; then
@@ -82,14 +86,14 @@ case $DISTRO in
 		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
 		;;
 	xenial)
-		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base-arm64.tar.gz"
+		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base-${BUILD_ARCH}.tar.gz"
 		;;
 	sid|jessie)
-		ROOTFS="${DISTRO}-base-arm64.tar.gz"
+		ROOTFS="${DISTRO}-base-${BUILD_ARCH}.tar.gz"
 		METHOD="debootstrap"
 		;;
 	stretch)
-		ROOTFS="${DISTRO}-base-arm64.tar.gz"
+		ROOTFS="${DISTRO}-base-${BUILD_ARCH}.tar.gz"
 		METHOD="multistrap"
 		;;
 	*)
@@ -191,6 +195,7 @@ rm -f "$TARBALL"
 
 # Add qemu emulation.
 cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
+cp /usr/bin/qemu-arm-static "$DEST/usr/bin"
 
 # Prevent services from starting
 cat > "$DEST/usr/sbin/policy-rc.d" <<EOF
@@ -400,6 +405,7 @@ elif [ -n "$LINUX" -a "$LINUX" != "-" ]; then
 fi
 
 # Clean up
+rm -f "$DEST/usr/bin/qemu-arm-static"
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
 rm -f "$DEST/usr/sbin/policy-rc.d"
 rm -f "$DEST/var/lib/dbus/machine-id"
