@@ -1,6 +1,7 @@
 export RELEASE_NAME ?= 0.1~dev
 export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master
+export BUILD_ARCH ?= arm64
 
 all: linux-rock64
 
@@ -23,7 +24,7 @@ linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
-		-a arm64 \
+		-a $(BUILD_ARCH) \
 		package/root/=/ \
 		package/rtk_bt/rtk_hciattach/rtk_hciattach=/usr/local/sbin/rtk_hciattach
 
