@@ -17,6 +17,8 @@ RUN curl -L https://github.com/aktau/github-release/releases/download/v0.6.2/lin
     mv /tmp/bin/linux/amd64/github-release /usr/local/bin/
 
 RUN which github-release
+RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo && \
+    chmod +x /usr/local/bin/repo
 
 ENV USER=root \
     HOME=/root
