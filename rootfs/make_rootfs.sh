@@ -289,15 +289,10 @@ adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
 usermod -a -G sudo,adm,input,video,plugdev $DEBUSER
-apt-get -y autoremove
 apt-get clean
 EOF
 		chmod +x "$DEST/second-phase"
 		do_chroot /second-phase
-		cat > "$DEST/etc/network/interfaces.d/eth0" <<EOF
-auto eth0
-iface eth0 inet dhcp
-EOF
 		cat > "$DEST/etc/hostname" <<EOF
 $MODEL
 EOF
@@ -327,15 +322,11 @@ EOF
 				;;
 		esac
 		do_chroot systemctl enable ssh-keygen
-		if [ "$MODEL" = "pinebook" ]; then
-			do_chroot systemctl enable pinebook-headphones
-		fi
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 		rm -f "$DEST/second-phase"
 		rm -f "$DEST/etc/resolv.conf"
 		rm -f "$DEST"/etc/ssh/ssh_host_*
 		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
-		do_chroot apt-get -y autoremove
 		do_chroot apt-get clean
 		;;
 	*)
@@ -349,9 +340,11 @@ mkdir -p "$DEST/usr"
 # Create fstab
 cat <<EOF > "$DEST/etc/fstab"
 # <file system>	<dir>	<type>	<options>			<dump>	<pass>
-/dev/mmcblk0p1	/boot	vfat	defaults			0		2
-/dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
+#/dev/mmcblk0p1	/boot	vfat	defaults			0		2
+#/dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
 EOF
+
+echo "$LINUX"
 
 # Direct Kernel install
 if [ -n "$LINUX" -a "$LINUX" != "-" -a -d "$LINUX" ]; then

@@ -17,7 +17,7 @@ if [[ -z "$MODEL" ]]; then
 fi
 export MODEL
 
-if [ -z "$SIMPLEIMAGE" -o -z "$KERNELTAR" ]; then
+if [ -z "$VARIANT" ]; then
 	echo "Usage: $0 <result.img> <simpleimage.img.xz> <kernel.tar.xz> <package.deb> [distro] [model] [variant: mate, i3, empty] [size (MiB)]"
 	exit 1
 fi
@@ -32,12 +32,11 @@ if [ -z "$DISTRO" ]; then
 fi
 
 SIMPLEIMAGE=$(readlink -f "$SIMPLEIMAGE")
-KERNELTAR=$(readlink -f "$KERNELTAR")
+[[ -n "$KERNELTAR" ]] && KERNELTAR=$(readlink -f "$KERNELTAR")
 
 PWD=$(readlink -f .)
 TEMP=$(mktemp -p $PWD -d -t "$MODEL-build-XXXXXXXXXX")
 IMAGE="$(basename "$OUT_IMAGE")"
-OUT_IMAGE="$(readlink -f "$IMAGE")"
 echo "> Building in $TEMP ..."
 
 cleanup() {
@@ -45,8 +44,6 @@ cleanup() {
     echo "> Cleaning up ..."
     umount $TEMP/image/* || true
     umount "$TEMP/image" || true
-    rmdir "$TEMP/boot"
-    rmdir "$TEMP/rootfs"
     rm -r "$TEMP"
     exit $arg
 }
@@ -70,7 +67,7 @@ mkfs.ext4 "$TEMP/$IMAGE"
 mount "$TEMP/$IMAGE" "$TEMP/image"
 
 # Copy all files
-sudo cp -rfp $TEMP/$IMAGE/rootfs/*  "$TEMP/image"
+sudo cp -rfp $TEMP/rootfs/*  "$TEMP/image"
 
 # Umount filesystem
 umount "$TEMP/image"
