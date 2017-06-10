@@ -11,6 +11,8 @@ RUN apt-get install -y python git-core gnupg flex bison gperf build-essential \
     sudo cpio nano vim kmod kpartx wget bsdtar qemu-user-static \
     pxz ruby-dev debootstrap multistrap
 
+RUN apt-get install -y libssl-dev
+
 RUN gem install fpm
 
 RUN curl -L https://github.com/aktau/github-release/releases/download/v0.6.2/linux-amd64-github-release.tar.bz2 | tar -C /tmp -jx && \
