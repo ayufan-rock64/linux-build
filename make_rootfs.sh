@@ -260,7 +260,6 @@ case $DISTRO in
 			EXTRADEBS="\
 				zram-config \
 				ubuntu-minimal \
-				sunxi-disp-tool \
 			"
 		elif [ "$DISTRO" = "sid" -o "$DISTRO" = "jessie" -o "$DISTRO" = "stretch" ]; then
 			DEB=debian
