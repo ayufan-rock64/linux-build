@@ -34,7 +34,7 @@ linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 	pxz -f -3 $<
 
 xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-rock64-image.sh \
+	sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f $<) \
 		"" \
@@ -44,62 +44,62 @@ xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(REL
 		minimal
 
 xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-rock64-image.sh \
+	sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f $<) \
 		$(shell readlink -f linux-rock64-$(RELEASE_NAME).tar.xz) \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		xenial \
-		pinebook \
+		rock64 \
 		minimal
 
 xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-rock64-image.sh \
+	sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f $<) \
 		"" \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		xenial \
-		pinebook \
+		rock64 \
 		mate \
 		7300
 
 xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-rock64-image.sh \
+	sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f $<) \
 		"" \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		xenial \
-		pinebook \
+		rock64 \
 		i3
 
 stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-rock64-image.sh \
+	sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f $<) \
 		"" \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		stretch \
-		pinebook \
+		rock64 \
 		i3
 
 .PHONY: linux-package
 linux-package: linux-rock64-package-$(RELEASE_NAME).deb
 
-.PHONY: xenial-minimal-pinebook
-xenial-minimal-rock64: xenial-minimal-pinebook-$(RELEASE_NAME)-$(RELEASE).img.xz
+.PHONY: xenial-minimal-rock64
+xenial-minimal-rock64: xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE).img.xz
 
-.PHONY: xenial-mate-pinebook
-xenial-mate-rock64: xenial-mate-pinebook-$(RELEASE_NAME)-$(RELEASE).img.xz
+.PHONY: xenial-mate-rock64
+xenial-mate-rock64: xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE).img.xz
 
-.PHONY: xenial-i3-pinebook
-xenial-i3-rock64: xenial-i3-pinebook-$(RELEASE_NAME)-$(RELEASE).img.xz
+.PHONY: xenial-i3-rock64
+xenial-i3-rock64: xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE).img.xz
 
-.PHONY: stretch-i3-pinebook
-stretch-i3-rock64: stretch-i3-pinebook-$(RELEASE_NAME)-$(RELEASE).img.xz
+.PHONY: stretch-i3-rock64
+stretch-i3-rock64: stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE).img.xz
 
-.PHONY: xenial-pinebook
+.PHONY: xenial-rock64
 xenial-rock64: xenial-minimal-rock64 xenial-mate-rock64 xenial-i3-rock64
 
 .PHONY: linux-rock64
