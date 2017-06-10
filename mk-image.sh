@@ -81,6 +81,16 @@ generate_system_image() {
 
 	echo "Generate System image : ${SYSTEM} !"
 
+	if [[ -z "$SIZE" ]]; then
+		SIZE=$(stat -c%s "${ROOTFS_PATH}")
+		SIZE=$(($ROOTFS_START*512+SIZE))
+
+		# Align to 1MB
+		SIZE=$((SIZE+1024*1024-1))
+		SIZE=$((SIZE/1024/1024))
+		echo "Deduced size: $SIZE."
+	fi
+
 	dd if=/dev/zero of=${SYSTEM} bs=1M count=0 seek=$SIZE
 
 	parted -s ${SYSTEM} mklabel gpt
@@ -91,6 +101,7 @@ generate_system_image() {
 	parted -s ${SYSTEM} unit s mkpart atf ${ATF_START} $(expr ${BOOT_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart boot ${BOOT_START} $(expr ${ROOTFS_START} - 1)
 	parted -s ${SYSTEM} set 6 boot on
+	parted -s ${SYSTEM} unit s mkpart root ${ROOTFS_START} 100%
 
 	# burn u-boot
 	if [ "$CHIP" == "rk3288" ] || [ "$CHIP" == "rk3036" ]; then
@@ -120,7 +131,6 @@ generate_system_image() {
 		exit 1
 	fi
 	dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START}
-	parted -s ${SYSTEM} unit s mkpart root ${ROOTFS_START} 100%
 }
 
 if [ "$TARGET" = "boot" ]; then
