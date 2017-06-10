@@ -40,7 +40,7 @@ case ${BOARD} in
 		UBOOT_DEFCONFIG=rock64-rk3328_defconfig
 		DTB=rk3328-rock64.dtb
 		export ARCH=arm64
-		export CROSS_COMPILE=aarch64-linux-gnu-
+		export CROSS_COMPILE="ccache aarch64-linux-gnu-"
 		CHIP="rk3328"
 	;;
 	"rk3288-evb")
