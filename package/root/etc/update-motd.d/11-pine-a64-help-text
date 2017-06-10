@@ -4,11 +4,11 @@ if [ $(id -u) -eq 0 ]; then
     echo ""
     echo "Update system with:"
     echo ""
-    echo " * pine64_update_kernel.sh"
-    echo " * pine64_update_uboot.sh"
-    echo " * pine64_update_package.sh"
+    echo " * rock64_update_kernel.sh"
+    echo " * rock64_update_uboot.sh"
+    echo " * rock64_update_package.sh"
 
     if [ -d /sys/devices/soc.0/1c10000.sdmmc/mmc_host/mmc1 ]; then
-        echo " * pine64_install_to_emmc.sh"
+        echo " * rock64_install_to_emmc.sh"
     fi
 fi

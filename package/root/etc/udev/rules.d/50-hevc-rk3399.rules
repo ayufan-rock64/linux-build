@@ -1,0 +1,1 @@
+KERNEL=="rkvdec", MODE="0666", GROUP="video"

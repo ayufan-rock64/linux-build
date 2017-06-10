@@ -1,2 +1,0 @@
-# Disable wlan1 by default (8723bs has two intefaces)
-iface wlan1 inet manual

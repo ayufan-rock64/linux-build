@@ -1,0 +1,27 @@
+# Configuration for rt5640 driver
+
+# playback
+CTL{reset}="mixer"
+CTL{name}="DAC MIXL INF1 Switch", CTL{value}="on"
+CTL{name}="DAC MIXR INF1 Switch", CTL{value}="on"
+CTL{name}="Stereo DAC MIXL DAC L1 Switch", CTL{value}="on"
+CTL{name}="Stereo DAC MIXR DAC R1 Switch", CTL{value}="on"
+CTL{name}="OUT MIXL DAC L1 Switch", CTL{value}="on"
+CTL{name}="OUT MIXR DAC R1 Switch", CTL{value}="on"
+CTL{name}="HPOVOL L Switch", CTL{value}="on"
+CTL{name}="HPOVOL R Switch", CTL{value}="on"
+CTL{name}="HPO MIX HPVOL Switch", CTL{value}="on"
+CTL{name}="HPO L Playback Switch", CTL{value}="on"
+CTL{name}="HPO R Playback Switch", CTL{value}="on, on"
+#CTL{name}="Speaker Playback Volume", CTL{value}="18, 18"
+
+CTL{name}="RECMIXL BST2 Switch", CTL{value}="on"
+CTL{name}="RECMIXR BST2 Switch", CTL{value}="on"
+CTL{name}="Stereo1 ADC L1 Mux", CTL{value}="ADC"
+CTL{name}="Stereo1 ADC R1 Mux", CTL{value}="ADC"
+CTL{name}="Stereo1 ADC MIXL ADC1 Switch", CTL{value}="on"
+CTL{name}="Stereo1 ADC MIXR ADC1 Switch", CTL{value}="on"
+CTL{name}="ADC Capture Switch", CTL{value}="on"
+CTL{name}="IN2 Boost", CTL{value}="2"
+CTL{name}="ADC Capture Volume", CTL{value}="47, 47"
+RESULT="true", EXIT="return"

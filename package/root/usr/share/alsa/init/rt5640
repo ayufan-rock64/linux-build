@@ -1,0 +1,28 @@
+# Configuration for rt5640 driver
+
+# playback
+CTL{reset}="mixer"
+CTL{name}="DAI select", CTL{value}="0"
+CTL{name}="DAC MIXL INF1 Switch", CTL{value}="on"
+CTL{name}="DAC MIXR INF1 Switch", CTL{value}="on"
+CTL{name}="Stereo DAC MIXL DAC L1 Switch", CTL{value}="on"
+CTL{name}="Stereo DAC MIXR DAC R1 Switch", CTL{value}="on"
+CTL{name}="SPK MIXL DAC L1 Switch", CTL{value}="on"
+CTL{name}="SPK MIXR DAC R1 Switch", CTL{value}="on"
+CTL{name}="SPOL MIX SPKVOL L Switch", CTL{value}="on"
+CTL{name}="SPOR MIX SPKVOL R Switch", CTL{value}="on"
+CTL{name}="Speaker L Playback Switch", CTL{value}="on"
+CTL{name}="Speaker R Playback Switch", CTL{value}="on"
+CTL{name}="Speaker Channel Switch", CTL{value}="on, on"
+CTL{name}="Speaker Playback Volume", CTL{value}="18, 18"
+
+CTL{name}="Stereo DAC MIXL DAC L1 Switch", CTL{value}="on"
+CTL{name}="Stereo DAC MIXR DAC R1 Switch", CTL{value}="on"
+CTL{name}="OUT MIXL DAC L1 Switch", CTL{value}="on"
+CTL{name}="OUT MIXR DAC R1 Switch", CTL{value}="on"
+CTL{name}="HP R Playback Switch", CTL{value}="on"
+CTL{name}="HP L Playback Switch", CTL{value}="on"
+CTL{name}="HPO MIX HPVOL Switch", CTL{value}="on"
+CTL{name}="HP Channel Switch", CTL{value}="on, on"
+CTL{name}="HP Playback Volume", CTL{value}="28, 28"
+RESULT="true", EXIT="return"

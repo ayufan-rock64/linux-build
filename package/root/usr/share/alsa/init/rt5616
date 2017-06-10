@@ -1,0 +1,12 @@
+# Configuration for rt5616 driver
+
+# playback
+CTL{reset}="mixer"
+CTL{name}="HPVOL Playback Switch", CTL{value}="on,on"
+CTL{name}="HP Playback Volume", CTL{value}="28dp,28dp"
+CTL{name}="HPO MIX HPVOL Switch", CTL{value}="on"
+CTL{name}="OUT MIXR DAC R1 Switch", CTL{value}="on"
+CTL{name}="OUT MIXL DAC L1 Switch", CTL{value}="on"
+CTL{name}="Stereo DAC MIXR DAC R1 Switch", CTL{value}="on"
+CTL{name}="Stereo DAC MIXL DAC L1 Switch", CTL{value}="on"
+RESULT="true", EXIT="return"
