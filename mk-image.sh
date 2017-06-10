@@ -2,6 +2,7 @@
 
 LOCALPATH=$(pwd)
 OUT=${LOCALPATH}/out
+OUT_IMAGE="$OUT/system.img"
 TOOLPATH=${LOCALPATH}/rkbin/tools
 EXTLINUXPATH=${LOCALPATH}/build/extlinux
 CHIP=""
@@ -24,7 +25,7 @@ finish() {
 trap finish ERR
 
 OLD_OPTIND=$OPTIND
-while getopts "c:t:s:r:h" flag; do
+while getopts "c:t:s:r:o:h" flag; do
 	case $flag in
 		c)
 			CHIP="$OPTARG"
@@ -41,6 +42,9 @@ while getopts "c:t:s:r:h" flag; do
 			;;
 		r)
 			ROOTFS_PATH="$OPTARG"
+			;;
+		o)
+			OUT_IMAGE="$OPTARG"
 			;;
 	esac
 done
@@ -72,7 +76,7 @@ generate_boot_image() {
 }
 
 generate_system_image() {
-	SYSTEM=${OUT}/system.img
+	SYSTEM="${OUT_IMAGE}"
 	rm -rf ${SYSTEM}
 
 	echo "Generate System image : ${SYSTEM} !"
@@ -107,14 +111,14 @@ generate_system_image() {
 	# burn boot image
 	if [ ! -e ${OUT}/boot.img ]; then
 		echo -e "\e[31m CAN'T FIND BOOT IMAGE \e[0m"
-		exit
+		exit 1
 	fi
 	dd if=${OUT}/boot.img of=${SYSTEM} conv=notrunc seek=${BOOT_START}
 
 	# burn rootfs image
 	if [ ! -e ${ROOTFS_PATH} ]; then
 		echo -e "\e[31m CAN'T FIND ROOTFS IMAGE \e[0m"
-		exit
+		exit 1
 	fi
 	dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START}
 }
