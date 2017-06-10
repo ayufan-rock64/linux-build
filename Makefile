@@ -33,7 +33,7 @@ linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 %.img.xz: %.img
 	pxz -f -3 $<
 
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
+xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
 	sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f $<) \
@@ -43,20 +43,20 @@ xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(REL
 		rock64 \
 		minimal
 
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-system-image.sh \
+xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+	cd rootfs/ && sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
-		$(shell readlink -f $<) \
-		$(shell readlink -f linux-rock64-$(RELEASE_NAME).tar.xz) \
+		"" \
+		"" \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		xenial \
 		rock64 \
 		minimal
 
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-system-image.sh \
+xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+	cd rootfs/ && sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
-		$(shell readlink -f $<) \
+		"" \
 		"" \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		xenial \
@@ -64,25 +64,43 @@ xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEAS
 		mate \
 		7300
 
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-system-image.sh \
+xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+	cd rootfs/ && sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
-		$(shell readlink -f $<) \
+		"" \
 		"" \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		xenial \
 		rock64 \
 		i3
 
-stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE).img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-system-image.sh \
+stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+	cd rootfs/ && sudo bash rootfs/build-system-image.sh \
 		$(shell readlink -f $@) \
-		$(shell readlink -f $<) \
+		"" \
 		"" \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		stretch \
 		rock64 \
 		i3
+
+out/kernel/Image out/kernel/rk3328-rock64.dtb: kernel/arch/arm64/configs/rockchip_linux_defconfig
+	build/mk-kernel.sh rk3328-rock64
+
+out/boot.img: out/kernel/Image out/kernel/rk3328-rock64.dtb
+	build/mk-image.sh -c rk3328 -t boot
+
+out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
+	build/mk-uboot.sh rk3328-rock64
+
+%.img: %-system.img
+	build/mk-image.sh -c rk3328 -t system -s 4000 -r "$<" -o "$@"
+
+.PHONY: kernel
+kernel: out/boot.img
+
+.PHONY: u-boot
+u-boot: out/u-boot/uboot.img
 
 .PHONY: linux-package
 linux-package: linux-rock64-package-$(RELEASE_NAME).deb
