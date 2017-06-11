@@ -62,7 +62,7 @@ node('docker && linux-build') {
             sh '''#!/bin/bash
               set +xe
               export CCACHE_DIR=$WORKSPACE/ccache
-              make -j4
+              make -j4 BUILD_ARCH=armhf
             '''
         }
   
