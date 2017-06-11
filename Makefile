@@ -5,10 +5,7 @@ export BUILD_ARCH ?= arm64
 
 all: linux-rock64
 
-package/rtk_bt/.git:
-	git clone --single-branch --depth=1 https://github.com/NextThingCo/rtl8723ds_bt package/rtk_bt
-
-package/rtk_bt/rtk_hciattach/rtk_hciattach: package/rtk_bt/.git
+package/rtk_bt/rtk_hciattach/rtk_hciattach:
 	make -C package/rtk_bt/rtk_hciattach CC="ccache aarch64-linux-gnu-gcc"
 
 linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/rtk_hciattach
