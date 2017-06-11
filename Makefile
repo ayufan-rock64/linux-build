@@ -1,7 +1,7 @@
 export RELEASE_NAME ?= 0.1~dev
 export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master
-export BUILD_ARCH ?= arm64
+export BUILD_ARCH ?= armhf
 
 all: linux-rock64
 
@@ -21,7 +21,7 @@ linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
-		-a $(BUILD_ARCH) \
+		-a all \
 		package/root/=/ \
 		package/rtk_bt/rtk_hciattach/rtk_hciattach=/usr/local/sbin/rtk_hciattach
 
@@ -31,7 +31,7 @@ linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 %.img.xz: %.img
 	pxz -f -3 $<
 
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
 	sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f $<) \
@@ -41,7 +41,7 @@ xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-packag
 		rock64 \
 		minimal
 
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
 	cd rootfs/ && sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		"" \
@@ -51,7 +51,7 @@ xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-packag
 		rock64 \
 		minimal
 
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
 	cd rootfs/ && sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		"" \
@@ -62,7 +62,7 @@ xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$
 		mate \
 		7300
 
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
 	cd rootfs/ && sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		"" \
@@ -72,7 +72,7 @@ xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(R
 		rock64 \
 		i3
 
-stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
 	cd rootfs/ && sudo bash rootfs/build-system-image.sh \
 		$(shell readlink -f $@) \
 		"" \
@@ -105,16 +105,16 @@ u-boot: out/u-boot/uboot.img
 linux-package: linux-rock64-package-$(RELEASE_NAME).deb
 
 .PHONY: xenial-minimal-rock64
-xenial-minimal-rock64: xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE).img.xz
+xenial-minimal-rock64: xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH).img.xz
 
 .PHONY: xenial-mate-rock64
-xenial-mate-rock64: xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE).img.xz
+xenial-mate-rock64: xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH).img.xz
 
 .PHONY: xenial-i3-rock64
-xenial-i3-rock64: xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE).img.xz
+xenial-i3-rock64: xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH).img.xz
 
 .PHONY: stretch-i3-rock64
-stretch-i3-rock64: stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE).img.xz
+stretch-i3-rock64: stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH).img.xz
 
 .PHONY: xenial-rock64
 xenial-rock64: xenial-minimal-rock64 xenial-mate-rock64 xenial-i3-rock64
