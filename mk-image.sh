@@ -82,17 +82,44 @@ generate_system_image() {
 	echo "Generate System image : ${SYSTEM} !"
 
 	if [[ -z "$SIZE" ]]; then
-		SIZE=$(stat -c%s "${ROOTFS_PATH}")
-		SIZE=$(($ROOTFS_START*512+SIZE))
-
-		# Align to 1MB
-		SIZE=$((SIZE+1024*1024-1))
-		SIZE=$((SIZE/1024/1024))
-		echo "Deduced size: $SIZE."
+		SIZE=256
 	fi
 
-	dd if=/dev/zero of=${SYSTEM} bs=1M count=0 seek=$SIZE
+	dd if=/dev/zero of=${SYSTEM} bs=1M count=0 seek=$SIZE status=none
 
+	# burn u-boot
+	echo "Burn u-boot..."
+	if [ "$CHIP" == "rk3288" ] || [ "$CHIP" == "rk3036" ]; then
+		dd if=${OUT}/u-boot/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc status=none
+	elif [ "$CHIP" == "rk3399" ]; then
+		dd if=${OUT}/u-boot/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc status=none
+
+		dd if=${OUT}/u-boot/uboot.img of=${SYSTEM} seek=${LOADER2_START} conv=notrunc status=none
+		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc status=none
+	elif [ "$CHIP" == "rk3328" ]; then
+		dd if=${OUT}/u-boot/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc status=none
+
+		dd if=${OUT}/u-boot/uboot.img of=${SYSTEM} seek=${LOADER2_START} conv=notrunc status=none
+		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc status=none
+	fi
+
+	# burn boot image
+	echo "Burn boot..."
+	if [ ! -e ${OUT}/boot.img ]; then
+		echo -e "\e[31m CAN'T FIND BOOT IMAGE \e[0m"
+		exit 1
+	fi
+	dd if=${OUT}/boot.img of=${SYSTEM} conv=notrunc seek=${BOOT_START} status=none
+
+	# burn rootfs image
+	echo "Burn rootfs..."
+	if [ ! -e ${ROOTFS_PATH} ]; then
+		echo -e "\e[31m CAN'T FIND ROOTFS IMAGE \e[0m"
+		exit 1
+	fi
+	dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START} status=none
+
+	echo Updating GPT...
 	parted -s ${SYSTEM} mklabel gpt
 	parted -s ${SYSTEM} unit s mkpart loader1 ${LOADER1_START} $(expr ${RESERVED1_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart reserved1 ${RESERVED1_START} $(expr ${RESERVED2_START} - 1)
@@ -102,35 +129,6 @@ generate_system_image() {
 	parted -s ${SYSTEM} unit s mkpart boot ${BOOT_START} $(expr ${ROOTFS_START} - 1)
 	parted -s ${SYSTEM} set 6 boot on
 	parted -s ${SYSTEM} unit s mkpart root ${ROOTFS_START} 100%
-
-	# burn u-boot
-	if [ "$CHIP" == "rk3288" ] || [ "$CHIP" == "rk3036" ]; then
-		dd if=${OUT}/u-boot/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc
-	elif [ "$CHIP" == "rk3399" ]; then
-		dd if=${OUT}/u-boot/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc
-
-		dd if=${OUT}/u-boot/uboot.img of=${SYSTEM} seek=${LOADER2_START} conv=notrunc
-		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc
-	elif [ "$CHIP" == "rk3328" ]; then
-		dd if=${OUT}/u-boot/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc
-
-		dd if=${OUT}/u-boot/uboot.img of=${SYSTEM} seek=${LOADER2_START} conv=notrunc
-		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc
-	fi
-
-	# burn boot image
-	if [ ! -e ${OUT}/boot.img ]; then
-		echo -e "\e[31m CAN'T FIND BOOT IMAGE \e[0m"
-		exit 1
-	fi
-	dd if=${OUT}/boot.img of=${SYSTEM} conv=notrunc seek=${BOOT_START}
-
-	# burn rootfs image
-	if [ ! -e ${ROOTFS_PATH} ]; then
-		echo -e "\e[31m CAN'T FIND ROOTFS IMAGE \e[0m"
-		exit 1
-	fi
-	dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START}
 }
 
 if [ "$TARGET" = "boot" ]; then
