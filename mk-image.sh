@@ -118,6 +118,7 @@ generate_system_image() {
 		exit 1
 	fi
 	dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START} status=none
+	dd if=/dev/zero of=${SYSTEM} count=2048 oflag=append conv=notrunc
 
 	echo Updating GPT...
 	parted -s ${SYSTEM} mklabel gpt
