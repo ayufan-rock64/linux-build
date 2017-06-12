@@ -32,7 +32,7 @@ linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 	pxz -f -3 $<
 
 xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash ./build-system-image.sh \
+	sudo bash export BUILD_ARCH=$(BUILD_ARCH) ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f $<) \
 		"" \
@@ -42,7 +42,7 @@ xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux
 		minimal
 
 xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	cd rootfs/ && sudo bash ./build-system-image.sh \
+	cd rootfs/ && sudo export BUILD_ARCH=$(BUILD_ARCH) bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		"" \
 		"" \
@@ -52,7 +52,7 @@ xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux
 		minimal
 
 xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	cd rootfs/ && sudo bash ./build-system-image.sh \
+	cd rootfs/ && sudo export BUILD_ARCH=$(BUILD_ARCH) bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		"" \
 		"" \
@@ -73,7 +73,7 @@ xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock
 		i3
 
 stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	cd rootfs/ && sudo bash rootfs/build-system-image.sh \
+	cd rootfs/ && sudo export BUILD_ARCH=$(BUILD_ARCH) bash rootfs/build-system-image.sh \
 		$(shell readlink -f $@) \
 		"" \
 		"" \
