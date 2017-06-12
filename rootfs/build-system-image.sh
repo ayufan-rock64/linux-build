@@ -12,13 +12,18 @@ DISTRO="$5"
 MODEL="$6"
 VARIANT="$7"
 SIZE="${8:-3650}"
+BUILD_ARCH="$9"
 if [[ -z "$MODEL" ]]; then
   MODEL="rock64"
 fi
+if [[ -z "$BUILD_ARCH" ]]; then
+  BUILD_ARCH="arm64"
+fi
 export MODEL
+export BUILD_ARCH
 
 if [ -z "$VARIANT" ]; then
-	echo "Usage: $0 <result.img> <simpleimage.img.xz> <kernel.tar.xz> <package.deb> [distro] [model] [variant: mate, i3, empty] [size (MiB)]"
+	echo "Usage: $0 <result.img> <simpleimage.img.xz> <kernel.tar.xz> <package.deb> [distro] [model] [variant: mate, i3, empty] [size (MiB)] [build_arch]"
 	exit 1
 fi
 

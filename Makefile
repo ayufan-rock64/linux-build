@@ -32,27 +32,31 @@ linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 	pxz -f -3 $<
 
 xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	sudo bash export BUILD_ARCH=$(BUILD_ARCH) ./build-system-image.sh \
+	sudo bash export ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		$(shell readlink -f $<) \
 		"" \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		xenial \
 		rock64 \
-		minimal
+		minimal \
+		"" \
+		"${BUILD_ARCH}"
 
 xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	cd rootfs/ && sudo export BUILD_ARCH=$(BUILD_ARCH) bash ./build-system-image.sh \
+	cd rootfs/ && sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		"" \
 		"" \
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		xenial \
 		rock64 \
-		minimal
+		minimal \
+		"" \
+		"${BUILD_ARCH}"
 
 xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	cd rootfs/ && sudo export BUILD_ARCH=$(BUILD_ARCH) bash ./build-system-image.sh \
+	cd rootfs/ && sudo bash ./build-system-image.sh \
 		$(shell readlink -f $@) \
 		"" \
 		"" \
@@ -60,7 +64,8 @@ xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-ro
 		xenial \
 		rock64 \
 		mate \
-		7300
+		7300 \
+		"${BUILD_ARCH}"
 
 xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
 	cd rootfs/ && sudo bash ./build-system-image.sh \
@@ -70,7 +75,9 @@ xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		xenial \
 		rock64 \
-		i3
+		i3 \
+		"" \
+		"${BUILD_ARCH}"
 
 stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
 	cd rootfs/ && sudo export BUILD_ARCH=$(BUILD_ARCH) bash rootfs/build-system-image.sh \
@@ -80,7 +87,9 @@ stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-roc
 		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
 		stretch \
 		rock64 \
-		i3
+		i3 \
+		"" \
+		"${BUILD_ARCH}"
 
 out/kernel/Image out/kernel/rk3328-rock64.dtb: kernel/arch/arm64/configs/rockchip_linux_defconfig
 	build/mk-kernel.sh rk3328-rock64
