@@ -287,7 +287,7 @@ locale-gen en_US.UTF-8
 $ADDPPACMD
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
-	nano git build-essential vim jq $EXTRADEBS
+	nano git build-essential vim jq ethtool $EXTRADEBS
 apt-get -y remove --purge ureadahead
 apt-get -y update
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
