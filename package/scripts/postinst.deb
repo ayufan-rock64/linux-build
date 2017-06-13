@@ -7,6 +7,8 @@ case "$1" in
 
   configure)
     systemctl enable rtk-hciattach
+    systemctl start rtk-hciattach
+
     systemctl enable restore-sound-after-resume
     systemctl enable store-sound-on-suspend
     ;;
