@@ -18,7 +18,7 @@ node('docker && linux-build') {
 
       def environment = docker.build('build-environment:build-rock64-image', 'environment')
 
-      environment.inside("--privileged -u 0:0") {
+      environment.inside("--privileged -u 0:0 -v /var/run/docker.sock:/var/run/docker.sock") {
         withEnv([
           "USE_CCACHE=true",
           "RELEASE_NAME=$VERSION",

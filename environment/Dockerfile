@@ -15,6 +15,9 @@ RUN apt-get install -y libssl-dev parted live-build linaro-image-tools
 
 RUN gem install fpm
 
+RUN curl -L https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz | tar -C /tmp -zx && \
+    mv /tmp/docker/docker /usr/local/bin/
+
 RUN curl -L https://github.com/aktau/github-release/releases/download/v0.6.2/linux-amd64-github-release.tar.bz2 | tar -C /tmp -jx && \
     mv /tmp/bin/linux/amd64/github-release /usr/local/bin/
 
