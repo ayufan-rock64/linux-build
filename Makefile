@@ -3,8 +3,6 @@ export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master
 export BUILD_ARCH ?= armhf
 
-ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-
 all: linux-rock64
 
 package/rtk_bt/rtk_hciattach/rtk_hciattach:
@@ -33,42 +31,65 @@ linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 %.img.xz: %.img
 	pxz -f -3 $<
 
-rootfs/linux-package.deb: linux-rock64-package-$(RELEASE_NAME).deb
-	cp "$<" "$@"
+xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+	sudo bash export ./build-system-image.sh \
+		$(shell readlink -f $@) \
+		$(shell readlink -f $<) \
+		"" \
+		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
+		xenial \
+		rock64 \
+		minimal \
+		"" \
+		"${BUILD_ARCH}"
 
-%-system.img: rootfs/linux-package.deb rootfs/Dockerfile
-	docker build \
-		--tag=$(BUILD_SUITE)_$(BUILD_VARIANT)_$(BUILD_MODEL) \
-		--build-arg BUILD_ARCH=$(BUILD_ARCH) \
-		--build-arg BUILD_SUITE=$(BUILD_SUITE) \
-		--build-arg BUILD_VARIANT=$(BUILD_VARIANT) \
-		--build-arg BUILD_VARIANT_PACKAGES="$(BUILD_VARIANT_PACKAGES)" \
-		--build-arg BUILD_ADDITIONAL_PACKAGES="$(BUILD_ADDITIONAL_PACKAGES)" \
-		--build-arg BUILD_MODEL=$(BUILD_MODEL) \
-		rootfs/
-	touch $@.tmp
-	docker run --rm -v $(ROOT_DIR):$(ROOT_DIR) $(BUILD_SUITE)_$(BUILD_VARIANT)_$(BUILD_MODEL) \
-		$(shell readlink -f $@.tmp) /rootfs -l $(BUILD_SIZE)
-	mv $@.tmp $@
+xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+	cd rootfs/ && sudo bash ./build-system-image.sh \
+		$(shell readlink -f $@) \
+		"" \
+		"" \
+		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
+		xenial \
+		rock64 \
+		minimal \
+		"" \
+		"${BUILD_ARCH}"
 
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_SUITE=xenial
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_VARIANT=minimal
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_MODEL=rock64
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_SIZE=1G
+xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+	cd rootfs/ && sudo bash ./build-system-image.sh \
+		$(shell readlink -f $@) \
+		"" \
+		"" \
+		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
+		xenial \
+		rock64 \
+		mate \
+		7300 \
+		"${BUILD_ARCH}"
 
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_SUITE=xenial
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_VARIANT=i3
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_MODEL=rock64
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_SIZE=2G
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_ADDITIONAL_PACKAGES=aisleriot geany gnomine gnome-sudoku mplayer scratch smplayer smplayer-themes smtube chromium-browser
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_VARIANT_PACKAGES=xserver-xorg-input-all xfonts-base slim rxvt-unicode-lite i3 i3status i3lock suckless-tools network-manager pulseaudio
+xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+	cd rootfs/ && sudo bash ./build-system-image.sh \
+		$(shell readlink -f $@) \
+		"" \
+		"" \
+		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
+		xenial \
+		rock64 \
+		i3 \
+		"" \
+		"${BUILD_ARCH}"
 
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_SUITE=xenial
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_VARIANT=mate
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_MODEL=rock64
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_SIZE=6G
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_ADDITIONAL_PACKAGES=aisleriot geany gnomine gnome-sudoku mplayer scratch smplayer smplayer-themes smtube chromium-browser
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: BUILD_VARIANT_PACKAGES=ubuntu-mate-core ubuntu-mate-desktop ubuntu-mate-lightdm-theme ubuntu-mate-wallpapers-xenial lightdm
+stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
+	cd rootfs/ && sudo export BUILD_ARCH=$(BUILD_ARCH) bash rootfs/build-system-image.sh \
+		$(shell readlink -f $@) \
+		"" \
+		"" \
+		$(shell readlink -f linux-rock64-package-$(RELEASE_NAME).deb) \
+		stretch \
+		rock64 \
+		i3 \
+		"" \
+		"${BUILD_ARCH}"
 
 out/kernel/Image out/kernel/rk3328-rock64.dtb: kernel/arch/arm64/configs/rockchip_linux_defconfig
 	build/mk-kernel.sh rk3328-rock64
