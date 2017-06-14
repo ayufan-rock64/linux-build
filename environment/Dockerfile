@@ -11,7 +11,7 @@ RUN apt-get install -y python git-core gnupg flex bison gperf build-essential \
     sudo cpio nano vim kmod kpartx wget bsdtar qemu-user-static \
     pxz ruby-dev debootstrap multistrap
 
-RUN apt-get install -y libssl-dev parted live-build linaro-image-tools
+RUN apt-get install -y libssl-dev parted live-build linaro-image-tools jq
 
 RUN gem install fpm
 
