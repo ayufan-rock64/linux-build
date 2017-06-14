@@ -159,7 +159,7 @@ export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
-	nano git build-essential vim jq wget $EXTRADEBS
+	nano git build-essential vim jq wget ca-certificates $EXTRADEBS
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
