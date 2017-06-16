@@ -11,7 +11,7 @@ CHIP=""
 UBOOT_DEFCONFIG=""
 
 case ${BOARD} in
-	"rk3399-evb")
+	"rk3399-excavator")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=evb-rk3399_defconfig
 		DTB=rk3399-sapphire-excavator-linux.dtb
