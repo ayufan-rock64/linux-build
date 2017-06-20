@@ -77,7 +77,7 @@ esac
 
 # Install.
 apt -y update
-apt -y --no-install-recommends install ${PACKAGES[@]}
+apt -y install ${PACKAGES[@]}
 
 # Kill parport module loading, not available on arm64.
 if [ -e "/etc/modules-load.d/cups-filters.conf" ]; then
