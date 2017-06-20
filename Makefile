@@ -5,10 +5,7 @@ export BUILD_ARCH ?= armhf
 
 all: linux-rock64
 
-package/rtk_bt/rtk_hciattach/rtk_hciattach:
-	make -C package/rtk_bt/rtk_hciattach CC="ccache aarch64-linux-gnu-gcc"
-
-linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/rtk_hciattach
+linux-rock64-package-$(RELEASE_NAME).deb: package
 	fpm -s dir -t deb -n linux-rock64-package -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
@@ -22,8 +19,7 @@ linux-rock64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
 		-a all \
-		package/root/=/ \
-		package/rtk_bt/rtk_hciattach/rtk_hciattach=/usr/local/sbin/rtk_hciattach
+		package/root/=/
 
 %.tar.xz: %.tar
 	pxz -f -3 $<
