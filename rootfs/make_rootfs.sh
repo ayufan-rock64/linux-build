@@ -159,7 +159,8 @@ export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
-	nano git build-essential vim jq wget ca-certificates $EXTRADEBS
+	nano git build-essential vim jq wget ca-certificates software-properties-common $EXTRADEBS
+add-apt-repository -y ppa:ayufan/rock64-ppa
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
@@ -188,7 +189,7 @@ EOF
 				do_chroot /usr/local/sbin/install_desktop.sh mate
 				do_chroot systemctl set-default graphical.target
 				;;
-			
+
 			i3)
 				do_chroot /usr/local/sbin/install_desktop.sh i3
 				do_chroot systemctl set-default graphical.target
