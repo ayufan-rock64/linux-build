@@ -64,9 +64,7 @@ SEC=1
 PATH=../rkbin/rk33/rk3328_bl31_v1.10.bin
 ADDR=0x10000
 [BL32_OPTION]
-SEC=1
-PATH=../rkbin/rk33/rk3328_bl32_v1.01.bin
-ADDR=0x08400000
+SEC=0
 [BL33_OPTION]
 SEC=0
 [OUTPUT]
@@ -83,6 +81,7 @@ elif [ "${CHIP}" == "rk3399" ]; then
 	tools/mkimage -n rk3399 -T rksd -d ../rkbin/rk33/rk3399_ddr_800MHz_v1.08.bin idbloader.img
 	cat ../rkbin/rk33/rk3399_miniloader_v1.06.bin >> idbloader.img
 	cp idbloader.img ${OUT}/u-boot/
+	cp ../rkbin/rk33/rk3399_loader_v1.08.106.bin ${OUT}/u-boot/
 
 	cat >trust.ini <<EOF
 [VERSION]

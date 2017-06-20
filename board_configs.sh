@@ -11,7 +11,7 @@ CHIP=""
 UBOOT_DEFCONFIG=""
 
 case ${BOARD} in
-	"rk3399-evb")
+	"rk3399-excavator")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=evb-rk3399_defconfig
 		DTB=rk3399-sapphire-excavator-linux.dtb
@@ -34,7 +34,7 @@ case ${BOARD} in
 		export ARCH=arm64
 		export CROSS_COMPILE=aarch64-linux-gnu-
 		CHIP="rk3328"
-	;;
+		;;
 	"rk3328-rock64")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=rock64-rk3328_defconfig
@@ -42,7 +42,7 @@ case ${BOARD} in
 		export ARCH=arm64
 		export CROSS_COMPILE="ccache aarch64-linux-gnu-"
 		CHIP="rk3328"
-	;;
+		;;
 	"rk3288-evb")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=evb-rk3288_defconfig
