@@ -80,7 +80,7 @@ out/boot.img: out/kernel/Image out/kernel/rk3328-rock64.dtb
 out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
 	build/mk-uboot.sh rk3328-rock64
 
-%.img: %-system.img
+%.img: %-system.img out/u-boot/uboot.img out/kernel/Image out/kernel/rk3328-rock64.dtb
 	build/mk-image.sh -c rk3328 -t system -r "$<" -o "$@.tmp"
 	mv "$@.tmp" "$@"
 
