@@ -300,7 +300,7 @@ EOF
 		chmod +x "$DEST/second-phase"
 		do_chroot /second-phase
 		cat > "$DEST/etc/network/interfaces.d/eth0" <<EOF
-auto eth0
+allow-hotplug eth0
 iface eth0 inet dhcp
 EOF
 		cat > "$DEST/etc/hostname" <<EOF
