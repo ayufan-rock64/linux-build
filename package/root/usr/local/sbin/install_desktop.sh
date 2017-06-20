@@ -39,6 +39,7 @@ PACKAGES=(
 	lib32mali-rk-utgard-2th-r7p0
 	libdrm-rockchip1
 	xserver-xorg
+	mesa-utils-extra
 )
 
 # Add packages based on desktop selection.
