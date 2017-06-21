@@ -3,11 +3,11 @@ properties([
   parameters([
     string(defaultValue: '1.0', description: 'Current version number', name: 'VERSION'),
     text(defaultValue: '', description: 'A list of changes', name: 'CHANGES'),
-    booleanParam(defaultValue: false, description: 'If build should be marked as pre-release', name: 'PRERELEASE'),
+    choice(choices: 'all\nkernel-tarball\nlinux-package\nxenial-minimal-pinebook\nxenial-mate-pinebook\nstretch-i3-pinebook\nxenial-pinebook\nlinux-pinebook\nxenial-minimal-pine64\nlinux-pine64\nxenial-minimal-sopine\nlinux-sopine', description: 'What makefile build type to target', name: 'MAKE_TARGET')
+    booleanParam(defaultValue: true, description: 'Whether to upload to Github for release or not', name: 'GITHUB_UPLOAD'),
+    booleanParam(defaultValue: false, description: 'If build should be marked as pre-release', name: 'GITHUB_PRERELEASE'),
     string(defaultValue: 'ayufan-pine64', description: 'GitHub username or organization', name: 'GITHUB_USER'),
     string(defaultValue: 'build-pine64-image', description: 'GitHub repository', name: 'GITHUB_REPO'),
-    booleanParam(defaultValue: true, description: 'Whether to upload to Github for release or not', name: 'GITHUB_UPLOAD'),
-    choice(choices: 'all\nkernel-tarball\nlinux-package\nxenial-minimal-pinebook\nxenial-mate-pinebook\nstretch-i3-pinebook\nxenial-pinebook\nlinux-pinebook\nxenial-minimal-pine64\nlinux-pine64\nxenial-minimal-sopine\nlinux-sopine', description: 'What makefile build type to target', name: 'MAKE_TARGET')
   ])
 ])
 */
@@ -45,7 +45,7 @@ node('docker && linux-build') {
         withEnv([
           "VERSION=$VERSION",
           "CHANGES=$CHANGES",
-          "PRERELEASE=$PRERELEASE",
+          "GITHUB_PRERELEASE=$GITHUB_PRERELEASE",
           "GITHUB_USER=$GITHUB_USER",
           "GITHUB_REPO=$GITHUB_REPO"
         ]) {
@@ -70,7 +70,7 @@ node('docker && linux-build') {
 
               wait
 
-              if [[ "$PRERELEASE" == "true" ]]; then
+              if [[ "$GITHUB_PRERELEASE" == "true" ]]; then
                 github-release edit \
                   --tag "${VERSION}" \
                   --name "$VERSION: $BUILD_TAG" \
