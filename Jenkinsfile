@@ -7,7 +7,7 @@ properties([
     string(defaultValue: 'ayufan-pine64', description: 'GitHub username or organization', name: 'GITHUB_USER'),
     string(defaultValue: 'build-pine64-image', description: 'GitHub repository', name: 'GITHUB_REPO'),
     booleanParam(defaultValue: true, description: 'Whether to upload to Github for release or not', name: 'GITHUB_UPLOAD'),
-    string(devaultValue: 'all', description: 'What makefile build type to target', name: 'MAKE_TARGET'),
+    choice(choices: 'all\nkernel-tarball\nlinux-package\nxenial-minimal-pinebook\nxenial-mate-pinebook\nstretch-i3-pinebook\nxenial-pinebook\nlinux-pinebook\nxenial-minimal-pine64\nlinux-pine64\nxenial-minimal-sopine\nlinux-sopine', description: 'What makefile build type to target', name: 'MAKE_TARGET')
   ])
 ])
 */
@@ -50,43 +50,41 @@ node('docker && linux-build') {
           "GITHUB_REPO=$GITHUB_REPO"
         ]) {
           stage 'Release'
-          if (GITHUB_UPLOAD == true) { 
-          sh '''#!/bin/bash
-            set -xe
-            shopt -s nullglob
+          if (params.GITHUB_UPLOAD) { 
+            sh '''#!/bin/bash
+              set -xe
+              shopt -s nullglob
 
-            github-release release \
-                --tag "${VERSION}" \
-                --name "$VERSION: $BUILD_TAG" \
-                --description "${CHANGES}\n\n${BUILD_URL}" \
-                --draft
-
-            for file in *.xz *.deb; do
-              github-release upload \
+              github-release release \
                   --tag "${VERSION}" \
-                  --name "$(basename "$file")" \
-                  --file "$file" &
-            done
+                  --name "$VERSION: $BUILD_TAG" \
+                  --description "${CHANGES}\n\n${BUILD_URL}" \
+                  --draft
 
-            wait
+              for file in *.xz *.deb; do
+                github-release upload \
+                    --tag "${VERSION}" \
+                    --name "$(basename "$file")" \
+                    --file "$file" &
+              done
 
-            if [[ "$PRERELEASE" == "true" ]]; then
-              github-release edit \
-                --tag "${VERSION}" \
-                --name "$VERSION: $BUILD_TAG" \
-                --description "${CHANGES}\n\n${BUILD_URL}" \
-                --pre-release
-            else
-              github-release edit \
-                --tag "${VERSION}" \
-                --name "$VERSION: $BUILD_TAG" \
-                --description "${CHANGES}\n\n${BUILD_URL}"
-            fi
-          '''
-          }
-          else
-          {
-             echo 'Flagged as no upload release job'
+              wait
+
+              if [[ "$PRERELEASE" == "true" ]]; then
+                github-release edit \
+                  --tag "${VERSION}" \
+                  --name "$VERSION: $BUILD_TAG" \
+                  --description "${CHANGES}\n\n${BUILD_URL}" \
+                  --pre-release
+              else
+                github-release edit \
+                  --tag "${VERSION}" \
+                  --name "$VERSION: $BUILD_TAG" \
+                  --description "${CHANGES}\n\n${BUILD_URL}"
+              fi
+            '''
+          } else {
+             echo 'Flagged as an no upload release job'
           }
         }
       }
