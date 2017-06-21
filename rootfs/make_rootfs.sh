@@ -161,6 +161,8 @@ apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
 	nano git build-essential vim jq wget ca-certificates software-properties-common $EXTRADEBS
 add-apt-repository -y ppa:ayufan/rock64-ppa
+apt-get update -y
+apt-get dist-upgrade -y
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
