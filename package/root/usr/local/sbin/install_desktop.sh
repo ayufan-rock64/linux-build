@@ -93,7 +93,7 @@ case $DESKTOP in
 	mate)
 		# Change default wallpaper
 		dpkg-divert --divert /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold-stock.jpg --rename /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold.jpg
-		ln /usr/share/backgrounds/ubuntu-mate-pinebook/Pinebook-Wallpaper-6.jpg /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold.jpg
+		ln -s /usr/share/backgrounds/ubuntu-mate-pinebook/Pinebook-Wallpaper-6.jpg /usr/share/backgrounds/ubuntu-mate-common/Ubuntu-Mate-Cold.jpg
 		;;
 
 	i3|i3wm)
