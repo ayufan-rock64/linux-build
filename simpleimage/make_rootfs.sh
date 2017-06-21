@@ -18,6 +18,8 @@ DISTRO="$4"
 BOOT="$5"
 MODEL="$6"
 VARIANT="$7"
+RELEASE_REPO=ayufan-rock64/linux-rootfs
+BUILD_ARCH=arm64
 
 if [ -z "$MODEL" ]; then
   MODEL="pine64"
@@ -74,23 +76,22 @@ cleanup() {
 trap cleanup EXIT
 
 ROOTFS=""
-UNTAR="bsdtar -xpf"
-METHOD="download"
+TAR_OPTIONS=""
 
 case $DISTRO in
 	arch)
 		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
+		TAR_OPTIONS="-z"
 		;;
-	xenial)
-		ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/16.04.2/release/ubuntu-base-16.04.2-base-arm64.tar.gz"
+	xenial|zesty)
+		version=$(curl -s https://api.github.com/repos/$RELEASE_REPO/releases/latest | jq -r ".tag_name")
+		ROOTFS="https://github.com/$RELEASE_REPO/releases/download/${version}/ubuntu-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
+		TAR_OPTIONS="-J --strip-components=1 binary"
 		;;
-	sid|jessie)
-		ROOTFS="${DISTRO}-base-arm64.tar.gz"
-		METHOD="debootstrap"
-		;;
-	stretch)
-		ROOTFS="${DISTRO}-base-arm64.tar.gz"
-		METHOD="multistrap"
+	sid|jessie|stretch)
+		version=$(curl -s https://api.github.com/repos/$RELEASE_REPO/releases/latest | jq -r ".tag_name")
+		ROOTFS="https://github.com/$RELEASE_REPO/releases/download/${version}/debian-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
+		TAR_OPTIONS="-J --strip-components=1 binary"
 		;;
 	*)
 		echo "Unknown distribution: $DISTRO"
@@ -98,99 +99,25 @@ case $DISTRO in
 		;;
 esac
 
-deboostrap_rootfs() {
-	dist="$1"
-	tgz="$(readlink -f "$2")"
-
-	[ "$TEMP" ] || exit 1
-	cd $TEMP && pwd
-
-	# this is updated very seldom, so is ok to hardcode
-	debian_archive_keyring_deb='https://ftp.de.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2014.3_all.deb'
-	wget -O keyring.deb "$debian_archive_keyring_deb"
-	ar -x keyring.deb && rm -f control.tar.gz debian-binary && rm -f keyring.deb
-	DATA=$(ls data.tar.*) && compress=${DATA#data.tar.}
-
-	KR=debian-archive-keyring.gpg
-	bsdtar --include ./usr/share/keyrings/$KR --strip-components 4 -xvf "$DATA"
-	rm -f "$DATA"
-
-	qemu-debootstrap --arch=arm64 --keyring=$TEMP/$KR $dist rootfs http://httpredir.debian.org/debian
-	rm -f $KR
-
-	# keeping things clean as this is copied later again
-	rm -f rootfs/usr/bin/qemu-aarch64-static
-
-	bsdtar -C $TEMP/rootfs -a -cf $tgz .
-	rm -fr $TEMP/rootfs
-
-	cd -
-}
-
-multistrap_rootfs() {
-	dist="$1"
-	tgz="$(readlink -f "$2")"
-
-	[ "$TEMP" ] || exit 1
-	cd $TEMP && pwd
-
-	cat > multistrap.conf <<EOF
-[General]
-noauth=true
-unpack=true
-debootstrap=Debian Net
-aptsources=Debian
-
-[Debian]
-# Base packages
-packages=systemd systemd-sysv udev apt kmod locales sudo
-source=http://deb.debian.org/debian/
-keyring=debian-archive-keyring
-components=main non-free
-suite=stretch
-
-[Net]
-# Networking packages
-packages=netbase net-tools ethtool iproute iputils-ping ifupdown dhcpcd5 firmware-brcm80211 wpasupplicant ssh avahi-daemon ntp wireless-tools
-EOF
-
-	multistrap -a arm64 -d rootfs -f multistrap.conf
-
-	# keeping things clean as this is copied later again
-	rm -f rootfs/usr/bin/qemu-aarch64-static
-
-	bsdtar -C $TEMP/rootfs -a -cf $tgz .
-	rm -fr $TEMP/rootfs
-
-	cd -
-}
-
 mkdir -p $BUILD
 TARBALL="$TEMP/$(basename $ROOTFS)"
+
 mkdir -p "$BUILD"
 if [ ! -e "$TARBALL" ]; then
-	if [ "$METHOD" = "download" ]; then
-		echo "Downloading $DISTRO rootfs tarball ..."
-		wget -O "$TARBALL" "$ROOTFS"
-	elif [ "$METHOD" = "debootstrap" ]; then
-		deboostrap_rootfs "$DISTRO" "$TARBALL"
-	elif [ "$METHOD" = "multistrap" ]; then
-		multistrap_rootfs "$DISTRO" "$TARBALL"
-	else
-		echo "Unknown rootfs creation method"
-		exit 1
-	fi
+	echo "Downloading $DISTRO rootfs tarball ..."
+	wget -O "$TARBALL" "$ROOTFS"
 fi
 
 # Extract with BSD tar
 echo -n "Extracting ... "
 set -x
-$UNTAR "$TARBALL" -C "$DEST"
+tar -xf "$TARBALL" -C "$DEST" $TAR_OPTIONS
 echo "OK"
 rm -f "$TARBALL"
 
 # Add qemu emulation.
 cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
+cp /usr/bin/qemu-arm-static "$DEST/usr/bin"
 
 # Prevent services from starting
 cat > "$DEST/usr/sbin/policy-rc.d" <<EOF
@@ -208,40 +135,6 @@ do_chroot() {
 	chroot "$DEST" umount /sys
 	chroot "$DEST" umount /proc
 	umount "$DEST/tmp"
-}
-
-add_debian_apt_sources() {
-	local release="$1"
-	local aptsrcfile="$DEST/etc/apt/sources.list"
-	cat > "$aptsrcfile" <<EOF
-deb http://httpredir.debian.org/debian ${release} main contrib non-free
-#deb-src http://httpredir.debian.org/debian ${release} main contrib non-free
-EOF
-	# No separate security or updates repo for unstable/sid
-	[ "$release" = "sid" ] || cat >> "$aptsrcfile" <<EOF
-deb http://httpredir.debian.org/debian ${release}-updates main contrib non-free
-#deb-src http://httpredir.debian.org/debian ${release}-updates main contrib non-free
-
-deb http://security.debian.org/ ${release}/updates main contrib non-free
-#deb-src http://security.debian.org/ ${release}/updates main contrib non-free
-EOF
-}
-
-add_ubuntu_apt_sources() {
-	local release="$1"
-	cat > "$DEST/etc/apt/sources.list" <<EOF
-deb http://ports.ubuntu.com/ ${release} main restricted universe multiverse
-deb-src http://ports.ubuntu.com/ ${release} main restricted universe multiverse
-
-deb http://ports.ubuntu.com/ ${release}-updates main restricted universe multiverse
-deb-src http://ports.ubuntu.com/ ${release}-updates main restricted universe multiverse
-
-deb http://ports.ubuntu.com/ ${release}-security main restricted universe multiverse
-deb-src http://ports.ubuntu.com/ ${release}-security main restricted universe multiverse
-
-#deb http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
-#deb-src http://ports.ubuntu.com/ ${release}-backports main restricted universe multiverse
-EOF
 }
 
 # Run stuff in new system.
@@ -278,7 +171,6 @@ case $DISTRO in
 			echo "Unknown DISTRO=$DISTRO"
 			exit 2
 		fi
-		add_${DEB}_apt_sources $DISTRO
 		cat > "$DEST/second-phase" <<EOF
 #!/bin/sh
 set -ex
@@ -287,7 +179,7 @@ locale-gen en_US.UTF-8
 $ADDPPACMD
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
-	nano git build-essential vim jq $EXTRADEBS
+	nano git build-essential vim jq wget ca-certificates $EXTRADEBS
 apt-get -y remove --purge ureadahead
 apt-get -y update
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
@@ -408,15 +300,13 @@ elif [ -n "$LINUX" -a "$LINUX" != "-" ]; then
 
 		depmod -b $DEST $VERSION
 	fi
-
-	# Set Kernel and U-boot update version to current.
-	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_kernel.sh
-	do_chroot /usr/bin/env MARK_ONLY=1 /usr/local/sbin/pine64_update_uboot.sh
 fi
 
 # Clean up
+rm -f "$DEST/usr/bin/qemu-arm-static"
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
 rm -f "$DEST/usr/sbin/policy-rc.d"
 rm -f "$DEST/var/lib/dbus/machine-id"
+rm -f "$DEST/SHA256SUMS"
 
 echo "Done - installed rootfs to $DEST"
