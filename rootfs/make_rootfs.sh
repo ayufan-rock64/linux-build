@@ -148,6 +148,7 @@ case $DISTRO in
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		DEBUSER=rock64
 		DEBUSERPW=rock64
+		EXTRA_ARCH=arm64
 		EXTRADEBS="\
 			zram-config \
 			sudo \
@@ -183,6 +184,9 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
+		if [[ "$BUILD_ARCH" != "$EXTRA_ARCH" ]]; then
+			do_chroot dpkg --add-architecture "$EXTRA_ARCH"
+		fi
 		for package in "$@"; do
 			do_install $package
 		done
