@@ -3,7 +3,25 @@ export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master
 export BUILD_ARCH ?= armhf
 
+KERNEL_LOCALVERSION ?= -ayufan-$(RELEASE)
+KERNEL_MAKE ?= make -C kernel \
+	LOCALVERSION=$(KERNEL_LOCALVERSION) \
+	KDEB_PKGVERSION=$(RELEASE_NAME) \
+	ARCH=arm64 \
+	CROSS_COMPILE="ccache aarch64-linux-gnu-"
+KERNEL_RELEASE ?= $(shell $(KERNEL_MAKE) -s kernelversion)$(KERNEL_LOCALVERSION)
+
+KERNEL_PACKAGE ?= linux-image-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
+KERNEL_EXTRA_PACKAGES ?= \
+	linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb \
+	linux-libc-dev_0.1~dev_arm64.deb
+PACKAGES := linux-rock64-package-$(RELEASE_NAME).deb $(KERNEL_PACKAGE) $(KERNEL_EXTRA_PACKAGES)
+
 all: linux-rock64
+
+info:
+	echo version: $(KERNEL_VERSION)
+	echo release: $(KERNEL_RELEASE)
 
 linux-rock64-package-$(RELEASE_NAME).deb: package
 	fpm -s dir -t deb -n linux-rock64-package -v $(RELEASE_NAME) \
@@ -14,7 +32,8 @@ linux-rock64-package-$(RELEASE_NAME).deb: package
 		--after-install package/scripts/postinst.deb \
 		--before-remove package/scripts/prerm.deb \
 		--url https://gitlab.com/ayufan-rock64/linux-build \
-		--description "GitLab Runner" \
+		--description "Rock64 Linux support package" \
+		--config-files /boot/extlinux/ \
 		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
@@ -27,61 +46,65 @@ linux-rock64-package-$(RELEASE_NAME).deb: package
 %.img.xz: %.img
 	pxz -f -3 $<
 
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	cd rootfs; sudo bash ./build-system-image.sh \
+xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: $(PACKAGES)
+	sudo bash rootfs/build-system-image.sh \
 		$(shell readlink -f $@) \
 		xenial \
 		minimal \
 		"${BUILD_ARCH}" \
 		rock64 \
 		1024 \
-		$(shell readlink -f $<)
+		$^
 
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	cd rootfs; sudo bash ./build-system-image.sh \
+xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: $(PACKAGES)
+	sudo bash rootfs/build-system-image.sh \
 		$(shell readlink -f $@) \
 		xenial \
 		mate \
 		"${BUILD_ARCH}" \
 		rock64 \
 		5120 \
-		$(shell readlink -f $<)
+		$^
 
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	cd rootfs; sudo bash ./build-system-image.sh \
+xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: $(PACKAGES)
+	sudo bash rootfs/build-system-image.sh \
 		$(shell readlink -f $@) \
 		xenial \
 		i3 \
 		"${BUILD_ARCH}" \
 		rock64 \
 		2048 \
-		$(shell readlink -f $<)
+		$^
 
-stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: linux-rock64-package-$(RELEASE_NAME).deb
-	cd rootfs; sudo bash ./build-system-image.sh \
+stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: $(PACKAGES)
+	sudo bash rootfs/build-system-image.sh \
 		$(shell readlink -f $@) \
 		stretch \
 		i3 \
 		"${BUILD_ARCH}" \
 		rock64 \
 		2048 \
-		$(shell readlink -f $<)
-
-out/kernel/Image out/kernel/rk3328-rock64.dtb: kernel/arch/arm64/configs/rockchip_linux_defconfig
-	build/mk-kernel.sh rk3328-rock64
-
-out/boot.img: out/kernel/Image out/kernel/rk3328-rock64.dtb
-	build/mk-image.sh -c rk3328 -t boot
+		$^
 
 out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
 	build/mk-uboot.sh rk3328-rock64
 
-%.img: %-system.img out/u-boot/uboot.img out/kernel/Image out/kernel/rk3328-rock64.dtb
+%.img: %-system.img out/u-boot/uboot.img
 	build/mk-image.sh -c rk3328 -t system -r "$<" -o "$@.tmp"
 	mv "$@.tmp" "$@"
 
+$(KERNEL_PACKAGE): kernel/arch/arm64/configs/rockchip_linux_defconfig
+	echo -n > kernel/.scmversion
+	$(KERNEL_MAKE) rockchip_linux_defconfig
+	$(KERNEL_MAKE) bindeb-pkg -j$(shell nproc)
+
+$(KERNEL_EXTRA_PACKAGES): $(KERNEL_PACKAGE)
+
+.PHONY: kernelpkg
+kernelpkg: $(KERNEL_PACKAGE) $(KERNEL_EXTRA_PACKAGES)
+
 .PHONY: kernel
-kernel: out/boot.img
+kernel: kernelpkg
 
 .PHONY: u-boot
 u-boot: out/u-boot/uboot.img

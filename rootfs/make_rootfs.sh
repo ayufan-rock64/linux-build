@@ -164,12 +164,14 @@ apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-serv
 add-apt-repository -y ppa:ayufan/rock64-ppa
 apt-get update -y
 apt-get dist-upgrade -y
+apt-get install -y flash-kernel u-boot-tools
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
 usermod -a -G sudo,adm,input,video,plugdev $DEBUSER
 apt-get clean
 EOF
+		echo "Rockchip RK3328 Rock64" > "$DEST/etc/flash-kernel/machine"
 		cat > "$DEST/etc/hostname" <<EOF
 $MODEL
 EOF
@@ -188,7 +190,7 @@ EOF
 			do_chroot dpkg --add-architecture "$EXTRA_ARCH"
 		fi
 		for package in "$@"; do
-			do_install $package
+			do_install "$package"
 		done
 		case "$VARIANT" in
 			mate)

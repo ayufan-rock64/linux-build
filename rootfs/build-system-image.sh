@@ -62,7 +62,7 @@ mkfs.ext4 "$TEMP/$IMAGE"
 mount "$TEMP/$IMAGE" "$TEMP/rootfs"
 
 # Create image
-./make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"
+rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"
 
 mv -v "$TEMP/$IMAGE" "$OUT_IMAGE"
 
