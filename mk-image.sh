@@ -103,14 +103,6 @@ generate_system_image() {
 		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc status=none
 	fi
 
-	# burn boot image
-	echo "Burn boot..."
-	if [ ! -e ${OUT}/boot.img ]; then
-		echo -e "\e[31m CAN'T FIND BOOT IMAGE \e[0m"
-		exit 1
-	fi
-	dd if=${OUT}/boot.img of=${SYSTEM} conv=notrunc seek=${BOOT_START} status=none
-
 	# burn rootfs image
 	echo "Burn rootfs..."
 	if [ ! -e ${ROOTFS_PATH} ]; then
@@ -127,13 +119,9 @@ generate_system_image() {
 	parted -s ${SYSTEM} unit s mkpart reserved2 ${RESERVED2_START} $(expr ${LOADER2_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart loader2 ${LOADER2_START} $(expr ${ATF_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart atf ${ATF_START} $(expr ${BOOT_START} - 1)
-	parted -s ${SYSTEM} unit s mkpart boot ${BOOT_START} $(expr ${ROOTFS_START} - 1)
-	parted -s ${SYSTEM} set 6 boot on
 	parted -s ${SYSTEM} unit s mkpart root ${ROOTFS_START} 100%
+	parted -s ${SYSTEM} set 6 boot on
 }
 
-if [ "$TARGET" = "boot" ]; then
-	generate_boot_image
-elif [ "$TARGET" == "system" ]; then
-	generate_system_image
-fi
+generate_system_image
+
