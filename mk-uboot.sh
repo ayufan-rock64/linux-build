@@ -61,7 +61,7 @@ MINOR=2
 SEC=0
 [BL31_OPTION]
 SEC=1
-PATH=../rkbin/rk33/rk3328_bl31_v1.10.bin
+PATH=../rkbin/rk33/rk3328_bl31_v1.34.bin
 ADDR=0x10000
 [BL32_OPTION]
 SEC=0
