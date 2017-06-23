@@ -1,9 +1,7 @@
 Machine: Rockchip RK3328 Rock64
-Method: generic
-#Method: symlink
-#Kernel-Flavors: ayufan
+Method: symlink
 Boot-Kernel-Path: /boot/Image
 Boot-Initrd-Path: /boot/initrd.img
-Boot-DTB-Path: rk3328-rock64.dtb
+Boot-DTB-Path: /boot/rk3328-rock64.dtb
 DTB-Kernel-Version: 4.4.70
 DTB-Id: rockchip/rk3328-rock64.dtb
