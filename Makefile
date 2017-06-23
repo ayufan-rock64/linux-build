@@ -61,7 +61,7 @@ linux-pine64-package-$(RELEASE_NAME).deb: package package/rtk_bt/rtk_hciattach/r
 		--after-install package/scripts/postinst.deb \
 		--before-remove package/scripts/prerm.deb \
 		--url https://gitlab.com/ayufan-pine64/linux-build \
-		--description "GitLab Runner" \
+		--description "Pine A64 Linux support package" \
 		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
