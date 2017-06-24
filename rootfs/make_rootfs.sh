@@ -148,11 +148,7 @@ case $DISTRO in
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		DEBUSER=rock64
 		DEBUSERPW=rock64
-		EXTRA_ARCH=arm64
-		EXTRADEBS="\
-			zram-config \
-			sudo \
-		"
+		EXTRA_ARCHS="arm64 armhf"
 		cat <<EOF | do_chroot bash
 #!/bin/sh
 set -ex
@@ -160,7 +156,7 @@ export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
-	nano git build-essential vim jq wget ca-certificates software-properties-common $EXTRADEBS
+	nano git build-essential vim jq wget ca-certificates software-properties-common
 add-apt-repository -y ppa:ayufan/rock64-ppa
 apt-get update -y
 apt-get dist-upgrade -y
@@ -186,9 +182,11 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
-		if [[ "$BUILD_ARCH" != "$EXTRA_ARCH" ]]; then
-			do_chroot dpkg --add-architecture "$EXTRA_ARCH"
-		fi
+		for arch in $EXTRA_ARCHS; do
+			if [[ "$arch" != "$BUILD_ARCH" ]]; then
+				do_chroot dpkg --add-architecture "$arch"
+			fi
+		done
 		for package in "$@"; do
 			do_install "$package"
 		done
