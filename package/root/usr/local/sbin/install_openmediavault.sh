@@ -35,11 +35,17 @@ apt-get --yes install openmediavault
 FILE=$(mktemp)
 wget http://omv-extras.org/openmediavault-omvextrasorg_latest_all3.deb -qO $FILE && dpkg -i $FILE && rm $FILE
 /usr/sbin/omv-update
+
 # use folder2ram instead of log2ram with OMV
 apt-get -y install openmediavault-flashmemory
 sed -i -e '/<flashmemory>/,/<\/flashmemory>/ s/<enable>0/<enable>1/' \
-    -e '/<ssh>/,/<\/ssh>/ s/<enable>0/<enable>1/' /etc/openmediavault/config.xml
+    -e '/<ssh>/,/<\/ssh>/ s/<enable>0/<enable>1/' \
+    -e '/<ntp>/,/<\/ntp>/ s/<enable>0/<enable>1/' \
+	/etc/openmediavault/config.xml
+
 /usr/sbin/omv-mkconf flashmemory
+/usr/sbin/omv-mkconf ntp
+
 systemctl disable log2ram
 /sbin/folder2ram -enablesystemd
 sed -i 's|-j /var/lib/rrdcached/journal/ ||' /etc/init.d/rrdcached
