@@ -15,6 +15,8 @@ KERNEL_PACKAGE ?= linux-image-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
 KERNEL_HEADERS_PACKAGES ?= linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
 PACKAGES := linux-rock64-package-$(RELEASE_NAME).deb $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
 
+IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)
+
 all: linux-rock64
 
 info:
@@ -44,45 +46,28 @@ linux-rock64-package-$(RELEASE_NAME).deb: package
 %.img.xz: %.img
 	pxz -f -3 $<
 
-xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: $(PACKAGES)
+%-system.img: $(PACKAGES)
 	sudo bash rootfs/build-system-image.sh \
 		$(shell readlink -f $@) \
-		xenial \
-		minimal \
-		"${BUILD_ARCH}" \
-		rock64 \
-		1024 \
+		"$(BUILD_SYSTEM)" \
+		"$(BUILD_VARIANT)" \
+		"$(BUILD_ARCH)" \
+		"$(BUILD_MODEL)" \
+		"$(BUILD_SIZE)" \
 		$^
 
-xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: $(PACKAGES)
-	sudo bash rootfs/build-system-image.sh \
-		$(shell readlink -f $@) \
-		xenial \
-		mate \
-		"${BUILD_ARCH}" \
-		rock64 \
-		5120 \
-		$^
+xenial-%-system.img: BUILD_SYSTEM=xenial
+stretch-%-system.img: BUILD_SYSTEM=stretch
 
-xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: $(PACKAGES)
-	sudo bash rootfs/build-system-image.sh \
-		$(shell readlink -f $@) \
-		xenial \
-		i3 \
-		"${BUILD_ARCH}" \
-		rock64 \
-		2048 \
-		$^
+%-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_MODEL=rock64
 
-stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)-system.img: $(PACKAGES)
-	sudo bash rootfs/build-system-image.sh \
-		$(shell readlink -f $@) \
-		stretch \
-		i3 \
-		"${BUILD_ARCH}" \
-		rock64 \
-		2048 \
-		$^
+%-minimal-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_VARIANT=minimal
+%-mate-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_VARIANT=mate
+%-i3-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_VARIANT=i3
+
+%-minimal-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_SIZE=1024
+%-mate-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_SIZE=5120
+%-i3-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_SIZE=2048
 
 out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
 	build/mk-uboot.sh rk3328-rock64
@@ -111,19 +96,25 @@ u-boot: out/u-boot/uboot.img
 linux-package: linux-rock64-package-$(RELEASE_NAME).deb
 
 .PHONY: xenial-minimal-rock64
-xenial-minimal-rock64: xenial-minimal-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH).img.xz
+xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX).img.xz
 
 .PHONY: xenial-mate-rock64
-xenial-mate-rock64: xenial-mate-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH).img.xz
+xenial-mate-rock64: xenial-mate-rock64-$(IMAGE_SUFFIX).img.xz
 
 .PHONY: xenial-i3-rock64
-xenial-i3-rock64: xenial-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH).img.xz
+xenial-i3-rock64: xenial-i3-rock64-$(IMAGE_SUFFIX).img.xz
 
 .PHONY: stretch-i3-rock64
-stretch-i3-rock64: stretch-i3-rock64-$(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH).img.xz
+stretch-i3-rock64: stretch-i3-rock64-$(IMAGE_SUFFIX).img.xz
+
+.PHONY: stretch-minimal-rock64
+stretch-minimal-rock64: stretch-minimal-rock64-$(IMAGE_SUFFIX).img.xz
 
 .PHONY: xenial-rock64
 xenial-rock64: xenial-minimal-rock64 xenial-mate-rock64 xenial-i3-rock64
+
+.PHONY: stretch-rock64
+stretch-rock64: stretch-minimal-rock64 stretch-i3-rock64
 
 .PHONY: linux-rock64
 linux-rock64: xenial-rock64
