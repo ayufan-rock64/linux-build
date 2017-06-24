@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ "$(lsb_release -c -s)" != "jessie" ]]; then
+	echo "This script only works on Debian/Jessie"
+	exit 1
+fi
+
 set -xe
 
 # Based on https://github.com/armbian/build/blob/b13e92911e91e34b0b9189c704f3186a0b3788f0/scripts/customize-image.sh.template#L31
