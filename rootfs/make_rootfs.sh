@@ -172,10 +172,10 @@ apt-get install -y flash-kernel u-boot-tools
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 chown -R 1000:1000 /home/$DEBUSER
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
-timedatectl set-timezone UTC
 usermod -a -G sudo,adm,input,video,plugdev,ssh $DEBUSER
 apt-get clean
 EOF
+		echo -n UTC > "$DEST/etc/timezone"
 		echo "Rockchip RK3328 Rock64" > "$DEST/etc/flash-kernel/machine"
 		cat > "$DEST/etc/hostname" <<EOF
 $MODEL
