@@ -157,7 +157,15 @@ locale-gen en_US.UTF-8
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
 	nano git build-essential vim jq wget ca-certificates software-properties-common
-add-apt-repository -y ppa:ayufan/rock64-ppa
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BF428671
+if [[ "$DISTRO" == "jessie" ]]; then
+	REPO=xenial
+elif [[ "$DISTRO" == "stretch" ]]; then
+	REPO=zesty
+else
+	REPO="$DISTRO"
+fi
+add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu \$REPO main"
 apt-get update -y
 apt-get dist-upgrade -y
 apt-get install -y flash-kernel u-boot-tools
