@@ -1,7 +1,6 @@
 export RELEASE_NAME ?= 0.1~dev
 export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master
-export BUILD_ARCH ?= armhf
 
 KERNEL_LOCALVERSION ?= -ayufan-$(RELEASE)
 KERNEL_MAKE ?= make -C kernel \
@@ -15,7 +14,7 @@ KERNEL_PACKAGE ?= linux-image-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
 KERNEL_HEADERS_PACKAGES ?= linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
 PACKAGES := linux-rock64-package-$(RELEASE_NAME).deb $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
 
-IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)-$(BUILD_ARCH)
+IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)
 
 all: linux-rock64
 
@@ -87,28 +86,31 @@ u-boot: out/u-boot/uboot.img
 linux-package: linux-rock64-package-$(RELEASE_NAME).deb
 
 .PHONY: xenial-minimal-rock64
-xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX).img.xz
+xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
 
 .PHONY: xenial-mate-rock64
-xenial-mate-rock64: xenial-mate-rock64-$(IMAGE_SUFFIX).img.xz
+xenial-mate-rock64: xenial-mate-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
 
 .PHONY: xenial-i3-rock64
-xenial-i3-rock64: xenial-i3-rock64-$(IMAGE_SUFFIX).img.xz
-
-.PHONY: stretch-i3-rock64
-stretch-i3-rock64: stretch-i3-rock64-$(IMAGE_SUFFIX).img.xz
+xenial-i3-rock64: xenial-i3-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
 
 .PHONY: jessie-minimal-rock64
-jessie-minimal-rock64: jessie-minimal-rock64-$(IMAGE_SUFFIX).img.xz
+jessie-minimal-rock64: jessie-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+
+.PHONY: jessie-openmediavault-rock64
+jessie-openmediavault-rock64: jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
 .PHONY: stretch-minimal-rock64
-stretch-minimal-rock64: stretch-minimal-rock64-$(IMAGE_SUFFIX).img.xz
+stretch-minimal-rock64: stretch-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
 .PHONY: xenial-rock64
 xenial-rock64: xenial-minimal-rock64 xenial-mate-rock64 xenial-i3-rock64
 
 .PHONY: stretch-rock64
-stretch-rock64: stretch-minimal-rock64 stretch-i3-rock64
+stretch-rock64: stretch-minimal-rock64
+
+.PHONY: jessie-rock64
+jessie-rock64: jessie-minimal-rock64 jessie-openmediavault-rock64
 
 .PHONY: linux-rock64
-linux-rock64: xenial-rock64
+linux-rock64: xenial-rock64 stretch-rock64 jessie-rock64
