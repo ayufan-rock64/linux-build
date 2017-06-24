@@ -200,6 +200,10 @@ EOF
 				do_chroot /usr/local/sbin/install_desktop.sh i3
 				do_chroot systemctl set-default graphical.target
 				;;
+
+			openmediavault)
+				do_chroot /usr/local/bin/install_openmediavault.sh
+				;;
 		esac
 		do_chroot systemctl enable ssh-keygen
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
