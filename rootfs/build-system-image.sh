@@ -9,28 +9,41 @@ DISTRO="$2"
 VARIANT="$3"
 BUILD_ARCH="$4"
 MODEL="$5"
-SIZE="$6"
-shift 6
+shift 5
 
-export MODEL
-export BUILD_ARCH
-
-if [ -z "$SIZE" ]; then
-	echo "Usage: $0 <result.img> <distro> <variant: mate, i3 or minimal> <arch> <model> <size (MiB)> <packages...>"
+if [[ -z "$DISTRO" ]] || [[ -z "$VARIANT" ]] || [[ -z "$BUILD_ARCH" ]] || [[ -z "$MODEL" ]]; then
+	echo "Usage: $0 <result.img> <distro> <variant: mate, i3 or minimal> <arch> <model> <packages...>"
+    echo "Empty DISTRO, VARIANT, BUILD_ARCH or MODEL."
 	exit 1
 fi
 
-if [ "$(id -u)" -ne "0" ]; then
+if [[ "$(id -u)" -ne "0" ]]; then
 	echo "This script requires root."
 	exit 1
 fi
 
-if [ -z "$DISTRO" ]; then
-	DISTRO="xenial"
-fi
+case "$VARIANT" in
+    minimal)
+        SIZE=1024
+        ;;
 
-SIMPLEIMAGE=$(readlink -f "$SIMPLEIMAGE")
-[[ -n "$KERNELTAR" ]] && KERNELTAR=$(readlink -f "$KERNELTAR")
+    i3)
+        SIZE=2048
+        ;;
+
+    mate)
+        SIZE=5120
+        ;;
+
+    openmediavault)
+        SIZE=2048
+        ;;
+
+    *)
+        echo "Unknown VARIANT: $VARIANT"
+        exit 1
+        ;;
+esac
 
 PWD=$(readlink -f .)
 TEMP=$(mktemp -p $PWD -d -t "$MODEL-build-XXXXXXXXXX")

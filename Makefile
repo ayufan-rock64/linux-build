@@ -46,28 +46,19 @@ linux-rock64-package-$(RELEASE_NAME).deb: package
 %.img.xz: %.img
 	pxz -f -3 $<
 
+BUILD_SYSTEMS := xenial zesty jessie stretch
+BUILD_VARIANTS := minimal mate i3 openmediavault
+BUILD_ARCHS := armhf arm64
+BUILD_MODELS := rock64
+
 %-system.img: $(PACKAGES)
 	sudo bash rootfs/build-system-image.sh \
-		$(shell readlink -f $@) \
-		"$(BUILD_SYSTEM)" \
-		"$(BUILD_VARIANT)" \
-		"$(BUILD_ARCH)" \
-		"$(BUILD_MODEL)" \
-		"$(BUILD_SIZE)" \
+		"$(shell readlink -f $@)" \
+		"$(filter $(BUILD_SYSTEMS), $(subst -, ,$@))" \
+		"$(filter $(BUILD_VARIANTS), $(subst -, ,$@))" \
+		"$(filter $(BUILD_ARCHS), $(subst -, ,$@))" \
+		"$(filter $(BUILD_MODELS), $(subst -, ,$@))" \
 		$^
-
-xenial-%-system.img: BUILD_SYSTEM=xenial
-stretch-%-system.img: BUILD_SYSTEM=stretch
-
-%-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_MODEL=rock64
-
-%-minimal-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_VARIANT=minimal
-%-mate-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_VARIANT=mate
-%-i3-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_VARIANT=i3
-
-%-minimal-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_SIZE=1024
-%-mate-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_SIZE=5120
-%-i3-rock64-$(IMAGE_SUFFIX)-system.img: BUILD_SIZE=2048
 
 out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
 	build/mk-uboot.sh rk3328-rock64
@@ -106,6 +97,9 @@ xenial-i3-rock64: xenial-i3-rock64-$(IMAGE_SUFFIX).img.xz
 
 .PHONY: stretch-i3-rock64
 stretch-i3-rock64: stretch-i3-rock64-$(IMAGE_SUFFIX).img.xz
+
+.PHONY: jessie-minimal-rock64
+jessie-minimal-rock64: jessie-minimal-rock64-$(IMAGE_SUFFIX).img.xz
 
 .PHONY: stretch-minimal-rock64
 stretch-minimal-rock64: stretch-minimal-rock64-$(IMAGE_SUFFIX).img.xz
