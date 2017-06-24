@@ -48,7 +48,7 @@ sed -i 's|-j /var/lib/rrdcached/journal/ ||' /etc/init.d/rrdcached
 [ -f /etc/default/tftpd-hpa ] && sed -i 's/--secure/--secure --ipv4/' /etc/default/tftpd-hpa
 
 # init OMV
-/usr/sbin/omv-initsystem
+# /usr/sbin/omv-initsystem
 
 # some performance tuning
 grep -q ondemand /etc/default/cpufrequtils && sed -i '/^exit\ 0/i \
@@ -66,4 +66,5 @@ grep -q ondemand /etc/default/cpufrequtils && sed -i '/^exit\ 0/i \
 
 echo "* * * * * root for i in \`pgrep \"ftpd|nfsiod|smbd|afpd|cnid\"\` ; do ionice -c1 -p \$i ${XU4_HMP_Fix}; done >/dev/null 2>&1" \
     >/etc/cron.d/make_nas_processes_faster
+
 chmod 600 /etc/cron.d/make_nas_processes_faster
