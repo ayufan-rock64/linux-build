@@ -12,10 +12,8 @@ KERNEL_MAKE ?= make -C kernel \
 KERNEL_RELEASE ?= $(shell $(KERNEL_MAKE) -s kernelversion)$(KERNEL_LOCALVERSION)
 
 KERNEL_PACKAGE ?= linux-image-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
-KERNEL_EXTRA_PACKAGES ?= \
-	linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb \
-	linux-libc-dev_0.1~dev_arm64.deb
-PACKAGES := linux-rock64-package-$(RELEASE_NAME).deb $(KERNEL_PACKAGE) $(KERNEL_EXTRA_PACKAGES)
+KERNEL_HEADERS_PACKAGES ?= linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
+PACKAGES := linux-rock64-package-$(RELEASE_NAME).deb $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
 
 all: linux-rock64
 
@@ -98,10 +96,10 @@ $(KERNEL_PACKAGE): kernel/arch/arm64/configs/rockchip_linux_defconfig
 	$(KERNEL_MAKE) rockchip_linux_defconfig
 	$(KERNEL_MAKE) bindeb-pkg -j$(shell nproc)
 
-$(KERNEL_EXTRA_PACKAGES): $(KERNEL_PACKAGE)
+$(KERNEL_HEADERS_PACKAGES): $(KERNEL_PACKAGE)
 
 .PHONY: kernelpkg
-kernelpkg: $(KERNEL_PACKAGE) $(KERNEL_EXTRA_PACKAGES)
+kernelpkg: $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
 
 .PHONY: kernel
 kernel: kernelpkg
