@@ -109,7 +109,7 @@ generate_system_image() {
 		echo -e "\e[31m CAN'T FIND ROOTFS IMAGE \e[0m"
 		exit 1
 	fi
-	dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START} status=none
+	dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START} conv=notrunc status=none
 	dd if=/dev/zero of=${SYSTEM} count=2048 oflag=append conv=notrunc
 
 	echo Updating GPT...
@@ -118,10 +118,14 @@ generate_system_image() {
 	parted -s ${SYSTEM} unit s mkpart reserved1 ${RESERVED1_START} $(expr ${RESERVED2_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart reserved2 ${RESERVED2_START} $(expr ${LOADER2_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart loader2 ${LOADER2_START} $(expr ${ATF_START} - 1)
-	parted -s ${SYSTEM} unit s mkpart atf ${ATF_START} $(expr ${ROOTFS_START} - 1)
+	parted -s ${SYSTEM} unit s mkpart atf ${ATF_START} $(expr ${BOOT_START} - 1)
+	parted -s ${SYSTEM} unit s mkpart reserved3 ${BOOT_START} $(expr ${ROOTFS_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart root ${ROOTFS_START} 100%
-	parted -s ${SYSTEM} set 6 boot on
+	parted -s ${SYSTEM} set 7 boot on
 }
 
-generate_system_image
-
+if [ "$TARGET" = "boot" ]; then
+	generate_boot_image
+elif [ "$TARGET" == "system" ]; then
+	generate_system_image
+fi
