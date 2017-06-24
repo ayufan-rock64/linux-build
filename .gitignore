@@ -8,3 +8,4 @@
 *.img.xz
 *.deb
 /package/rtk_bt
+*.changes
