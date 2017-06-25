@@ -156,12 +156,12 @@ export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
-	nano git build-essential vim jq wget ca-certificates software-properties-common
+	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BF428671
 if [[ "$DISTRO" == "jessie" ]]; then
 	REPO=xenial
 elif [[ "$DISTRO" == "stretch" ]]; then
-	REPO=zesty
+	REPO=xenial
 else
 	REPO="$DISTRO"
 fi
