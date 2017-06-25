@@ -86,7 +86,7 @@ u-boot: out/u-boot/uboot.img
 linux-package: linux-rock64-package-$(RELEASE_NAME).deb
 
 .PHONY: xenial-minimal-rock64
-xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
+xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz xenial-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
 .PHONY: xenial-mate-rock64
 xenial-mate-rock64: xenial-mate-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
@@ -98,7 +98,7 @@ xenial-i3-rock64: xenial-i3-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
 jessie-minimal-rock64: jessie-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
 .PHONY: jessie-openmediavault-rock64
-jessie-openmediavault-rock64: jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+jessie-openmediavault-rock64: jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
 
 .PHONY: stretch-minimal-rock64
 stretch-minimal-rock64: stretch-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
