@@ -23,7 +23,7 @@ deb https://openmediavault.github.io/packages/ erasmus-proposed main
 EOF
 
 # Add OMV and OMV Plugin developer keys
-debconf-apt-progress -- apt-get update
+apt-get update -y
 apt-get --yes --force-yes --allow-unauthenticated install openmediavault-keyring
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7AA630A1EDEE7D73
 
