@@ -166,6 +166,7 @@ else
 	REPO="$DISTRO"
 fi
 add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu \$REPO main"
+curl -fsSL http://deb.ayufan.eu/orgs/ayufan-rock64/archive.key | apt-key add -
 apt-get update -y
 apt-get dist-upgrade -y
 apt-get install -y flash-kernel u-boot-tools
@@ -177,6 +178,12 @@ apt-get clean
 EOF
 		echo -n UTC > "$DEST/etc/timezone"
 		echo "Rockchip RK3328 Rock64" > "$DEST/etc/flash-kernel/machine"
+		cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64.list" <<EOF
+deb http://deb.ayufan.eu/orgs/ayufan-rock64/releases /
+
+# uncomment to use pre-release kernels and compatibility packages
+# deb http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
+EOF
 		cat > "$DEST/etc/hostname" <<EOF
 $MODEL
 EOF
