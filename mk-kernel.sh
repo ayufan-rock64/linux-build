@@ -5,6 +5,8 @@ OUT=${LOCALPATH}/out
 EXTLINUXPATH=${LOCALPATH}/build/extlinux
 BOARD=$1
 
+version_gt() { test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"; }
+
 finish() {
 	echo -e "\e[31m MAKE KERNEL IMAGE FAILED.\e[0m"
 	exit -1
@@ -31,6 +33,14 @@ cd ${LOCALPATH}/kernel
 make ${DEFCONFIG}
 make -j8
 cd ${LOCALPATH}
+
+KERNEL_VERSION=$(cat ${LOCALPATH}/kernel/include/config/kernel.release)
+
+if version_gt "${KERNEL_VERSION}" "4.5"; then
+	if [ "${DTB_MAINLINE}" ]; then
+		DTB=${DTB_MAINLINE}
+	fi
+fi
 
 if [ "${ARCH}" == "arm" ]; then
 	cp ${LOCALPATH}/kernel/arch/arm/boot/zImage ${OUT}/kernel/
