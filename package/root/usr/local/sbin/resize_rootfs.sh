@@ -2,6 +2,11 @@
 
 set -xe
 
+if [ "$(id -u)" -ne "0" ]; then
+	echo "This script requires root."
+	exit 1
+fi
+
 gdisk /dev/mmcblk0 <<EOF
 x
 e
