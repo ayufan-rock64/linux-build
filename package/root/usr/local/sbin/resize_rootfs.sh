@@ -7,8 +7,6 @@ if [ "$(id -u)" -ne "0" ]; then
 	exit 1
 fi
 
-apt-get update && apt-get install gdisk parted
-
 gdisk /dev/mmcblk0 <<EOF
 x
 e
