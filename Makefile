@@ -30,6 +30,8 @@ linux-rock64-package-$(RELEASE_NAME).deb: package
 		--deb-compression bzip2 \
 		--after-install package/scripts/postinst.deb \
 		--before-remove package/scripts/prerm.deb \
+		--depends gdisk \
+        --depends parted \
 		--url https://gitlab.com/ayufan-rock64/linux-build \
 		--description "Rock64 Linux support package" \
 		--config-files /boot/extlinux/ \
