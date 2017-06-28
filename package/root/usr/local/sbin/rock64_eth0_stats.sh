@@ -40,30 +40,35 @@ all() {
 }
 
 usage() {
-	echo "Usage: $0 [-w] [-h]"
+	echo "Usage: $0 [OPTION]"
+        echo -e "  -w [time]\tKeep watching, refreshing every 0.5 seconds or as set"
+        echo -e "  -h\t\tThis help screen"
 }
 
-WATCH=""
-for i in "$@"; do
-	case $i in
-	-w)
-		WATCH=1
-		shift
-		;;
-	-h|--help)
-		usage
-		exit 0
-		;;
-	*)
-		usage
-		exit 1
-		;;
-	esac
+while getopts ":w:h" opt; do
+   case $opt in
+      w)
+         if [[ $OPTARG =~ ^[0-9]+$ ]]; then
+           WATCH=$OPTARG
+         fi
+         ;;
+      h)
+         usage
+         exit 0
+         ;;
+      :) #can only be -w with no custom refresh interval
+         WATCH=0.5
+         ;;
+      *)
+         echo "Invalid parameter '-$OPTARG'"
+         usage
+         exit 1
+         ;;
+   esac
 done
 
 if [ -n "$WATCH" ]; then
-	exec watch -n0.5 "$0"
+	exec watch -n$WATCH "$0"
 else
 	all
 fi
-
