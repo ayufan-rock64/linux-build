@@ -2,12 +2,13 @@
 
 set -e
 
+STAT_PATH=/sys/bus/platform/drivers/rk_gmac-dwmac/ff540000.eth/net/eth0/statistics
+
 print() {
         printf "%-20s: %s %s\n" "$1" "$2 $3" "$4"
 }
 
 statprint() {
-	local STAT_PATH=/sys/bus/platform/drivers/rk_gmac-dwmac/ff540000.eth/net/eth0/statistics
 	local STAT_VALUE=$(cat $STAT_PATH/$1)
 	print "$1" $STAT_VALUE
 }
