@@ -157,7 +157,7 @@ locale-gen en_US.UTF-8
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
-	gdisk parted
+	gdisk parted figlet
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BF428671
 if [[ "$DISTRO" == "jessie" ]]; then
 	REPO=xenial
@@ -165,6 +165,9 @@ elif [[ "$DISTRO" == "stretch" ]]; then
 	REPO=xenial
 else
 	REPO="$DISTRO"
+fi
+if [[ "$DISTRO" == "xenial" || "$DISTRO" == "zesty" ]]; then
+	apt-get -y install landscape-common
 fi
 add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu \$REPO main"
 curl -fsSL http://deb.ayufan.eu/orgs/ayufan-rock64/archive.key | apt-key add -
