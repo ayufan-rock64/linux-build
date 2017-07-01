@@ -14,6 +14,7 @@ case ${BOARD} in
 	"rk3399-excavator")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=evb-rk3399_defconfig
+		DTB_MAINLINE=rk3399-sapphire-excavator.dtb
 		DTB=rk3399-sapphire-excavator-linux.dtb
 		export ARCH=arm64
 		export CROSS_COMPILE=aarch64-linux-gnu-
