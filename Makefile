@@ -26,9 +26,9 @@ linux-rock64-$(RELEASE_NAME).deb: $(PACKAGES)
 	fpm -s empty -t deb -n linux-rock64 -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
-		--depends linux-rock64-package=$(RELEASE_NAME) \
-		--depends linux-image-$(KERNEL_RELEASE)=$(RELEASE_NAME) \
-		--depends linux-headers-$(KERNEL_RELEASE)=$(RELEASE_NAME) \
+		--depends "linux-rock64-package (= $(RELEASE_NAME))" \
+		--depends "linux-image-$(KERNEL_RELEASE) (= $(RELEASE_NAME))" \
+		--depends "linux-headers-$(KERNEL_RELEASE) (= $(RELEASE_NAME))" \
 		--force \
 		--url https://gitlab.com/ayufan-rock64/linux-build \
 		--description "Rock64 Linux virtual package: depends on kernel and compatibility package" \
