@@ -12,7 +12,7 @@ KERNEL_RELEASE ?= $(shell $(KERNEL_MAKE) -s kernelversion)$(KERNEL_LOCALVERSION)
 
 KERNEL_PACKAGE ?= linux-image-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
 KERNEL_HEADERS_PACKAGES ?= linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
-PACKAGES := linux-rock64-package-$(RELEASE_NAME).deb $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
+PACKAGES := linux-rock64-package-$(RELEASE_NAME)_all.deb $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
 
 IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)
 
@@ -22,7 +22,7 @@ info:
 	echo version: $(KERNEL_VERSION)
 	echo release: $(KERNEL_RELEASE)
 
-linux-rock64-$(RELEASE_NAME).deb: $(PACKAGES)
+linux-rock64-$(RELEASE_NAME)_arm64.deb: $(PACKAGES)
 	fpm -s empty -t deb -n linux-rock64 -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
@@ -35,20 +35,21 @@ linux-rock64-$(RELEASE_NAME).deb: $(PACKAGES)
 		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
-		-a all
+		-a arm64
 
-linux-rock64-package-$(RELEASE_NAME).deb: package
+linux-rock64-package-$(RELEASE_NAME)_all.deb: package
 	fpm -s dir -t deb -n linux-rock64-package -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
 		--force \
 		--depends figlet \
 		--depends cron \
-		--deb-compression bzip2 \
-		--after-install package/scripts/postinst.deb \
-		--before-remove package/scripts/prerm.deb \
 		--depends gdisk \
 		--depends parted \
+		--deb-compression bzip2 \
+		--deb-field "Multi-Arch: foreign" \
+		--after-install package/scripts/postinst.deb \
+		--before-remove package/scripts/prerm.deb \
 		--url https://gitlab.com/ayufan-rock64/linux-build \
 		--description "Rock64 Linux support package" \
 		--config-files /boot/extlinux/ \
@@ -69,7 +70,7 @@ BUILD_VARIANTS := minimal mate i3 openmediavault
 BUILD_ARCHS := armhf arm64
 BUILD_MODELS := rock64
 
-%-system.img: $(PACKAGES) linux-rock64-$(RELEASE_NAME).deb
+%-system.img: $(PACKAGES) linux-rock64-$(RELEASE_NAME)_arm64.deb
 	sudo bash rootfs/build-system-image.sh \
 		"$(shell readlink -f $@)" \
 		"$(filter $(BUILD_SYSTEMS), $(subst -, ,$@))" \
@@ -102,10 +103,10 @@ kernel: kernelpkg
 u-boot: out/u-boot/uboot.img
 
 .PHONY: linux-package
-linux-package: linux-rock64-package-$(RELEASE_NAME).deb
+linux-package: linux-rock64-package-$(RELEASE_NAME)_all.deb
 
 .PHONY: linux-virtual
-linux-virtual: linux-rock64-$(RELEASE_NAME).deb
+linux-virtual: linux-rock64-$(RELEASE_NAME)_arm64.deb
 
 .PHONY: xenial-minimal-rock64
 xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz xenial-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
