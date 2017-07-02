@@ -22,6 +22,21 @@ info:
 	echo version: $(KERNEL_VERSION)
 	echo release: $(KERNEL_RELEASE)
 
+linux-rock64-$(RELEASE_NAME).deb: $(PACKAGES)
+	fpm -s dir -t deb -n linux-rock64 -v $(RELEASE_NAME) \
+		-p $@ \
+		--deb-priority optional --category admin \
+		--depends linux-rock64-package=$(RELEASE_NAME) \
+		--depends linux-image-$(KERNEL_RELEASE)=$(RELEASE_NAME) \
+		--depends linux-headers-$(KERNEL_RELEASE)=$(RELEASE_NAME) \
+		--force \
+		--url https://gitlab.com/ayufan-rock64/linux-build \
+		--description "Rock64 Linux virtual package: depends on kernel and compatibility package" \
+		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
+		--license "MIT" \
+		--vendor "Kamil Trzciński" \
+		-a all
+
 linux-rock64-package-$(RELEASE_NAME).deb: package
 	fpm -s dir -t deb -n linux-rock64-package -v $(RELEASE_NAME) \
 		-p $@ \
@@ -54,7 +69,7 @@ BUILD_VARIANTS := minimal mate i3 openmediavault
 BUILD_ARCHS := armhf arm64
 BUILD_MODELS := rock64
 
-%-system.img: $(PACKAGES)
+%-system.img: $(PACKAGES) linux-rock64-$(RELEASE_NAME).deb
 	sudo bash rootfs/build-system-image.sh \
 		"$(shell readlink -f $@)" \
 		"$(filter $(BUILD_SYSTEMS), $(subst -, ,$@))" \
@@ -89,6 +104,9 @@ u-boot: out/u-boot/uboot.img
 .PHONY: linux-package
 linux-package: linux-rock64-package-$(RELEASE_NAME).deb
 
+.PHONY: linux-virtual
+linux-virtual: linux-rock64-$(RELEASE_NAME).deb
+
 .PHONY: xenial-minimal-rock64
 xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz xenial-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
@@ -117,4 +135,4 @@ stretch-rock64: stretch-minimal-rock64
 jessie-rock64: jessie-minimal-rock64 jessie-openmediavault-rock64
 
 .PHONY: linux-rock64
-linux-rock64: xenial-rock64 stretch-rock64 jessie-rock64
+linux-rock64: xenial-rock64 stretch-rock64 jessie-rock64 linux-virtual
