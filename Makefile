@@ -23,7 +23,7 @@ info:
 	echo release: $(KERNEL_RELEASE)
 
 linux-rock64-$(RELEASE_NAME).deb: $(PACKAGES)
-	fpm -s dir -t deb -n linux-rock64 -v $(RELEASE_NAME) \
+	fpm -s empty -t deb -n linux-rock64 -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
 		--depends linux-rock64-package=$(RELEASE_NAME) \
