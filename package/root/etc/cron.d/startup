@@ -1,1 +1,2 @@
 @reboot root /usr/local/sbin/rock64_fix_irqs.sh
+

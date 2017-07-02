@@ -2,6 +2,8 @@
 
 # Taken from: https://forum.armbian.com/index.php?/topic/3953-preview-generate-omv-images-for-sbc-with-armbian/#comment-34596
 
+set -x
+
 echo performance >/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 for i in 1 2 3 ; do
 	echo 4 >/proc/irq/$(awk -F":" "/xhci/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
