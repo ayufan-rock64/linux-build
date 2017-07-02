@@ -28,6 +28,7 @@ linux-rock64-package-$(RELEASE_NAME).deb: package
 		--deb-priority optional --category admin \
 		--force \
 		--depends figlet \
+		--depends cron \
 		--deb-compression bzip2 \
 		--after-install package/scripts/postinst.deb \
 		--before-remove package/scripts/prerm.deb \
