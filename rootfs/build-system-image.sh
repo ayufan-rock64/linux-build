@@ -10,7 +10,7 @@ DISTRO="$3"
 VARIANT="$4"
 BUILD_ARCH="$5"
 MODEL="$6"
-shift 5
+shift 6
 
 if [[ -z "$DISTRO" ]] || [[ -z "$VARIANT" ]] || [[ -z "$BUILD_ARCH" ]] || [[ -z "$MODEL" ]]; then
 	echo "Usage: $0 <system.img> <boot.img> <distro> <variant: mate, i3 or minimal> <arch> <model> <packages...>"
