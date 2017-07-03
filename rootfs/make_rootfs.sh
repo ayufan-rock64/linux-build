@@ -133,7 +133,7 @@ do_chroot() {
 do_install() {
 	FILE=$(basename "$1")
 	cp "$1" "$DEST/$(basename "$1")"
-	do_chroot dpkg -i "$FILE"
+	do_chroot dpkg -i "$FILE" || do_chroot bash
 	do_chroot rm "$FILE"
 }
 
@@ -148,7 +148,7 @@ case $DISTRO in
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		DEBUSER=rock64
 		DEBUSERPW=rock64
-		EXTRA_ARCHS="arm64 armhf"
+		EXTRA_ARCHS="arm64"
 		cat <<EOF | do_chroot bash
 #!/bin/sh
 set -ex
@@ -190,6 +190,9 @@ deb http://deb.ayufan.eu/orgs/ayufan-rock64/releases /
 EOF
 		cat > "$DEST/etc/hostname" <<EOF
 $MODEL
+EOF
+		cat > "$DEST/etc/fstab" <<EOF
+/dev/mmcblk0p6 /boot/efi vfat defaults 0 0
 EOF
 		cat > "$DEST/etc/hosts" <<EOF
 127.0.0.1 localhost
