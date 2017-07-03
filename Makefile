@@ -143,3 +143,10 @@ linux-rock64: xenial-rock64 stretch-rock64 jessie-rock64 linux-virtual
 pull-trees:
 	git subtree pull --prefix build https://github.com/rockchip-linux/build debian
 	git subtree pull --prefix build https://github.com/rock64-linux/build debian
+
+.PHONY: kernel-menuconfig
+kernel-menuconfig:
+	$(KERNEL_MAKE) rockchip_linux_defconfig
+	$(KERNEL_MAKE) menuconfig
+	$(KERNEL_MAKE) savedefconfig
+	cp kernel/defconfig kernel/arch/arm64/configs/rockchip_linux_defconfig
