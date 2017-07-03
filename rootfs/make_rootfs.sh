@@ -40,7 +40,7 @@ if [ ! -d "$DEST" ]; then
 	exit 1
 fi
 
-if [ "$(ls -A -Ilost+found $DEST)" ]; then
+if [ "$(ls -A -Ilost+found -Iboot $DEST)" ]; then
 	echo "Destination $DEST is not empty. Aborting."
 	exit 1
 fi

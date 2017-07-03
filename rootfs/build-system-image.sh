@@ -81,7 +81,7 @@ mkfs.vfat -n "boot" -S 512 "$TEMP/$BOOT_IMAGE"
 # Mount filesystem
 mount "$TEMP/$IMAGE" "$TEMP/rootfs"
 mkdir -p "$TEMP/rootfs/boot/efi"
-mount "$TEMP/$BOOT_IMAGE" "$TEMP/boot/efi"
+mount "$TEMP/$BOOT_IMAGE" "$TEMP/rootfs/boot/efi"
 
 # Create image
 rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"

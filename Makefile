@@ -52,7 +52,7 @@ linux-rock64-package-$(RELEASE_NAME)_all.deb: package
 		--before-remove package/scripts/prerm.deb \
 		--url https://gitlab.com/ayufan-rock64/linux-build \
 		--description "Rock64 Linux support package" \
-		--config-files /boot/extlinux/ \
+		--config-files /boot/efi/extlinux/ \
 		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
@@ -83,8 +83,8 @@ BUILD_MODELS := rock64
 out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
 	build/mk-uboot.sh rk3328-rock64
 
-%.img: %-system.img %-boot.img out/u-boot/uboot.img
-	build/mk-image.sh -c rk3328 -t system -r "$(word 1,$^)" -b "$(word 2,$^)" -o "$@.tmp"
+%.img: %-system.img out/u-boot/uboot.img
+	build/mk-image.sh -c rk3328 -t system -r "$<" -b "$(subst -system.img,-boot.img,$<)" -o "$@.tmp"
 	mv "$@.tmp" "$@"
 
 $(KERNEL_PACKAGE): kernel/arch/arm64/configs/rockchip_linux_defconfig
