@@ -137,3 +137,9 @@ jessie-rock64: jessie-minimal-rock64 jessie-openmediavault-rock64
 
 .PHONY: linux-rock64
 linux-rock64: xenial-rock64 stretch-rock64 jessie-rock64 linux-virtual
+
+.PHONY: pull-trees
+pull-trees:
+	git subtree pull --prefix build https://github.com/ayufan-rock64/linux-build-scripts debian
+	git subtree pull --prefix build https://github.com/rock64-linux/build debian
+	git subtree pull --prefix build https://github.com/rockchip-linux/build debian
