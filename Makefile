@@ -150,3 +150,13 @@ kernel-menuconfig:
 	$(KERNEL_MAKE) menuconfig
 	$(KERNEL_MAKE) savedefconfig
 	cp kernel/defconfig kernel/arch/arm64/configs/rockchip_linux_defconfig
+
+REMOTE_HOST ?= rock64.home
+
+kernel-build:
+	$(KERNEL_MAKE) Image modules -j$(shell nproc)
+	$(KERNEL_MAKE) modules_install INSTALL_MOD_PATH=$(shell pwd)/tmp/linux_modules
+
+kernel-update:
+	rsync --partial -rv kernel/arch/arm64/boot/Image root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/Image
+	rsync --partial -av tmp/linux_modules/lib/ root@$(REMOTE_HOST):$(REMOTE_DIR)/lib
