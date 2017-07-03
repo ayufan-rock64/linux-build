@@ -22,6 +22,7 @@ case ${BOARD} in
 	"firefly-rk3399")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=firefly-rk3399_defconfig
+		DTB_MAINLINE=rk3399-firefly.dtb
 		DTB=rk3399-firefly-linux.dtb
 		export ARCH=arm64
 		export CROSS_COMPILE=aarch64-linux-gnu-
@@ -46,6 +47,7 @@ case ${BOARD} in
 	"rk3288-evb")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=evb-rk3288_defconfig
+		DTB_MAINLINE=rk3288-evb-act8846.dtb
 		DTB=rk3288-evb-act8846.dtb
 		CHIP="rk3288"
 		;;
@@ -64,6 +66,7 @@ case ${BOARD} in
 	"miniarm")
 		DEFCONFIG=rockchip_linux_defconfig
 		UBOOT_DEFCONFIG=tinker-rk3288_defconfig
+		DTB_MAINLINE=rk3288-tinker.dtb
 		DTB=rk3288-miniarm.dtb
 		CHIP="rk3288"
 		;;
