@@ -75,8 +75,8 @@ dd if=/dev/zero of="$TEMP/$IMAGE" bs=1M seek=$SIZE count=0
 dd if=/dev/zero of="$TEMP/$BOOT_IMAGE" bs=1M seek=$BOOT_SIZE count=0
 
 # Make filesystem
-mkfs.ext4 "$TEMP/$IMAGE"
-mkfs.vfat "$TEMP/$BOOT_IMAGE"
+mkfs.ext4 -L "${DISTRO}-root" "$TEMP/$IMAGE"
+mkfs.vfat -n "boot" -S 512 "$TEMP/$BOOT_IMAGE"
 
 # Mount filesystem
 mount "$TEMP/$IMAGE" "$TEMP/rootfs"
