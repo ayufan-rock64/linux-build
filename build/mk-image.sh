@@ -9,13 +9,14 @@ CHIP=""
 TARGET=""
 SIZE=""
 ROOTFS_PATH=""
+BOOT_PATH=""
 
 PATH=$PATH:$TOOLPATH
 
 source $LOCALPATH/build/partitions.sh
 
 usage() {
-	echo -e "\nUsage: build/mk-image.sh -c rk3288 -t system -s 4000 -r rk-rootfs-build/linaro-rootfs.img \n"
+	echo -e "\nUsage: build/mk-image.sh -c rk3288 -t system -s 4000 -b boot.img -r rk-rootfs-build/linaro-rootfs.img \n"
 	echo -e "       build/mk-image.sh -c rk3288 -t boot\n"
 }
 finish() {
@@ -25,7 +26,7 @@ finish() {
 trap finish ERR
 
 OLD_OPTIND=$OPTIND
-while getopts "c:t:s:r:o:h" flag; do
+while getopts "c:t:s:r:b:o:h" flag; do
 	case $flag in
 		c)
 			CHIP="$OPTARG"
@@ -42,6 +43,9 @@ while getopts "c:t:s:r:o:h" flag; do
 			;;
 		r)
 			ROOTFS_PATH="$OPTARG"
+			;;
+		b)
+			BOOT_PATH="$OPTARG"
 			;;
 		o)
 			OUT_IMAGE="$OPTARG"
@@ -103,7 +107,13 @@ generate_system_image() {
 		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc status=none
 	fi
 
-	# burn rootfs image
+	echo "Burn boot..."
+	if [ ! -e ${BOOT_PATH} ]; then
+		echo -e "\e[31m CAN'T FIND BOOT IMAGE \e[0m"
+		exit 1
+	fi
+	dd if=${BOOT_PATH} of=${SYSTEM} seek=${BOOT_START} conv=notrunc status=none
+
 	echo "Burn rootfs..."
 	if [ ! -e ${ROOTFS_PATH} ]; then
 		echo -e "\e[31m CAN'T FIND ROOTFS IMAGE \e[0m"
@@ -119,9 +129,9 @@ generate_system_image() {
 	parted -s ${SYSTEM} unit s mkpart reserved2 ${RESERVED2_START} $(expr ${LOADER2_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart loader2 ${LOADER2_START} $(expr ${ATF_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart atf ${ATF_START} $(expr ${BOOT_START} - 1)
-	parted -s ${SYSTEM} unit s mkpart reserved3 ${BOOT_START} $(expr ${ROOTFS_START} - 1)
+	parted -s ${SYSTEM} unit s mkpart boot ${BOOT_START} $(expr ${ROOTFS_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart root ${ROOTFS_START} 100%
-	parted -s ${SYSTEM} set 7 boot on
+	parted -s ${SYSTEM} set 6 boot on
 }
 
 if [ "$TARGET" = "boot" ]; then

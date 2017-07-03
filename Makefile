@@ -73,6 +73,7 @@ BUILD_MODELS := rock64
 %-system.img: $(PACKAGES) linux-rock64-$(RELEASE_NAME)_arm64.deb
 	sudo bash rootfs/build-system-image.sh \
 		"$(shell readlink -f $@)" \
+		"$(shell readlink -f $(subst -system.img,-boot.img,$@))" \
 		"$(filter $(BUILD_SYSTEMS), $(subst -, ,$@))" \
 		"$(filter $(BUILD_VARIANTS), $(subst -, ,$@))" \
 		"$(filter $(BUILD_ARCHS), $(subst -, ,$@))" \
@@ -82,8 +83,8 @@ BUILD_MODELS := rock64
 out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
 	build/mk-uboot.sh rk3328-rock64
 
-%.img: %-system.img out/u-boot/uboot.img
-	build/mk-image.sh -c rk3328 -t system -r "$<" -o "$@.tmp"
+%.img: %-system.img %-boot.img out/u-boot/uboot.img
+	build/mk-image.sh -c rk3328 -t system -r "$(word 1,$^)" -b "$(word 2,$^)" -o "$@.tmp"
 	mv "$@.tmp" "$@"
 
 $(KERNEL_PACKAGE): kernel/arch/arm64/configs/rockchip_linux_defconfig
