@@ -113,10 +113,10 @@ linux-virtual: linux-rock64-$(RELEASE_NAME)_arm64.deb
 xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz xenial-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
 .PHONY: xenial-mate-rock64
-xenial-mate-rock64: xenial-mate-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
+xenial-mate-rock64: xenial-mate-rock64-$(IMAGE_SUFFIX)-armhf.img.xz xenial-mate-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
 .PHONY: xenial-i3-rock64
-xenial-i3-rock64: xenial-i3-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
+xenial-i3-rock64: xenial-i3-rock64-$(IMAGE_SUFFIX)-armhf.img.xz xenial-i3-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
 .PHONY: jessie-minimal-rock64
 jessie-minimal-rock64: jessie-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz

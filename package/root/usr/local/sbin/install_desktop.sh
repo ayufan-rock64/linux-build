@@ -36,10 +36,11 @@ PACKAGES=(
 	smplayer-themes
 	smtube
 	chromium-browser
-	lib32mali-rk-utgard-2th-r7p0
+	libmali-rk-utgard-2th-r7p0
 	libdrm-rockchip1
 	xserver-xorg
 	mesa-utils-extra
+	gstreamer1.0-rockchip1
 )
 
 # Add packages based on desktop selection.
