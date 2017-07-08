@@ -1,13 +1,24 @@
 #!/bin/bash
 
-set -xe
+if [ $# -ne 1 ]; then
+	echo "No arguments provided... please specify device to resize!"
+	echo "e.g. $(basename $0) /dev/mmcblk1"
+	exit 1
+fi
+
+if [ ! -b "$1" ]; then
+	echo "Specified device '$1' does not exist! Abort!"
+	exit 1
+fi
 
 if [ "$(id -u)" -ne "0" ]; then
 	echo "This script requires root."
 	exit 1
 fi
 
-gdisk /dev/mmcblk0 <<EOF
+set -xe
+
+gdisk "$1" <<EOF
 x
 e
 m
@@ -25,6 +36,6 @@ w
 Y
 EOF
 
-partprobe /dev/mmcblk0
+partprobe "$1"
 
-resize2fs /dev/mmcblk0p7
+resize2fs "${1}p7"
