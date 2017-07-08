@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -eq 0 ]; then
+if [ $# -ne 1 ]; then
 	echo "No arguments provided... please specify device to resize!"
 	echo "e.g. $(basename $0) /dev/mmcblk1"
 	exit 1
@@ -18,7 +18,7 @@ fi
 
 set -xe
 
-gdisk $1 <<EOF
+gdisk "$1" <<EOF
 x
 e
 m
@@ -36,6 +36,6 @@ w
 Y
 EOF
 
-partprobe $1
+partprobe "$1"
 
-resize2fs $1p7
+resize2fs "${1}p7"
