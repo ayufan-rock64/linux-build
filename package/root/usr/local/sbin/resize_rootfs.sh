@@ -46,4 +46,4 @@ EOF
 
 partprobe "$DISK"
 
-resize2fs "$DISK"
+resize2fs "${DISK}p7"
