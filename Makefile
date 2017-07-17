@@ -38,6 +38,7 @@ linux-rock64-$(RELEASE_NAME)_arm64.deb: $(PACKAGES)
 		-a arm64
 
 linux-rock64-package-$(RELEASE_NAME)_all.deb: package
+	chmod -R go-w $@
 	fpm -s dir -t deb -n linux-rock64-package -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
