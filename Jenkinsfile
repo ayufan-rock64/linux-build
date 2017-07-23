@@ -5,7 +5,7 @@ properties([
     text(defaultValue: '', description: 'A list of changes', name: 'CHANGES'),
     choice(choices: 'all\njessie-minimal-rock64\njessie-openmediavault-rock64\nstretch-minimal-rock64\nxenial-i3-rock64\nxenial-mate-rock64\nxenial-minimal-rock64\nlinux-virtual', description: 'What makefile image to target', name: 'MAKE_TARGET')
     booleanParam(defaultValue: true, description: 'Whether to upload to Github for release or not', name: 'GITHUB_UPLOAD'),
-    booleanParam(defaultValue: false, description: 'If build should be marked as pre-release', name: 'PRERELEASE'),
+    booleanParam(defaultValue: false, description: 'If build should be marked as pre-release', name: 'GITHUB_PRERELEASE'),
     string(defaultValue: 'ayufan-rock64', description: 'GitHub username or organization', name: 'GITHUB_USER'),
     string(defaultValue: 'linux-build', description: 'GitHub repository', name: 'GITHUB_REPO'),
   ])
@@ -76,7 +76,7 @@ node('docker && linux-build') {
           withEnv([
             "VERSION=$VERSION",
             "CHANGES=$CHANGES",
-            "PRERELEASE=$PRERELEASE",
+            "GITHUB_PRERELEASE=$GITHUB_PRERELEASE",
             "GITHUB_USER=$GITHUB_USER",
             "GITHUB_REPO=$GITHUB_REPO"
           ]) {
@@ -119,7 +119,7 @@ node('docker && linux-build') {
 
                   wait
 
-                  if [[ "$PRERELEASE" == "true" ]]; then
+                  if [[ "$GITHUB_PRERELEASE" == "true" ]]; then
                     github-release edit \
                       --tag "${VERSION}" \
                       --name "$VERSION: $BUILD_TAG" \
