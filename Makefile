@@ -66,7 +66,7 @@ linux-rock64-package-$(RELEASE_NAME)_all.deb: package
 %.img.xz: %.img
 	pxz -f -3 $<
 
-BUILD_SYSTEMS := xenial zesty jessie stretch
+BUILD_SYSTEMS := artful zesty xenial jessie stretch
 BUILD_VARIANTS := minimal mate i3 openmediavault
 BUILD_ARCHS := armhf arm64
 BUILD_MODELS := rock64

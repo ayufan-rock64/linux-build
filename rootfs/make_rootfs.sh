@@ -76,7 +76,7 @@ case $DISTRO in
 		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
 		TAR_OPTIONS="-z"
 		;;
-	xenial|zesty)
+	xenial|zesty|artful)
 		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/ubuntu-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
@@ -166,7 +166,7 @@ elif [[ "$DISTRO" == "stretch" ]]; then
 else
 	REPO="$DISTRO"
 fi
-if [[ "$DISTRO" == "xenial" || "$DISTRO" == "zesty" ]]; then
+if [[ "$DISTRO" == "xenial" || "$DISTRO" == "zesty" || "$DISTRO" == "artful" ]]; then
 	apt-get -y install landscape-common
 fi
 add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu \$REPO main"

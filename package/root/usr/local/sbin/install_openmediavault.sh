@@ -7,7 +7,7 @@ fi
 
 set -xe
 
-# Based on https://github.com/armbian/build/blob/b13e92911e91e34b0b9189c704f3186a0b3788f0/scripts/customize-image.sh.template#L31
+# Based on https://github.com/armbian/build/blob/master/scripts/customize-image.sh.template#L31
 
 #Add OMV source.list and Update System
 cat > /etc/apt/sources.list.d/openmediavault.list <<- EOF
@@ -53,29 +53,36 @@ sed -i -e '/<flashmemory>/,/<\/flashmemory>/ s/<enable>0/<enable>1/' \
 
 systemctl disable log2ram
 /sbin/folder2ram -enablesystemd
-sed -i 's|-j /var/lib/rrdcached/journal/ ||' /etc/init.d/rrdcached
+
+# disable rrdcached
+systemctl disable rrdcached
 
 #FIX TFTPD ipv4
 [ -f /etc/default/tftpd-hpa ] && sed -i 's/--secure/--secure --ipv4/' /etc/default/tftpd-hpa
 
+. /usr/share/openmediavault/scripts/helper-functions
+
+# improve netatalk performance
+apt-get -y install openmediavault-netatalk
+AFP_Options="vol dbpath = /var/tmp/netatalk/CNID/%v/"
+xmlstarlet ed -L -u "/config/services/afp/extraoptions" -v "$(echo -e "${AFP_Options}")" ${OMV_CONFIG_FILE}
+
+# improve samba performance
+SMB_Options="min receivefile size = 16384\nwrite cache size = 524288\ngetwd cache = yes\nsocket options = TCP_NODELAY IPTOS_LOWDELAY"
+xmlstarlet ed -L -u "/config/services/smb/extraoptions" -v "$(echo -e "${SMB_Options}")" ${OMV_CONFIG_FILE}
+
+# fix timezone
+xmlstarlet ed -L -u "/config/system/time/timezone" -v "UTC" ${OMV_CONFIG_FILE}
+
+# disable monitoring
+xmlstarlet ed -L -u "/config/system/monitoring/perfstats/enable" -v "0" ${OMV_CONFIG_FILE}
+
+# update configs
+omv-mkconf monit
+omv-mkconf netatalk
+omv-mkconf samba
+omv-mkconf timezone
+omv-mkconf collectd
+
 # init OMV
 # /usr/sbin/omv-initsystem
-
-# some performance tuning
-grep -q ondemand /etc/default/cpufrequtils && sed -i '/^exit\ 0/i \
-	echo ondemand >/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor \
-	sleep 0.1 \
-	cd /sys/devices/system/cpu \
-	for i in cpufreq/ondemand cpu0/cpufreq/ondemand cpu4/cpufreq/ondemand ; do \
-	if [ -d $i ]; then \
-	echo 1 >${i}/io_is_busy \
-	echo 25 >${i}/up_threshold \
-	echo 10 >${i}/sampling_down_factor \
-	fi \
-	done \
-	' /etc/rc.local
-
-echo "* * * * * root for i in \`pgrep \"ftpd|nfsiod|smbd|afpd|cnid\"\` ; do ionice -c1 -p \$i ${XU4_HMP_Fix}; done >/dev/null 2>&1" \
-    >/etc/cron.d/make_nas_processes_faster
-
-chmod 600 /etc/cron.d/make_nas_processes_faster

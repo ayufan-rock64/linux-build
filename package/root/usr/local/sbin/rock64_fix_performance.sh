@@ -4,7 +4,22 @@
 
 set -x
 
-echo performance >/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+# echo performance >/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+
+echo ondemand >/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+
+sleep 0.1
+
+pushd /sys/devices/system/cpu
+for i in cpufreq/ondemand cpu0/cpufreq/ondemand cpu4/cpufreq/ondemand ; do
+	if [ -d $i ]; then
+		echo 1 >${i}/io_is_busy
+		echo 25 >${i}/up_threshold
+		echo 10 >${i}/sampling_down_factor
+	fi
+done
+popd
+
 for i in 1 2 3 ; do
 	echo 4 >/proc/irq/$(awk -F":" "/xhci/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
 	echo 8 >/proc/irq/$(awk -F":" "/eth0/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
