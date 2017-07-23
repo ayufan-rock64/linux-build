@@ -41,26 +41,26 @@ FILE=$(mktemp)
 wget http://omv-extras.org/openmediavault-omvextrasorg_latest_all3.deb -qO $FILE && dpkg -i $FILE && rm $FILE
 /usr/sbin/omv-update
 
-# use folder2ram instead of log2ram with OMV
+# FIX TFTPD ipv4
+[ -f /etc/default/tftpd-hpa ] && sed -i 's/--secure/--secure --ipv4/' /etc/default/tftpd-hpa
+
+# load OMV helpers
+. /usr/share/openmediavault/scripts/helper-functions
+
+# use folder2ram
 apt-get -y install openmediavault-flashmemory
-sed -i -e '/<flashmemory>/,/<\/flashmemory>/ s/<enable>0/<enable>1/' \
-    -e '/<ssh>/,/<\/ssh>/ s/<enable>0/<enable>1/' \
-    -e '/<ntp>/,/<\/ntp>/ s/<enable>0/<enable>1/' \
-	/etc/openmediavault/config.xml
-
+xmlstarlet ed -L -u "/config/services/flashmemory/enable" -v "1" ${OMV_CONFIG_FILE}
 /usr/sbin/omv-mkconf flashmemory
-/usr/sbin/omv-mkconf ntp
-
-systemctl disable log2ram
 /sbin/folder2ram -enablesystemd
+
+xmlstarlet ed -L -u "/config/services/ssh/enable" -v "1" ${OMV_CONFIG_FILE}
+/usr/sbin/omv-mkconf ssh
+
+xmlstarlet ed -L -u "/config/services/ntp/enable" -v "1" ${OMV_CONFIG_FILE}
+/usr/sbin/omv-mkconf ntp
 
 # disable rrdcached
 systemctl disable rrdcached
-
-#FIX TFTPD ipv4
-[ -f /etc/default/tftpd-hpa ] && sed -i 's/--secure/--secure --ipv4/' /etc/default/tftpd-hpa
-
-. /usr/share/openmediavault/scripts/helper-functions
 
 # improve netatalk performance
 apt-get -y install openmediavault-netatalk
@@ -78,11 +78,11 @@ xmlstarlet ed -L -u "/config/system/time/timezone" -v "UTC" ${OMV_CONFIG_FILE}
 xmlstarlet ed -L -u "/config/system/monitoring/perfstats/enable" -v "0" ${OMV_CONFIG_FILE}
 
 # update configs
-omv-mkconf monit
-omv-mkconf netatalk
-omv-mkconf samba
-omv-mkconf timezone
-omv-mkconf collectd
+/usr/sbin/omv-mkconf monit
+/usr/sbin/omv-mkconf netatalk
+/usr/sbin/omv-mkconf samba
+/usr/sbin/omv-mkconf timezone
+/usr/sbin/omv-mkconf collectd
 
 # init OMV
 # /usr/sbin/omv-initsystem
