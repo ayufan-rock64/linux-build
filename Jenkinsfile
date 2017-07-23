@@ -3,6 +3,8 @@ properties([
   parameters([
     string(defaultValue: '1.0', description: 'Current version number', name: 'VERSION'),
     text(defaultValue: '', description: 'A list of changes', name: 'CHANGES'),
+    choice(choices: 'all\njessie-minimal-rock64\njessie-openmediavault-rock64\nstretch-minimal-rock64\nxenial-i3-rock64\nxenial-mate-rock64\nxenial-minimal-rock64\nlinux-virtual', description: 'What makefile image to target', name: 'MAKE_TARGET')
+    booleanParam(defaultValue: true, description: 'Whether to upload to Github for release or not', name: 'GITHUB_UPLOAD'),
     booleanParam(defaultValue: false, description: 'If build should be marked as pre-release', name: 'PRERELEASE'),
     string(defaultValue: 'ayufan-rock64', description: 'GitHub username or organization', name: 'GITHUB_USER'),
     string(defaultValue: 'linux-build', description: 'GitHub repository', name: 'GITHUB_REPO'),
@@ -92,43 +94,47 @@ node('docker && linux-build') {
             }
 
             stage('Release') {
-              sh '''#!/bin/bash
-                set -xe
-                shopt -s nullglob
+              if (params.GITHUB_UPLOAD) {
+                sh '''#!/bin/bash
+                  set -xe
+                  shopt -s nullglob
 
-                github-release release \
-                    --tag "${VERSION}" \
-                    --name "$VERSION: $BUILD_TAG" \
-                    --description "${CHANGES}\n\n${BUILD_URL}" \
-                    --draft
+                  github-release release \
+                      --tag "${VERSION}" \
+                      --name "$VERSION: $BUILD_TAG" \
+                      --description "${CHANGES}\n\n${BUILD_URL}" \
+                      --draft
 
-                github-release upload \
-                    --tag "${VERSION}" \
-                    --name "manifest.xml" \
-                    --file "manifest.xml"
-
-                for file in *.xz *.deb; do
                   github-release upload \
                       --tag "${VERSION}" \
-                      --name "$(basename "$file")" \
-                      --file "$file" &
-                done
+                      --name "manifest.xml" \
+                      --file "manifest.xml"
 
-                wait
+                  for file in *.xz *.deb; do
+                    github-release upload \
+                        --tag "${VERSION}" \
+                        --name "$(basename "$file")" \
+                        --file "$file" &
+                  done
 
-                if [[ "$PRERELEASE" == "true" ]]; then
-                  github-release edit \
-                    --tag "${VERSION}" \
-                    --name "$VERSION: $BUILD_TAG" \
-                    --description "${CHANGES}\n\n${BUILD_URL}" \
-                    --pre-release
-                else
-                  github-release edit \
-                    --tag "${VERSION}" \
-                    --name "$VERSION: $BUILD_TAG" \
-                    --description "${CHANGES}\n\n${BUILD_URL}"
-                fi
-              '''
+                  wait
+
+                  if [[ "$PRERELEASE" == "true" ]]; then
+                    github-release edit \
+                      --tag "${VERSION}" \
+                      --name "$VERSION: $BUILD_TAG" \
+                      --description "${CHANGES}\n\n${BUILD_URL}" \
+                      --pre-release
+                  else
+                    github-release edit \
+                      --tag "${VERSION}" \
+                      --name "$VERSION: $BUILD_TAG" \
+                      --description "${CHANGES}\n\n${BUILD_URL}"
+                  fi
+                '''
+              } else {
+                 echo 'Flagged as an no upload release job'
+              }
             }
           }
         }
