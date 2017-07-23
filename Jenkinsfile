@@ -68,7 +68,7 @@ node('docker && linux-build') {
                 sh '''#!/bin/bash
                   set +xe
                   export CCACHE_DIR=$WORKSPACE/ccache
-                  make -j$(nproc)
+                  make -j$(nproc) $MAKE_TARGET
                 '''
               }
           }
