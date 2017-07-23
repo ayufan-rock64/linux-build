@@ -35,7 +35,7 @@ node('docker && linux-build') {
                 '''
               }
 
-              stage 'Sources' {
+              stage('Sources') {
                 sh '''#!/bin/bash
                   set -xe
 
