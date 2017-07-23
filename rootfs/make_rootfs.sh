@@ -146,8 +146,17 @@ case $DISTRO in
 	xenial|sid|jessie|stretch)
 		rm "$DEST/etc/resolv.conf"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
-		DEBUSER=rock64
-		DEBUSERPW=rock64
+		case "$VARIANT" in
+			openmediavault)
+				DEBUSER=root
+				DEBUSERPW=openmediavault
+				;;
+
+			*)
+				DEBUSER=rock64
+				DEBUSERPW=rock64
+				;;
+		esac
 		EXTRA_ARCHS="arm64"
 		cat <<EOF | do_chroot bash
 #!/bin/sh
@@ -174,10 +183,13 @@ curl -fsSL http://deb.ayufan.eu/orgs/ayufan-rock64/archive.key | apt-key add -
 apt-get update -y
 apt-get dist-upgrade -y
 apt-get install -y flash-kernel u-boot-tools
-adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
-chown -R 1000:1000 /home/$DEBUSER
+if [[ "$DEBUSER" != "root" ]]; then
+	adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
+	chown -R 1000:1000 /home/$DEBUSER
+	usermod -a -G sudo,audio,adm,input,video,plugdev,ssh $DEBUSER
+fi
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
-usermod -a -G sudo,audio,adm,input,video,plugdev,ssh $DEBUSER
+chage -d 0 "$DEBUSER"
 apt-get clean
 EOF
 		echo -n UTC > "$DEST/etc/timezone"
