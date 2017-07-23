@@ -50,17 +50,10 @@ wget http://omv-extras.org/openmediavault-omvextrasorg_latest_all3.deb -qO $FILE
 # use folder2ram
 apt-get -y install openmediavault-flashmemory
 xmlstarlet ed -L -u "/config/services/flashmemory/enable" -v "1" ${OMV_CONFIG_FILE}
-/usr/sbin/omv-mkconf flashmemory
-/sbin/folder2ram -enablesystemd
 
+# enable ssh and ntp
 xmlstarlet ed -L -u "/config/services/ssh/enable" -v "1" ${OMV_CONFIG_FILE}
-/usr/sbin/omv-mkconf ssh
-
 xmlstarlet ed -L -u "/config/services/ntp/enable" -v "1" ${OMV_CONFIG_FILE}
-/usr/sbin/omv-mkconf ntp
-
-# disable rrdcached
-systemctl disable rrdcached
 
 # improve netatalk performance
 apt-get -y install openmediavault-netatalk
@@ -83,6 +76,14 @@ xmlstarlet ed -L -u "/config/system/monitoring/perfstats/enable" -v "0" ${OMV_CO
 /usr/sbin/omv-mkconf samba
 /usr/sbin/omv-mkconf timezone
 /usr/sbin/omv-mkconf collectd
+/usr/sbin/omv-mkconf flashmemory
+/usr/sbin/omv-mkconf ssh
+/usr/sbin/omv-mkconf ntp
+
+/sbin/folder2ram -enablesystemd
+
+# disable rrdcached
+systemctl disable rrdcached
 
 # init OMV
 # /usr/sbin/omv-initsystem
