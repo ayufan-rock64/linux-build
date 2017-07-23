@@ -89,9 +89,7 @@ EOF
 /usr/sbin/omv-mkconf cpufrequtils
 
 /sbin/folder2ram -enablesystemd
-
-# disable rrdcached
-systemctl disable rrdcached
+/sbin/folder2ram -mountall || true
 
 # init OMV
 # /usr/sbin/omv-initsystem
