@@ -70,6 +70,13 @@ xmlstarlet ed -L -u "/config/system/time/timezone" -v "UTC" ${OMV_CONFIG_FILE}
 # disable monitoring
 xmlstarlet ed -L -u "/config/system/monitoring/perfstats/enable" -v "0" ${OMV_CONFIG_FILE}
 
+# configure cpufreq
+cat <<EOF >>/etc/default/openmediavault
+OMV_CPUFREQUTILS_GOVERNOR=ondemand
+OMV_CPUFREQUTILS_MINSPEED=0
+OMV_CPUFREQUTILS_MAXSPEED=0
+EOF
+
 # update configs
 /usr/sbin/omv-mkconf monit
 /usr/sbin/omv-mkconf netatalk
@@ -79,6 +86,7 @@ xmlstarlet ed -L -u "/config/system/monitoring/perfstats/enable" -v "0" ${OMV_CO
 /usr/sbin/omv-mkconf flashmemory
 /usr/sbin/omv-mkconf ssh
 /usr/sbin/omv-mkconf ntp
+/usr/sbin/omv-mkconf cpufrequtils
 
 /sbin/folder2ram -enablesystemd
 
