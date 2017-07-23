@@ -123,7 +123,7 @@ xenial-i3-rock64: xenial-i3-rock64-$(IMAGE_SUFFIX)-armhf.img.xz xenial-i3-rock64
 jessie-minimal-rock64: jessie-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
 .PHONY: jessie-openmediavault-rock64
-jessie-openmediavault-rock64: jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
+jessie-openmediavault-rock64: jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-armhf.img.xz jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-armhf.img.xz
 
 .PHONY: stretch-minimal-rock64
 stretch-minimal-rock64: stretch-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
