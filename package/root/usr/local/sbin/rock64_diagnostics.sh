@@ -280,7 +280,7 @@ UploadSupportLogs() {
 	which iostat >/dev/null 2>&1 || MissingTools="${MissingTools} sysstat"
 
 	if [ "X${MissingTools}" != "X" ]; then
-		echo -e "Some tools are missing, installing: \c ${MissingTools}" >&2
+		echo -e "Some tools are missing, installing: ${MissingTools}" >&2
 		apt-get -f -qq -y install ${MissingTools} >/dev/null 2>&1
 	fi
 
