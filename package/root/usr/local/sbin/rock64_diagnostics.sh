@@ -7,6 +7,7 @@
 #
 
 Log="/var/log/${0##*/}.log"
+VerifyRepairExcludes="/etc/|/boot/|cache|getty"
 
 Main() {
 	# check if stdout is a terminal...
@@ -32,18 +33,18 @@ Main() {
 VerifyFiles() {
 	echo -e "\n### file verification:\n"
 
-	OUTPUT=$(dpkg --verify | egrep -v "/etc/|/boot/" | awk -F" /" '{print "/"$2}')
+	OUTPUT=$(dpkg --verify | egrep -v -i "${VerifyRepairExcludes}" | awk -F" /" '{print "/"$2}')
 
 	if [[ -z $OUTPUT ]]; then
 		echo -e "${LGREEN}${BOLD}It would appear you don't have any corrupt files or packages!${NC}"
 		echo -e "If you still have concerns, use this scripts media test mode"
 		echo -e "to do a stress test of your drive/storage device.\n"
 	else
-		echo -e "${LRED}${BOLD}It appears you may have corrupt packages.${NC} To prevent avoidable issues in the"
-		echo -e "future (and reduce support requests on the forum) it is strongly recommended"
-		echo -e "you re-run this script NOW in fix (-f) mode to try and fix these packages!\n"
+		echo -e "${LRED}${BOLD}It appears you *may* have corrupt packages.${NC} If you believe this to be the"
+		echo -e "case (and not a customisation that you or a script has applied), re-run this"
+		echo -e "script in fix mode to try and fix these packages.\n"
 
-		echo -e "### The following suspect files or issues were detected:\n"
+		echo -e "### The following changed from packaged state files were detected:\n"
 		echo -e "${OUTPUT}\n"
 	fi
 
@@ -53,17 +54,17 @@ VerifyFiles() {
 VerifyAndFixFiles() {
 	echo -e "\n### file verification and file/package repair:\n"
 
-	STAGE1=$(dpkg --verify | egrep -v "/etc/|/boot/" | awk -F" /" '{print "/"$2}')
+	STAGE1=$(dpkg --verify | egrep -v -i "${VerifyRepairExcludes}" | awk -F" /" '{print "/"$2}')
 
 	if [[ -z $STAGE1 ]]; then
 		echo -e "${LGREEN}${BOLD}It would appear you don't have any corrupt files or packages!${NC}"
 		echo -e "\nIf you are experiencing issues, it is probably best to back"
 		echo -e "up your data, and reinstall the OS from a new image.\n"
 	else
-		echo -e "### The following files were found to be corrupt:\n"
+		echo -e "### The following changed from packaged state files were detected:\n"
 		echo -e "${STAGE1}"
 
-		echo -e "\n### Identifying which packages the corrupt files belong to... "
+		echo -e "\n### Identifying which packages the changed files belong to... "
 		STAGE2=$(echo "${STAGE1}" | while read ; do dpkg -S "${REPLY}" | cut -f1 -d: ; done | sort | uniq)
 
 		if [[ -z ${STAGE2} ]]; then
@@ -267,6 +268,12 @@ GetDevice() {
 } # GetDevice
 
 UploadSupportLogs() {
+	#prevent colour escape sequences in log
+	BOLD=''
+	NC=''
+	LGREEN=''
+	LRED=''
+
 	#check requirements
 	which fping >/dev/null 2>&1 || MissingTools=" fping"
 	which curl >/dev/null 2>&1 || MissingTools="${MissingTools} curl"
@@ -292,7 +299,7 @@ UploadSupportLogs() {
 		sed -E 's/([0-9]{1,3}\.)([0-9]{1,3}\.)([0-9]{1,3}\.)([0-9]{1,3})/XXX.XXX.\3\4/g' \
 		| curl -F 'sprunge=<-' http://sprunge.us
 
-	echo -e "Please post the above URL in the pine64 forum where you've been asked for it."
+	echo -e "Please post the above URL on the forum where you've been asked for it."
 } # UploadSupportLogs
 
 RequireRoot() {
