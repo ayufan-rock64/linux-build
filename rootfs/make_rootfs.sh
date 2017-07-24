@@ -187,9 +187,9 @@ if [[ "$DEBUSER" != "root" ]]; then
 	adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 	chown -R 1000:1000 /home/$DEBUSER
 	usermod -a -G sudo,audio,adm,input,video,plugdev,ssh $DEBUSER
+	chage -d 0 "$DEBUSER"
 fi
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
-chage -d 0 "$DEBUSER"
 apt-get clean
 EOF
 		echo -n UTC > "$DEST/etc/timezone"
