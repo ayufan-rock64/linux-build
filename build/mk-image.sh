@@ -129,9 +129,9 @@ generate_system_image() {
 	parted -s ${SYSTEM} unit s mkpart reserved2 ${RESERVED2_START} $(expr ${LOADER2_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart loader2 ${LOADER2_START} $(expr ${ATF_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart atf ${ATF_START} $(expr ${BOOT_START} - 1)
-	parted -s ${SYSTEM} unit s mkpart boot ${BOOT_START} $(expr ${ROOTFS_START} - 1)
-	parted -s ${SYSTEM} unit s mkpart root ${ROOTFS_START} 100%
-	parted -s ${SYSTEM} set 6 boot on
+	parted -s ${SYSTEM} unit s mkpart boot fat16 ${BOOT_START} $(expr ${ROOTFS_START} - 1)
+	parted -s ${SYSTEM} unit s mkpart root ext4 ${ROOTFS_START} 100%
+	parted -s ${SYSTEM} set 6 legacy_boot on
 }
 
 if [ "$TARGET" = "boot" ]; then
