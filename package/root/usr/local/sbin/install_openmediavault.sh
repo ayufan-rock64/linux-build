@@ -51,13 +51,16 @@ wget http://omv-extras.org/openmediavault-omvextrasorg_latest_all3.deb -qO $FILE
 apt-get -y install openmediavault-flashmemory
 xmlstarlet ed -L -u "/config/services/flashmemory/enable" -v "1" ${OMV_CONFIG_FILE}
 
-# enable ssh and ntp
+# enable ssh, but disallow root login
 xmlstarlet ed -L -u "/config/services/ssh/enable" -v "1" ${OMV_CONFIG_FILE}
+xmlstarlet ed -L -u "/config/services/ssh/permitrootlogin" -v "0" ${OMV_CONFIG_FILE}
+
+# enable ntp
 xmlstarlet ed -L -u "/config/services/ntp/enable" -v "1" ${OMV_CONFIG_FILE}
 
 # improve netatalk performance
 apt-get -y install openmediavault-netatalk
-AFP_Options="vol dbpath = /var/tmp/netatalk/CNID/%v/"
+AFP_Options="vol dbpath = /var/tmp/netatalk/CNID/%v/\nmimic model = Macmini"
 xmlstarlet ed -L -u "/config/services/afp/extraoptions" -v "$(echo -e "${AFP_Options}")" ${OMV_CONFIG_FILE}
 
 # improve samba performance
@@ -78,6 +81,13 @@ cat <<EOF >>/etc/default/openmediavault
 OMV_CPUFREQUTILS_GOVERNOR=ondemand
 OMV_CPUFREQUTILS_MINSPEED=0
 OMV_CPUFREQUTILS_MAXSPEED=0
+EOF
+
+cat <<EOF >>/etc/rsyslog.d/omv-armbian.conf
+:msg, contains, "do ionice -c1" ~
+:msg, contains, "action " ~
+:msg, contains, "netsnmp_assert" ~
+:msg, contains, "Failed to initiate sched scan" ~
 EOF
 
 # update configs
