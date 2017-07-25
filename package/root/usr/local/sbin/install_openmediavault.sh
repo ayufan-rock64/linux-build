@@ -100,6 +100,7 @@ xmlstarlet ed -L \
 	-s /config/system/network/interfaces/interface -t elem -n type -v ethernet \
 	-s /config/system/network/interfaces/interface -t elem -n devicename -v eth0 \
 	-s /config/system/network/interfaces/interface -t elem -n method -v dhcp \
+	-s /config/system/network/interfaces/interface -t elem -n method6 -v manual \
 	/etc/openmediavault/config.xml
 
 # configure cpufreq
