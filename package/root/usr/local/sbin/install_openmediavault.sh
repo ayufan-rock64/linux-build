@@ -5,9 +5,23 @@ if [[ "$(lsb_release -c -s)" != "jessie" ]]; then
 	exit 1
 fi
 
-set -xe
+echo "OpenMediaVault installation script"
+echo "Script is based on Armbian and tkaiser work: https://github.com/armbian/build/blob/master/scripts/customize-image.sh.template"
+echo ""
+echo "This script overwrites network interfaces."
+echo "Make sure that you configured them in OpenMediaVault interface before rebooting."
+echo ""
 
-# Based on https://github.com/armbian/build/blob/master/scripts/customize-image.sh.template#L31
+if [[ -t 0 ]]; then
+	echo "In order to continue type YES or cancel:"
+	while read PROMPT; do
+		if [[ "$PROMPT" == "YES" ]]; then
+			break
+		fi
+	done
+fi
+
+set -xe
 
 #Add OMV source.list and Update System
 cat > /etc/apt/sources.list.d/openmediavault.list <<- EOF
@@ -76,6 +90,18 @@ xmlstarlet ed -L -u "/config/system/network/dns/hostname" -v "$(cat /etc/hostnam
 # disable monitoring
 xmlstarlet ed -L -u "/config/system/monitoring/perfstats/enable" -v "0" ${OMV_CONFIG_FILE}
 
+# disable journal for rrdcached
+sed -i 's|-j /var/lib/rrdcached/journal/ ||' /etc/init.d/rrdcached
+
+# add eth0 interface
+xmlstarlet ed -L \
+	-s /config/system/network/interfaces -t elem -n interface \
+	-s /config/system/network/interfaces/interface -t elem -n uuid -v 4fa8fd59-e5be-40f6-a76d-be6a73ed1407 \
+	-s /config/system/network/interfaces/interface -t elem -n type -v ethernet \
+	-s /config/system/network/interfaces/interface -t elem -n devicename -v eth0 \
+	-s /config/system/network/interfaces/interface -t elem -n method -v dhcp \
+	/etc/openmediavault/config.xml
+
 # configure cpufreq
 cat <<EOF >>/etc/default/openmediavault
 OMV_CPUFREQUTILS_GOVERNOR=ondemand
@@ -100,6 +126,10 @@ EOF
 /usr/sbin/omv-mkconf ssh
 /usr/sbin/omv-mkconf ntp
 /usr/sbin/omv-mkconf cpufrequtils
+/usr/sbin/omv-mkconf interfaces
+
+# make sure that rrdcached does exist
+mkdir -p /var/lib/rrdcached
 
 /sbin/folder2ram -enablesystemd
 /sbin/folder2ram -mountall || true
