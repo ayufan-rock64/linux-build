@@ -67,6 +67,9 @@ xmlstarlet ed -L -u "/config/services/smb/extraoptions" -v "$(echo -e "${SMB_Opt
 # fix timezone
 xmlstarlet ed -L -u "/config/system/time/timezone" -v "UTC" ${OMV_CONFIG_FILE}
 
+# fix hostname
+xmlstarlet ed -L -u "/config/system/network/dns/hostname" -v "$(hostname)" ${OMV_CONFIG_FILE}
+
 # disable monitoring
 xmlstarlet ed -L -u "/config/system/monitoring/perfstats/enable" -v "0" ${OMV_CONFIG_FILE}
 
