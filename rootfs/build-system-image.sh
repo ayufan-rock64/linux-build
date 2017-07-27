@@ -75,7 +75,8 @@ dd if=/dev/zero of="$TEMP/$IMAGE" bs=1M seek=$SIZE count=0
 dd if=/dev/zero of="$TEMP/$BOOT_IMAGE" bs=1M seek=$BOOT_SIZE count=0
 
 # Make filesystem
-mkfs.ext4 -L "linux-root" "$TEMP/$IMAGE" && tune2fs -o journal_data_writeback "$TEMP/$IMAGE"
+mkfs.ext4 -L "linux-root" "$TEMP/$IMAGE"
+tune2fs -o journal_data_writeback "$TEMP/$IMAGE"
 mkfs.vfat -n "boot" -S 512 "$TEMP/$BOOT_IMAGE"
 
 # Mount filesystem
