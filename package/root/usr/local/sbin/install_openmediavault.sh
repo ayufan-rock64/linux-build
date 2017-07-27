@@ -74,7 +74,7 @@ xmlstarlet ed -L -u "/config/services/ntp/enable" -v "1" ${OMV_CONFIG_FILE}
 
 # improve netatalk performance
 apt-get -y install openmediavault-netatalk
-AFP_Options="vol dbpath = /var/tmp/netatalk/CNID/%v/\nmimic model = Macmini"
+AFP_Options="mimic model = Macmini"
 xmlstarlet ed -L -u "/config/services/afp/extraoptions" -v "$(echo -e "${AFP_Options}")" ${OMV_CONFIG_FILE}
 
 # improve samba performance
