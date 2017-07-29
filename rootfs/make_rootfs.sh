@@ -217,6 +217,10 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
+		cat >> "$DEST/etc/securetty" <<EOF
+# Rock 64
+ttyFIQ0
+EOF
 		for arch in $EXTRA_ARCHS; do
 			if [[ "$arch" != "$BUILD_ARCH" ]]; then
 				do_chroot dpkg --add-architecture "$arch"
