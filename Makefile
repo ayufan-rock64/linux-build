@@ -177,12 +177,13 @@ kernel-menuconfig:
 REMOTE_HOST ?= rock64.home
 
 kernel-build:
-	$(KERNEL_MAKE) Image -j$(shell nproc)
+	$(KERNEL_MAKE) Image dtbs -j$(shell nproc)
 
 kernel-build-with-modules:
-	$(KERNEL_MAKE) Image modules -j$(shell nproc)
+	$(KERNEL_MAKE) Image modules dtbs -j$(shell nproc)
 	$(KERNEL_MAKE) modules_install INSTALL_MOD_PATH=$(shell pwd)/tmp/linux_modules
 
 kernel-update:
 	rsync --partial --checksum -rv kernel/arch/arm64/boot/Image root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/Image
+	rsync --partial --checksum -rv kernel/arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/dtb
 	rsync --partial --checksum -av tmp/linux_modules/lib/ root@$(REMOTE_HOST):$(REMOTE_DIR)/lib
