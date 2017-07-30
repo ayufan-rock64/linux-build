@@ -132,6 +132,9 @@ EOF
 # make sure that rrdcached does exist
 mkdir -p /var/lib/rrdcached
 
+# disable rrdcached
+systemctl disable rrdcached
+
 /sbin/folder2ram -enablesystemd
 /sbin/folder2ram -mountall || true
 
