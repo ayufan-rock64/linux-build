@@ -1,9 +1,11 @@
 export RELEASE_NAME ?= 0.1~dev
 export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master
+export KERNEL_DIR ?= kernel
 
 KERNEL_LOCALVERSION ?= -rockchip-ayufan-$(RELEASE)
-KERNEL_MAKE ?= make -C kernel \
+KERNEL_DEFCONFIG ?= rockchip_linux_defconfig
+KERNEL_MAKE ?= make -C $(KERNEL_DIR) \
 	LOCALVERSION=$(KERNEL_LOCALVERSION) \
 	KDEB_PKGVERSION=$(RELEASE_NAME) \
 	ARCH=arm64 \
@@ -88,9 +90,9 @@ out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
 	build/mk-image.sh -c rk3328 -t system -r "$<" -b "$(subst -system.img,-boot.img,$<)" -o "$@.tmp"
 	mv "$@.tmp" "$@"
 
-$(KERNEL_PACKAGE): kernel/arch/arm64/configs/rockchip_linux_defconfig
+$(KERNEL_PACKAGE): kernel/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 	echo -n > kernel/.scmversion
-	$(KERNEL_MAKE) rockchip_linux_defconfig
+	$(KERNEL_MAKE) $(KERNEL_DEFCONFIG)
 	$(KERNEL_MAKE) bindeb-pkg -j$(shell nproc)
 
 $(KERNEL_HEADERS_PACKAGES): $(KERNEL_PACKAGE)
@@ -147,10 +149,10 @@ pull-trees:
 
 .PHONY: kernel-menuconfig
 kernel-menuconfig:
-	$(KERNEL_MAKE) rockchip_linux_defconfig
+	$(KERNEL_MAKE) $(KERNEL_DEFCONFIG)
 	$(KERNEL_MAKE) menuconfig
 	$(KERNEL_MAKE) savedefconfig
-	cp kernel/defconfig kernel/arch/arm64/configs/rockchip_linux_defconfig
+	cp kernel/defconfig kernel/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 
 REMOTE_HOST ?= rock64.home
 
