@@ -163,10 +163,12 @@ case $DISTRO in
 set -ex
 export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
+# add non-free
+sed -i 's/main contrib$/main contrib non-free/g' /etc/apt/sources.list
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
-	gdisk parted figlet htop
+	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BF428671
 if [[ "$DISTRO" == "jessie" ]]; then
 	REPO=xenial
