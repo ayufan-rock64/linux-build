@@ -62,6 +62,26 @@ linux-rock64-package-$(RELEASE_NAME)_all.deb: package
 		-a all \
 		package/root/=/
 
+linux-rock64-package-$(RELEASE_NAME)_all.rpm: package
+	chmod -R go-w $<
+	fpm -s dir -t rpm -n linux-rock64-package -v $(RELEASE_NAME) \
+		-p $@ \
+		--force \
+		--depends figlet \
+		--depends cron \
+		--depends gdisk \
+		--depends parted \
+		--after-install package/scripts/postinst.deb \
+		--before-remove package/scripts/prerm.deb \
+		--url https://gitlab.com/ayufan-rock64/linux-build \
+		--description "Rock64 Linux support package" \
+		--config-files /boot/efi/extlinux/ \
+		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
+		--license "MIT" \
+		--vendor "Kamil Trzciński" \
+		-a all \
+		package/root/=/
+
 %.tar.xz: %.tar
 	pxz -f -3 $<
 
@@ -107,7 +127,7 @@ kernel: kernelpkg
 u-boot: out/u-boot/uboot.img
 
 .PHONY: linux-package
-linux-package: linux-rock64-package-$(RELEASE_NAME)_all.deb
+linux-package: linux-rock64-package-$(RELEASE_NAME)_all.deb linux-rock64-package-$(RELEASE_NAME)_all.rpm
 
 .PHONY: linux-virtual
 linux-virtual: linux-rock64-$(RELEASE_NAME)_arm64.deb
