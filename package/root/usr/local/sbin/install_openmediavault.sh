@@ -70,7 +70,7 @@ xmlstarlet ed -L -u "/config/services/ssh/enable" -v "1" ${OMV_CONFIG_FILE}
 xmlstarlet ed -L -u "/config/services/ssh/permitrootlogin" -v "0" ${OMV_CONFIG_FILE}
 
 # enable ntp
-xmlstarlet ed -L -u "/config/services/ntp/enable" -v "1" ${OMV_CONFIG_FILE}
+xmlstarlet ed -L -u "/config/system/time/ntp/enable" -v "1" ${OMV_CONFIG_FILE}
 
 # improve netatalk performance
 apt-get -y install openmediavault-netatalk
