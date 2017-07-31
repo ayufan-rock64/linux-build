@@ -6,7 +6,7 @@ if [[ "$(lsb_release -c -s)" != "jessie" ]]; then
 fi
 
 echo "OpenMediaVault installation script"
-echo "Script is based on Armbian and tkaiser work: https://github.com/armbian/build/blob/master/scripts/customize-image.sh.template"
+echo "Script is based on Armbian, OMV and tkaiser work: https://github.com/armbian/build/blob/master/config/templates/customize-image.sh.template"
 echo ""
 echo "This script overwrites network interfaces."
 echo "Make sure that you configured them in OpenMediaVault interface before rebooting."
@@ -44,15 +44,14 @@ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7AA630A1EDEE7D
 # install debconf-utils, postfix and OMV
 debconf-set-selections <<< "postfix postfix/mailname string openmediavault"
 debconf-set-selections <<< "postfix postfix/main_mailer_type string 'No configuration'"
-apt-get -y install \
-    debconf-utils postfix
+apt-get -y install debconf-utils postfix
 
 # install openmediavault
 apt-get --yes install openmediavault
 
 # install OMV extras, enable folder2ram, tweak some settings
 FILE=$(mktemp)
-wget http://omv-extras.org/openmediavault-omvextrasorg_latest_all3.deb -qO $FILE && dpkg -i $FILE && rm $FILE
+wget https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/openmediavault-omvextrasorg_latest_all3.deb -qO $FILE && dpkg -i $FILE
 /usr/sbin/omv-update
 
 # FIX TFTPD ipv4
