@@ -6,8 +6,14 @@
 # Written 2017 Peter Feerick and contributors, released under GPLv3
 #
 
-Log="/var/log/${0##*/}.log"
-VerifyRepairExcludes="/etc/|/boot/|cache|getty"
+#if user doesn't have permission for /var/log, write to /tmp
+if [ -w /var/log ]; then
+	Log="/var/log/${0##*/}.log"
+else
+	Log="/tmp/${0##*/}.log"
+fi
+
+VerifyRepairExcludes="/etc/|/boot/|cache|getty|/var/lib/smartmontools/"
 
 Main() {
 	# check if stdout is a terminal...
@@ -127,13 +133,26 @@ GenerateLog() {
 
 	echo -e "\n### Loaded modules:\n\n$(lsmod)"
 
-	echo -e "\n### package version:\n"
-	apt-cache policy linux-pine64-package
+        if [[ $(dpkg-query -W -f='${Status}' linux-pine64-package 2>/dev/null | grep -c "ok installed") == "1" ]]; then
+                echo -e "\n### linux-pine64-package version:\n"
+                apt-cache policy linux-pine64-package
+        fi
+
+        if [[ $(dpkg-query -W -f='${Status}' linux-rock64-package 2>/dev/null | grep -c "ok installed") == "1" ]]; then
+                echo -e "\n### linux-rock64-package version:\n"
+                apt-cache policy linux-rock64-package
+        fi
 
 	echo -e "\n### Kernel version:\n"
 	uname -a
 
-	echo -e "\n### Current sysinfo:\n\n$(iostat -p ALL | grep -v "^loop")\n\n$(vmstat -w)\n\n$(free -h)\n\n$(dmesg | tail -n 250)"
+        echo -e "Searching for info on flash media... "
+        get_flash_information >>${Log}
+	which iostat >/dev/null 2>&1 && \
+
+	echo -e "\n### Current sysinfo:\n\n"
+	which iostat >/dev/null 2>&1 && echo -e "$(iostat -p ALL | grep -v '^loop')\n\n"
+	echo -e "$(vmstat -w)\n\n$(free -h)\n\n$(dmesg | tail -n 250)"
 } # GenerateLog
 
 CheckCard() {
@@ -267,6 +286,19 @@ GetDevice() {
 	fi
 } # GetDevice
 
+get_flash_information() {
+	# http://www.bunniestudios.com/blog/?page_id=1022
+	find /sys -name oemid | while read Device ; do
+		DeviceNode="${Device%/*}"
+		DeviceName="${DeviceNode##*/}"
+		echo -e "\n### ${DeviceName} info:\n"
+		find "${DeviceNode}" -maxdepth 1 -type f | while read ; do
+			NodeName="${REPLY##*/}"
+			echo -e "$(printf "%20s" ${NodeName}): $(cat "${DeviceNode}/${NodeName}" | tr '\n' " ")"
+		done
+	done
+} # get_flash_information
+
 UploadSupportLogs() {
 	#prevent colour escape sequences in log
 	BOLD=''
@@ -287,7 +319,7 @@ UploadSupportLogs() {
 	echo -e "Generating diagnostic logs... "
 	GenerateLog > ${Log}
 	echo -e "Running file integrity checks... "
-	   	VerifyFiles >> ${Log}
+   	VerifyFiles >> ${Log}
 
 	#check network connection
 	fping sprunge.us | grep -q alive || \
