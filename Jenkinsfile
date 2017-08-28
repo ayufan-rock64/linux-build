@@ -61,7 +61,7 @@ node('docker && linux-build') {
                   set +xe
                   export CCACHE_DIR=$WORKSPACE/ccache
                   make kernel KERNEL_DIR=kernel
-                  make kernel KERNEL_DIR=kernel-mainline KERNEL_DEFCONFIG=defconfig
+                  make kernel KERNEL_DIR=kernel-mainline
                 '''
               }
 
