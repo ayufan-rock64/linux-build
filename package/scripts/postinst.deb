@@ -10,10 +10,10 @@ case "$1" in
     systemctl enable restore-sound-after-resume
     systemctl enable store-sound-on-suspend
 
-    if [[ -b /dev/mmcblk0 ]]; then
+    if [[ -b /dev/mmcblk0p7 ]]; then
       e2label /dev/mmcblk0p7 linux-root
     fi
-    if [[ -b /dev/mmcblk1 ]]; then
+    if [[ -b /dev/mmcblk1p7 ]]; then
       e2label /dev/mmcblk1p7 linux-root
     fi
     ;;
