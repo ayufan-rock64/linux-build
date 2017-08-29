@@ -21,6 +21,8 @@ Tweak_Ondemand_Governor() {
 
 Enable_RPS_and_tweak_IRQ_Affinity() {
 	for i in 1 2 3 ; do
+		echo 2 >/proc/irq/$(awk -F":" "/ehci/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
+		echo 2 >/proc/irq/$(awk -F":" "/ohci/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
 		echo 4 >/proc/irq/$(awk -F":" "/xhci/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
 		echo 8 >/proc/irq/$(awk -F":" "/eth0/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
 	done
