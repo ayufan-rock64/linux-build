@@ -4,6 +4,6 @@ ETHTOOL=/sbin/ethtool
 
 test -x $ETHTOOL || exit 0
 
-[ -d "/sys/devices/platform/ff540000.eth/net/$IFACE" ] || exit 0
+[ -d "/sys/devices/platform/ff540000.eth/net/$IFACE" ] || [ -d "/sys/devices/platform/ff540000.ethernet/net/$IFACE" ] || exit 0
 
 $ETHTOOL -K "$IFACE" rx off tx off
