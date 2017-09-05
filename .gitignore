@@ -1,5 +1,6 @@
 /build
 /kernel
+/kernel-mainline
 /out
 /rkbin
 /u-boot
