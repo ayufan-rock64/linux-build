@@ -128,8 +128,8 @@ EOF
 /usr/sbin/omv-mkconf cpufrequtils
 /usr/sbin/omv-mkconf interfaces
 
-# make sure that rrdcached does exist
-mkdir -p /var/lib/rrdcached
+# make sure that rrdcached/php does exist
+mkdir -p /var/lib/rrdcached /var/lib/php
 
 # disable rrdcached
 systemctl disable rrdcached
