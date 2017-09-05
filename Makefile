@@ -172,7 +172,7 @@ kernel-menuconfig:
 	$(KERNEL_MAKE) $(KERNEL_DEFCONFIG)
 	$(KERNEL_MAKE) menuconfig
 	$(KERNEL_MAKE) savedefconfig
-	cp kernel/defconfig kernel/arch/arm64/configs/$(KERNEL_DEFCONFIG)
+	cp $(KERNEL_DIR)/defconfig $(KERNEL_DIR)/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 
 REMOTE_HOST ?= rock64.home
 
@@ -184,6 +184,6 @@ kernel-build-with-modules:
 	$(KERNEL_MAKE) modules_install INSTALL_MOD_PATH=$(shell pwd)/tmp/linux_modules
 
 kernel-update:
-	rsync --partial --checksum -rv kernel/arch/arm64/boot/Image root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/Image
-	rsync --partial --checksum -rv kernel/arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/dtb
+	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/Image root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/Image
+	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/dtb
 	rsync --partial --checksum -av tmp/linux_modules/lib/ root@$(REMOTE_HOST):$(REMOTE_DIR)/lib
