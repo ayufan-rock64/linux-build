@@ -244,7 +244,10 @@ EOF
 				;;
 
 			openmediavault)
-				do_chroot /usr/local/sbin/install_openmediavault.sh
+				do_chroot /usr/local/sbin/install_openmediavault.sh || do_chroot /bin/bash
+
+				echo "AFTER"
+				do_chroot /bin/bash
 				;;
 		esac
 		do_chroot systemctl enable ssh-keygen

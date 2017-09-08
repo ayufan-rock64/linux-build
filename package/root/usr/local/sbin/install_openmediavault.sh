@@ -14,7 +14,7 @@ case "$(lsb_release -c -s)" in
 	*)
 		echo "This script only works on Debian/Jessie|Stretch"
 		exit 1
-done
+esac
 
 echo "OpenMediaVault installation script"
 echo "Script is based on Armbian, OMV and tkaiser work: https://github.com/armbian/build/blob/master/config/templates/customize-image.sh.template"
