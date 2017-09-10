@@ -45,7 +45,7 @@ elif [ "${CHIP}" == "rk3036" ]; then
 	cat u-boot-dtb.bin >>idbloader.img
 	cp idbloader.img ${OUT}/u-boot/
 elif [ "${CHIP}" == "rk3328" ]; then
-	$TOOLPATH/loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img
+	$TOOLPATH/loaderimage --pack --uboot ./u-boot-dtb.bin uboot.img 0x200000
 
 	dd if=../rkbin/rk33/rk3328_ddr_786MHz_v1.06.bin of=DDRTEMP bs=4 skip=1
 	tools/mkimage -n rk3328 -T rksd -d DDRTEMP idbloader.img
