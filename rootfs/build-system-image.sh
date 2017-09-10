@@ -27,7 +27,7 @@ BOOT_SIZE=100
 
 case "$VARIANT" in
     minimal)
-        SIZE=1024
+        SIZE=2048
         ;;
 
     i3)
