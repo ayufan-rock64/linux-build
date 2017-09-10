@@ -1,0 +1,10 @@
+[Unit]
+Description=Rock 64 First boot
+After=systemd-modules-load.service local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/rock64_first_boot.sh
+
+[Install]
+WantedBy=multi-user.target
