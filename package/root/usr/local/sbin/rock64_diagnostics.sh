@@ -147,7 +147,7 @@ GenerateLog() {
 	uname -a
 
         echo -e "Searching for info on flash media... "
-        get_flash_information >>${Log}
+        get_flash_information
 	which iostat >/dev/null 2>&1 && \
 
 	echo -e "\n### Current sysinfo:\n\n"
