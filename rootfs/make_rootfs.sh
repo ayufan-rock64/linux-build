@@ -168,7 +168,8 @@ sed -i 's/main contrib$/main contrib non-free/g' /etc/apt/sources.list
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
-	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp
+	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
+	firmware-realtek network-manager
 fake-hwclock save
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BF428671
 if [[ "$DISTRO" == "jessie" ]]; then
