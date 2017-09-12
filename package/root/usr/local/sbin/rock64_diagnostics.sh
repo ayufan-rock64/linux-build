@@ -123,7 +123,10 @@ GenerateLog() {
 	echo -e "\n### ifconfig:\n"
 	ifconfig
 
-	echo -e "### partitions:\n"
+	echo -e "### lsusb:\n"
+	lsusb 2>/dev/null ; echo "" ; lsusb -t 2>/dev/null
+	
+	echo -e "\n### partitions:\n"
 	cat /proc/partitions
 
 	echo -e "\n### df:\n"
@@ -318,8 +321,7 @@ UploadSupportLogs() {
 
 	echo -e "Generating diagnostic logs... "
 	GenerateLog > ${Log}
-	echo -e "Running file integrity checks... "
-   	VerifyFiles >> ${Log}
+   	[[ -n ${VERIFY} ]] && (echo -e "Running file integrity checks... " ; VerifyFiles >> ${Log})
 
 	#check network connection
 	fping sprunge.us | grep -q alive || \
@@ -397,13 +399,21 @@ ParseOptions() {
 			exit 0
 			;;
 
-		u|U)
+		u)
 			# upload generated logs for support
 			RequireRoot
 			UploadSupportLogs
 			exit 0
 			;;
 
+		U)
+			# verify files and upload generated logs for support
+			RequireRoot
+			export VERIFY=TRUE
+			UploadSupportLogs
+			exit 0
+			;;
+			
 		c|C)
 			# check card mode
 			CheckCard "${OPTARG}"
