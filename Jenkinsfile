@@ -42,8 +42,7 @@ node('docker && linux-build') {
                   export HOME=$WORKSPACE
                   export USER=jenkins
 
-                  repo init -u https://github.com/ayufan-rock64/linux-manifests -b default --depth=1
-
+                  repo init -u https://github.com/ayufan-rock64/linux-manifests -b default --depth=1 --no-clone-bundle
                   repo sync -j 20 -c --force-sync
                 '''
               }
