@@ -133,7 +133,7 @@ do_chroot() {
 do_install() {
 	FILE=$(basename "$1")
 	cp "$1" "$DEST/$(basename "$1")"
-	do_chroot dpkg -i "$FILE" || do_chroot bash
+	do_chroot dpkg -i "$FILE"
 	do_chroot rm "$FILE"
 }
 
@@ -245,10 +245,7 @@ EOF
 				;;
 
 			openmediavault)
-				do_chroot /usr/local/sbin/install_openmediavault.sh || do_chroot /bin/bash
-
-				echo "AFTER"
-				do_chroot /bin/bash
+				do_chroot /usr/local/sbin/install_openmediavault.sh
 				;;
 		esac
 		do_chroot systemctl enable ssh-keygen
