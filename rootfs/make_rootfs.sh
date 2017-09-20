@@ -130,13 +130,13 @@ do_chroot() {
 	chroot "$DEST" $cmd
 	chroot "$DEST" umount /sys
 	chroot "$DEST" umount /proc
-	umount "$DEST/tmp" || do_chroot bash
+	umount "$DEST/tmp"
 }
 
 do_install() {
 	FILE=$(basename "$1")
 	cp "$1" "$DEST/$(basename "$1")"
-	do_chroot dpkg -i "$FILE"
+	yes | do_chroot dpkg -i "$FILE"
 	do_chroot rm "$FILE"
 }
 
@@ -161,35 +161,32 @@ case $DISTRIB in
 				;;
 		esac
 		EXTRA_ARCHS="arm64"
-		cat <<EOF | do_chroot bash
+		do_chroot apt-key add < rootfs/ayufan-ppa.gpg
+		do_chroot apt-key add < rootfs/ayufan-deb-ayufan-eu.gpg
+		cat <<EOF > "$DEST/install_script.bash"
 #!/bin/sh
 set -ex
 export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 # add non-free
 sed -i 's/main contrib$/main contrib non-free/g' /etc/apt/sources.list
+if [[ "$DISTRIB" == "debian" ]]; then
+	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu xenial main"
+else
+	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu $DISTRO main"
+fi
 apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
 	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
-	network-manager
+	network-manager psmisc flash-kernel u-boot-tools
 if [[ "$DISTRIB" == "debian" ]]; then
 	apt-get -y install firmware-realtek
 elif [[ "$DISTRIB" == "ubuntu" ]]; then
 	apt-get -y install landscape-common linux-firmware
 fi
-fake-hwclock save
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BF428671
-if [[ "$DISTRIB" == "debian" ]]; then
-	REPO=xenial
-else
-	REPO="$DISTRO"
-fi
-add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu \$REPO main"
-curl -fsSL http://deb.ayufan.eu/orgs/ayufan-rock64/archive.key | apt-key add -
-apt-get update -y
 apt-get dist-upgrade -y
-apt-get install -y flash-kernel u-boot-tools
+fake-hwclock save
 if [[ "$DEBUSER" != "root" ]]; then
 	adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 	chown -R 1000:1000 /home/$DEBUSER
@@ -199,6 +196,8 @@ fi
 echo "$DEBUSER:$DEBUSERPW" | chpasswd
 apt-get clean
 EOF
+		do_chroot bash "/install_script.bash"
+		rm -f "$DEST/install_script.bash"
 		echo -n UTC > "$DEST/etc/timezone"
 		echo "Rockchip RK3328 Rock64" > "$DEST/etc/flash-kernel/machine"
 		cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64.list" <<EOF
