@@ -97,7 +97,7 @@ case $DISTRO in
 esac
 
 mkdir -p $BUILD
-TARBALL="$TEMP/$(basename $ROOTFS)"
+TARBALL="tmp/$(basename $ROOTFS)"
 
 mkdir -p "$BUILD"
 if [ ! -e "$TARBALL" ]; then
@@ -110,7 +110,6 @@ echo -n "Extracting ... "
 set -x
 tar -xf "$TARBALL" -C "$DEST" $TAR_OPTIONS
 echo "OK"
-rm -f "$TARBALL"
 
 # Add qemu emulation.
 cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
