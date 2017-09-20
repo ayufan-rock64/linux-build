@@ -176,7 +176,7 @@ apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-serv
 	network-manager
 if [[ "$DISTRIB" == "debian" ]]; then
 	apt-get -y install firmware-realtek
-elsif [[ "$DISTRIB" == "ubuntu" ]]; then
+elif [[ "$DISTRIB" == "ubuntu" ]]; then
 	apt-get -y install landscape-common linux-firmware
 fi
 fake-hwclock save
