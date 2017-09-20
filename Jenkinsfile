@@ -31,7 +31,7 @@ node('docker && linux-build') {
                   set +xe
                   export CCACHE_DIR=$WORKSPACE/ccache
                   ccache -M 0 -F 0
-                  git clean -fdx -e ccache tmp .repo
+                  git clean -ffdx -e ccache
                 '''
               }
 
