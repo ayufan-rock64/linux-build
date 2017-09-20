@@ -70,21 +70,25 @@ trap cleanup EXIT
 
 ROOTFS=""
 TAR_OPTIONS=""
+DISTRIB=""
 
 case $DISTRO in
 	arch)
 		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
 		TAR_OPTIONS="-z"
+		DISTRIB="arch"
 		;;
 	xenial|zesty|artful)
 		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/ubuntu-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
+		DISTRIB="ubuntu"
 		;;
 	sid|jessie|stretch)
 		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/debian-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
+		DISTRIB="debian"
 		;;
 	*)
 		echo "Unknown distribution: $DISTRO"
@@ -138,12 +142,12 @@ do_install() {
 }
 
 # Run stuff in new system.
-case $DISTRO in
+case $DISTRIB in
 	arch)
 		echo "No longer supported"
 		exit 1
 		;;
-	xenial|sid|jessie|stretch)
+	debian|ubuntu)
 		rm "$DEST/etc/resolv.conf"
 		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 		case "$VARIANT" in
@@ -170,17 +174,17 @@ apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-serv
 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
 	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
 	network-manager
+if [[ "$DISTRIB" == "debian" ]]; then
+	apt-get -y install firmware-realtek
+elsif [[ "$DISTRIB" == "ubuntu" ]]; then
+	apt-get -y install landscape-common linux-firmware
+fi
 fake-hwclock save
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BF428671
-if [[ "$DISTRO" == "jessie" ]]; then
-	REPO=xenial
-elif [[ "$DISTRO" == "stretch" ]]; then
+if [[ "$DISTRIB" == "debian" ]]; then
 	REPO=xenial
 else
 	REPO="$DISTRO"
-fi
-if [[ "$DISTRO" == "xenial" || "$DISTRO" == "zesty" || "$DISTRO" == "artful" ]]; then
-	apt-get -y install landscape-common
 fi
 add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu \$REPO main"
 curl -fsSL http://deb.ayufan.eu/orgs/ayufan-rock64/archive.key | apt-key add -
@@ -228,6 +232,8 @@ EOF
 		for arch in $EXTRA_ARCHS; do
 			if [[ "$arch" != "$BUILD_ARCH" ]]; then
 				do_chroot dpkg --add-architecture "$arch"
+				do_chroot apt-get update -y
+				do_chroot apt-get install -y "libc6:$arch" "libstdc++6:$arch"
 			fi
 		done
 		for package in "$@"; do
@@ -255,7 +261,10 @@ EOF
 		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 		do_chroot apt-get clean
 		;;
+
 	*)
+		echo "Unsupported distrib:$DISTRIB and distro:$DISTRO..."
+		exit 1
 		;;
 esac
 
