@@ -97,6 +97,7 @@ case $DISTRO in
 esac
 
 mkdir -p $BUILD
+mkdir -p tmp
 TARBALL="tmp/$(basename $ROOTFS)"
 
 mkdir -p "$BUILD"
