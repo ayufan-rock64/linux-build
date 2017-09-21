@@ -3,15 +3,15 @@ export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master
 export KERNEL_DIR ?= kernel
 
-KERNEL_LOCALVERSION ?= -rockchip-ayufan-$(RELEASE)
+KERNEL_EXTRAVERSION ?= -rockchip-ayufan-$(RELEASE)
 KERNEL_DEFCONFIG ?= rockchip_linux_defconfig
 KERNEL_MAKE ?= make -C $(KERNEL_DIR) \
-	EXTRAVERSION=$(KERNEL_LOCALVERSION) \
+	EXTRAVERSION=$(KERNEL_EXTRAVERSION) \
 	KDEB_PKGVERSION=$(RELEASE_NAME) \
 	ARCH=arm64 \
 	HOSTCC=aarch64-linux-gnu-gcc \
 	CROSS_COMPILE="ccache aarch64-linux-gnu-"
-KERNEL_RELEASE ?= $(shell $(KERNEL_MAKE) -s kernelversion)$(KERNEL_LOCALVERSION)
+KERNEL_RELEASE ?= $(shell $(KERNEL_MAKE) -s kernelversion)
 
 KERNEL_PACKAGE ?= linux-image-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
 KERNEL_HEADERS_PACKAGES ?= linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
