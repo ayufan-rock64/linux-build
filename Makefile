@@ -194,3 +194,7 @@ kernel-update:
 	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/Image root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/Image
 	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/dtb
 	rsync --partial --checksum -av tmp/linux_modules/lib/ root@$(REMOTE_HOST):$(REMOTE_DIR)/lib
+
+shell:
+	docker build -q -t rock64-linux:build-environment environment/
+	docker run -it -v $(CURDIR):$(CURDIR) -w $(CURDIR) rock64-linux:build-environment
