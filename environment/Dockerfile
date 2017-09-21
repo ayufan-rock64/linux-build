@@ -22,5 +22,8 @@ RUN which github-release
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo && \
     chmod +x /usr/local/bin/repo
 
+RUN ln -s /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 /lib/
+ENV LD_LIBRARY_PATH=/usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
+
 ENV USER=root \
     HOME=/root

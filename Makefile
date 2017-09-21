@@ -6,9 +6,10 @@ export KERNEL_DIR ?= kernel
 KERNEL_LOCALVERSION ?= -rockchip-ayufan-$(RELEASE)
 KERNEL_DEFCONFIG ?= rockchip_linux_defconfig
 KERNEL_MAKE ?= make -C $(KERNEL_DIR) \
-	LOCALVERSION=$(KERNEL_LOCALVERSION) \
+	EXTRAVERSION=$(KERNEL_LOCALVERSION) \
 	KDEB_PKGVERSION=$(RELEASE_NAME) \
 	ARCH=arm64 \
+	HOSTCC=aarch64-linux-gnu-gcc \
 	CROSS_COMPILE="ccache aarch64-linux-gnu-"
 KERNEL_RELEASE ?= $(shell $(KERNEL_MAKE) -s kernelversion)$(KERNEL_LOCALVERSION)
 
@@ -176,7 +177,7 @@ pull-trees:
 .PHONY: kernel-menuconfig
 kernel-menuconfig:
 	$(KERNEL_MAKE) $(KERNEL_DEFCONFIG)
-	$(KERNEL_MAKE) menuconfig
+	$(KERNEL_MAKE) HOSTCC=gcc menuconfig
 	$(KERNEL_MAKE) savedefconfig
 	cp $(KERNEL_DIR)/defconfig $(KERNEL_DIR)/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 
