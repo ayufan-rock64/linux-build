@@ -162,8 +162,8 @@ case $DISTRIB in
 				;;
 		esac
 		EXTRA_ARCHS="arm64"
-		do_chroot apt-key add < rootfs/ayufan-ppa.gpg
-		do_chroot apt-key add < rootfs/ayufan-deb-ayufan-eu.gpg
+		do_chroot apt-key add - < rootfs/ayufan-ppa.gpg
+		do_chroot apt-key add - < rootfs/ayufan-deb-ayufan-eu.gpg
 		cat <<EOF > "$DEST/install_script.bash"
 #!/bin/sh
 set -ex
