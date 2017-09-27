@@ -54,7 +54,7 @@ while getopts "c:t:s:r:b:o:h" flag; do
 done
 OPTIND=$OLD_OPTIND
 
-if [ ! -e "${EXTLINUXPATH}/${CHIP}.conf" ]; then
+if [ ! -f "${EXTLINUXPATH}/${CHIP}.conf" ]; then
 	CHIP="rk3288"
 fi
 
@@ -80,13 +80,13 @@ generate_boot_image() {
 }
 
 generate_system_image() {
-	if [ ! -e "${BOOT_PATH}" ]; then
+	if [ ! -f "${BOOT_PATH}" ]; then
 		echo -e "\e[31m CAN'T FIND BOOT IMAGE \e[0m"
 		usage
 		exit 1
 	fi
 
-	if [ ! -e "${ROOTFS_PATH}" ]; then
+	if [ ! -f "${ROOTFS_PATH}" ]; then
 		echo -e "\e[31m CAN'T FIND ROOTFS IMAGE \e[0m"
 		usage
 		exit 1

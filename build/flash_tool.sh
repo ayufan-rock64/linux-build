@@ -35,7 +35,7 @@ while getopts "c:t:s:d:p:r:d:i:h" flag; do
 			;;
 		i)
 			IMAGE="$OPTARG"
-			if [ ! -e "${IMAGE}" ]; then
+			if [ ! -f "${IMAGE}" ]; then
 				echo -e "\e[31m CAN'T FIND IMAGE \e[0m"
 				usage
 				exit
@@ -62,7 +62,7 @@ if [ ! $IMAGE ]; then
 	exit
 fi
 
-if [ ! -e "${EXTLINUXPATH}/${CHIP}.conf" ]; then
+if [ ! -f "${EXTLINUXPATH}/${CHIP}.conf" ]; then
 	CHIP="rk3288"
 fi
 
