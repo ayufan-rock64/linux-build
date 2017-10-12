@@ -1,7 +1,7 @@
 FROM ubuntu:xenial
 
-RUN apt-get update -y
-RUN apt-get install -y python git-core gnupg flex bison gperf build-essential \
+RUN apt-get update -y && \
+    apt-get install -y python git-core gnupg flex bison gperf build-essential \
     zip curl zlib1g-dev libc6-dev-i386 \
     lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache \
     libgl1-mesa-dev libxml2-utils xsltproc unzip mtools u-boot-tools \
@@ -9,9 +9,8 @@ RUN apt-get install -y python git-core gnupg flex bison gperf build-essential \
     dosfstools gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
     gcc-arm-linux-gnueabi g++-arm-linux-gnueabi ccache \
     sudo cpio nano vim kmod kpartx wget bsdtar qemu-user-static \
-    pxz ruby-dev debootstrap multistrap
-
-RUN apt-get install -y libssl-dev parted live-build linaro-image-tools jq
+    pxz ruby-dev debootstrap multistrap libssl-dev parted \
+    live-build linaro-image-tools jq
 
 RUN gem install fpm
 
