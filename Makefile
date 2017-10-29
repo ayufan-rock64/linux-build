@@ -11,7 +11,12 @@ KERNEL_MAKE ?= make -C $(KERNEL_DIR) \
 	ARCH=arm64 \
 	HOSTCC=aarch64-linux-gnu-gcc \
 	CROSS_COMPILE="ccache aarch64-linux-gnu-"
-KERNEL_RELEASE ?= $(shell $(KERNEL_MAKE) -s kernelversion)
+ifneq (,$(wildcard $(KERNEL_DIR)))
+	KERNEL_RELEASE ?= $(shell $(KERNEL_MAKE) -s kernelversion)
+else
+$(warning "Missing $(KERNEL_DIR). Try to run `make sync`)
+	KERNEL_RELEASE ?= unknown
+endif
 
 KERNEL_PACKAGE ?= linux-image-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
 KERNEL_HEADERS_PACKAGES ?= linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
@@ -21,9 +26,23 @@ IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)
 
 all: linux-rock64
 
+.PHONY: info
 info:
-	echo version: $(KERNEL_VERSION)
-	echo release: $(KERNEL_RELEASE)
+	@echo version: $(KERNEL_VERSION)
+	@echo release: $(KERNEL_RELEASE)
+
+.PHONY: help
+help:
+	@echo Available targets:
+	@grep '^.PHONY: .*#' Makefile | cut -d: -f2- | expand -t20 | sort
+	@echo
+	@echo Extra targets:
+	@echo " " $$(grep '^.PHONY: [^#]*$$' Makefile | cut -d: -f2- | sort)
+
+.PHONY: sync		# download all subtrees
+sync:
+	repo init -u https://github.com/ayufan-rock64/linux-manifests -b default --depth=1 --no-clone-bundle
+	repo sync -j 20 -c --force-sync
 
 linux-rock64-$(RELEASE_NAME)_arm64.deb: $(PACKAGES)
 	fpm -s empty -t deb -n linux-rock64 -v $(RELEASE_NAME) \
@@ -96,8 +115,8 @@ BUILD_MODELS := rock64
 
 %-system.img: $(PACKAGES) linux-rock64-$(RELEASE_NAME)_arm64.deb
 	sudo bash rootfs/build-system-image.sh \
-		"$(shell readlink -f $@)" \
-		"$(shell readlink -f $(subst -system.img,-boot.img,$@))" \
+		"$$(readlink -f $@)" \
+		"$$(readlink -f $(subst -system.img,-boot.img,$@))" \
 		"$(filter $(BUILD_SYSTEMS), $(subst -, ,$@))" \
 		"$(filter $(BUILD_VARIANTS), $(subst -, ,$@))" \
 		"$(filter $(BUILD_ARCHS), $(subst -, ,$@))" \
@@ -118,19 +137,16 @@ $(KERNEL_PACKAGE): kernel/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 
 $(KERNEL_HEADERS_PACKAGES): $(KERNEL_PACKAGE)
 
-.PHONY: kernelpkg
+.PHONY: kernelpkg		# compile kernel package
 kernelpkg: $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
 
-.PHONY: kernel
-kernel: kernelpkg
-
-.PHONY: u-boot
+.PHONY: u-boot		# compile u-boot
 u-boot: out/u-boot/uboot.img
 
-.PHONY: linux-package
+.PHONY: linux-package		# compile linux compatibility package
 linux-package: linux-rock64-package-$(RELEASE_NAME)_all.deb linux-rock64-package-$(RELEASE_NAME)_all.rpm
 
-.PHONY: linux-virtual
+.PHONY: linux-virtual		# compile linux package tying compatiblity package and kernel package
 linux-virtual: linux-rock64-$(RELEASE_NAME)_arm64.deb
 
 .PHONY: xenial-minimal-rock64
@@ -151,30 +167,30 @@ jessie-openmediavault-rock64: jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-armhf
 .PHONY: stretch-minimal-rock64
 stretch-minimal-rock64: stretch-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: xenial-rock64
+.PHONY: xenial-rock64		# build all xenial variants
 xenial-rock64: xenial-minimal-rock64 xenial-mate-rock64 xenial-i3-rock64
 
 .PHONY: artful-minimal-rock64
 artful-minimal-rock64: artful-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz artful-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: artful-rock64
+.PHONY: artful-rock64		# build all artful variants
 artful-rock64: artful-minimal-rock64
 
-.PHONY: stretch-rock64
+.PHONY: stretch-rock64		# build all stretch variants
 stretch-rock64: stretch-minimal-rock64
 
-.PHONY: jessie-rock64
+.PHONY: jessie-rock64		# build all jessie variants
 jessie-rock64: jessie-minimal-rock64 jessie-openmediavault-rock64
 
-.PHONY: linux-rock64
+.PHONY: linux-rock64		# build all linux variants
 linux-rock64: artful-rock64 xenial-rock64 stretch-rock64 jessie-rock64 linux-virtual
 
-.PHONY: pull-trees
+.PHONY: pull-trees		# merge all subtree into current tree
 pull-trees:
 	git subtree pull --prefix build https://github.com/rockchip-linux/build debian
 	git subtree pull --prefix build https://github.com/rock64-linux/build debian
 
-.PHONY: kernel-menuconfig
+.PHONY: kernel-menuconfig		# edit kernel config and save as defconfig
 kernel-menuconfig:
 	$(KERNEL_MAKE) $(KERNEL_DEFCONFIG)
 	$(KERNEL_MAKE) HOSTCC=gcc menuconfig
@@ -184,17 +200,28 @@ kernel-menuconfig:
 REMOTE_HOST ?= rock64.home
 
 kernel-build:
-	$(KERNEL_MAKE) Image dtbs -j$(shell nproc)
+	$(KERNEL_MAKE) Image dtbs -j$$(nproc)
 
 kernel-build-with-modules:
-	$(KERNEL_MAKE) Image modules dtbs -j$(shell nproc)
-	$(KERNEL_MAKE) modules_install INSTALL_MOD_PATH=$(shell pwd)/tmp/linux_modules
+	$(KERNEL_MAKE) Image modules dtbs -j$$(nproc)
+	$(KERNEL_MAKE) modules_install INSTALL_MOD_PATH=$(CURDIR)/tmp/linux_modules
 
 kernel-update:
 	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/Image root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/Image
 	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/dtb
 	rsync --partial --checksum -av tmp/linux_modules/lib/ root@$(REMOTE_HOST):$(REMOTE_DIR)/lib
 
+.PHONY: shell		# run docker shell to build image
 shell:
-	docker build -q -t rock64-linux:build-environment environment/
-	docker run -it -v $(CURDIR):$(CURDIR) -w $(CURDIR) rock64-linux:build-environment
+	@echo Building environment...
+	@docker build -q -t rock64-linux:build-environment environment/
+	@echo Entering shell...
+	@docker run --rm \
+		-it \
+		-e HOME -v $(HOME):$(HOME) \
+		-e USER -u $$(id -u):$$(id -g) \
+		-v /etc/passwd:/etc/passwd:ro \
+		-h rock64-build-env \
+		-v $(CURDIR):$(CURDIR) \
+		-w $(CURDIR) \
+		rock64-linux:build-environment
