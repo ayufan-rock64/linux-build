@@ -10,7 +10,8 @@ RUN apt-get update -y && \
     gcc-arm-linux-gnueabi g++-arm-linux-gnueabi ccache \
     sudo cpio nano vim kmod kpartx wget bsdtar qemu-user-static \
     pxz ruby-dev debootstrap multistrap libssl-dev parted \
-    live-build linaro-image-tools jq locales
+    live-build linaro-image-tools jq locales \
+    gawk swig libpython-dev
 
 RUN locale-gen en_US.UTF-8
 
