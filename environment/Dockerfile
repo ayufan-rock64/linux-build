@@ -10,7 +10,18 @@ RUN apt-get update -y && \
     gcc-arm-linux-gnueabi g++-arm-linux-gnueabi ccache \
     sudo cpio nano vim kmod kpartx wget bsdtar qemu-user-static \
     pxz ruby-dev debootstrap multistrap libssl-dev parted \
-    live-build linaro-image-tools jq
+    live-build linaro-image-tools jq locales
+
+RUN locale-gen en_US.UTF-8
+
+ENV LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en \
+    LC_ALL=en_US.UTF-8 \
+    USER=root \
+    HOME=/root
+
+RUN git config --global user.email "you@rock64" && \
+    git config --global user.name "ROCK64 Shell"
 
 RUN gem install fpm
 
@@ -23,6 +34,3 @@ RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin
 
 RUN ln -s /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 /lib/
 ENV LD_LIBRARY_PATH=/usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
-
-ENV USER=root \
-    HOME=/root
