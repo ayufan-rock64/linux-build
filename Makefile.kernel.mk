@@ -18,12 +18,12 @@ KERNEL_HEADERS_PACKAGES ?= linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64
 $(KERNEL_PACKAGE): kernel/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 	echo -n > kernel/.scmversion
 	$(KERNEL_MAKE) $(KERNEL_DEFCONFIG)
-	$(KERNEL_MAKE) bindeb-pkg -j$(shell nproc)
+	$(KERNEL_MAKE) bindeb-pkg -j$$(nproc)
 
 $(KERNEL_HEADERS_PACKAGES): $(KERNEL_PACKAGE)
 
-.PHONY: kernelpkg		# compile kernel package
-kernelpkg: $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
+.PHONY: kernel		# compile kernel package
+kernel: $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
 
 .PHONY: kernel-menuconfig		# edit kernel config and save as defconfig
 kernel-menuconfig:
@@ -39,10 +39,10 @@ kernel-build:
 .PHONY: kernel-build-with-modules
 kernel-build-with-modules:
 	$(KERNEL_MAKE) Image modules dtbs -j$$(nproc)
-	$(KERNEL_MAKE) modules_install INSTALL_MOD_PATH=$(CURDIR)/tmp/linux_modules
+	$(KERNEL_MAKE) modules_install INSTALL_MOD_PATH=$(CURDIR)/out/linux_modules
 
 .PHONY: kernel-update
 kernel-update:
 	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/Image root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/Image
 	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/dtb
-	rsync --partial --checksum -av tmp/linux_modules/lib/ root@$(REMOTE_HOST):$(REMOTE_DIR)/lib
+	rsync --partial --checksum -av out/linux_modules/lib/ root@$(REMOTE_HOST):$(REMOTE_DIR)/lib

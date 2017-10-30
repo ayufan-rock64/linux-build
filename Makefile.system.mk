@@ -1,4 +1,6 @@
-PACKAGES := linux-rock64-package-$(RELEASE_NAME)_all.deb $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
+PACKAGES := linux-rock64-package-$(RELEASE_NAME)_all.deb \
+	$(KERNEL_PACKAGE) \
+	$(KERNEL_HEADERS_PACKAGES)
 
 %.tar.xz: %.tar
 	pxz -f -3 $<
