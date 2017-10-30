@@ -32,13 +32,16 @@ kernel-menuconfig:
 	$(KERNEL_MAKE) savedefconfig
 	cp $(KERNEL_DIR)/defconfig $(KERNEL_DIR)/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 
+.PHONY: kernel-build
 kernel-build:
 	$(KERNEL_MAKE) Image dtbs -j$$(nproc)
 
+.PHONY: kernel-build-with-modules
 kernel-build-with-modules:
 	$(KERNEL_MAKE) Image modules dtbs -j$$(nproc)
 	$(KERNEL_MAKE) modules_install INSTALL_MOD_PATH=$(CURDIR)/tmp/linux_modules
 
+.PHONY: kernel-update
 kernel-update:
 	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/Image root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/Image
 	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/dtb

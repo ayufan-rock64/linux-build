@@ -1,4 +1,4 @@
-FROM ubuntu:artful
+FROM ubuntu:zesty
 
 RUN apt-get update -y && \
     apt-get install -y python git-core gnupg flex bison gperf build-essential \
@@ -11,7 +11,8 @@ RUN apt-get update -y && \
     sudo cpio nano vim kmod kpartx wget bsdtar qemu-user-static \
     pxz ruby-dev debootstrap multistrap libssl-dev parted \
     live-build linaro-image-tools jq locales \
-    gawk swig libpython-dev
+    gawk swig libpython-dev libusb-1.0-0-dev \
+    pkg-config autoconf
 
 RUN locale-gen en_US.UTF-8
 
@@ -33,11 +34,6 @@ RUN which github-release
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo && \
     chmod +x /usr/local/bin/repo
 
-RUN ln -s /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 /lib/
-ENV LD_LIBRARY_PATH=/usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
-
-RUN apt-get install -y libusb-1.0-0-dev pkg-config autoconf
-
 RUN git clone https://github.com/rockchip-linux/rkflashtool && \
     make -C rkflashtool install && \
     rm -rf rkflashtool
@@ -49,3 +45,6 @@ RUN git clone https://github.com/rockchip-linux/rkdeveloptool && \
     make install && \
     cd .. && \
     rm -rf rkdeveloptool
+
+RUN ln -s /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 /lib/
+ENV LD_LIBRARY_PATH=/usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
