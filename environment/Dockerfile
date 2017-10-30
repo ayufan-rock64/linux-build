@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM ubuntu:artful
 
 RUN apt-get update -y && \
     apt-get install -y python git-core gnupg flex bison gperf build-essential \
@@ -35,3 +35,17 @@ RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin
 
 RUN ln -s /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 /lib/
 ENV LD_LIBRARY_PATH=/usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
+
+RUN apt-get install -y libusb-1.0-0-dev pkg-config autoconf
+
+RUN git clone https://github.com/rockchip-linux/rkflashtool && \
+    make -C rkflashtool install && \
+    rm -rf rkflashtool
+
+RUN git clone https://github.com/rockchip-linux/rkdeveloptool && \
+    cd rkdeveloptool && \
+    autoreconf -i && \
+    ./configure && \
+    make install && \
+    cd .. && \
+    rm -rf rkdeveloptool

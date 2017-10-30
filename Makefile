@@ -2,6 +2,7 @@ export RELEASE_NAME ?= 0.1~dev
 export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master
 export KERNEL_DIR ?= kernel
+export UBOOT_DIR ?= u-boot
 
 KERNEL_EXTRAVERSION ?= -rockchip-ayufan-$(RELEASE)
 KERNEL_DEFCONFIG ?= rockchip_linux_defconfig
@@ -43,6 +44,8 @@ help:
 sync:
 	repo init -u https://github.com/ayufan-rock64/linux-manifests -b default --depth=1 --no-clone-bundle
 	repo sync -j 20 -c --force-sync
+
+include Makefile.uboot.mk
 
 linux-rock64-$(RELEASE_NAME)_arm64.deb: $(PACKAGES)
 	fpm -s empty -t deb -n linux-rock64 -v $(RELEASE_NAME) \
@@ -123,10 +126,8 @@ BUILD_MODELS := rock64
 		"$(filter $(BUILD_MODELS), $(subst -, ,$@))" \
 		$^
 
-out/u-boot/uboot.img: u-boot/configs/rock64-rk3328_defconfig
-	build/mk-uboot.sh rk3328-rock64
 
-%.img: %-system.img out/u-boot/uboot.img
+%.img: %-system.img out/u-boot/idbloader.img
 	build/mk-image.sh -c rk3328 -t system -r "$<" -b "$(subst -system.img,-boot.img,$<)" -o "$@.tmp"
 	mv "$@.tmp" "$@"
 
@@ -139,9 +140,6 @@ $(KERNEL_HEADERS_PACKAGES): $(KERNEL_PACKAGE)
 
 .PHONY: kernelpkg		# compile kernel package
 kernelpkg: $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
-
-.PHONY: u-boot		# compile u-boot
-u-boot: out/u-boot/uboot.img
 
 .PHONY: linux-package		# compile linux compatibility package
 linux-package: linux-rock64-package-$(RELEASE_NAME)_all.deb linux-rock64-package-$(RELEASE_NAME)_all.rpm
@@ -190,6 +188,13 @@ pull-trees:
 	git subtree pull --prefix build https://github.com/rockchip-linux/build debian
 	git subtree pull --prefix build https://github.com/rock64-linux/build debian
 
+.PHONY: u-boot-menuconfig		# edit u-boot config and save as defconfig
+u-boot-menuconfig:
+	$(UBOOT_MAKE) ARCH=arm64 $(UBOOT_DEFCONFIG)
+	$(UBOOT_MAKE) ARCH=arm64 menuconfig
+	$(UBOOT_MAKE) ARCH=arm64 savedefconfig
+	cp $(UBOOT_DIR)/defconfig $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
+
 .PHONY: kernel-menuconfig		# edit kernel config and save as defconfig
 kernel-menuconfig:
 	$(KERNEL_MAKE) $(KERNEL_DEFCONFIG)
@@ -219,8 +224,12 @@ shell:
 	@docker run --rm \
 		-it \
 		-e HOME -v $(HOME):$(HOME) \
-		-e USER -u $$(id -u):$$(id -g) \
+		-e USER \
+		-u $$(id -u):$$(id -g) \
+		$$(id -Gz | xargs -0 -n1 -I{} echo "--group-add={}") \
 		-v /etc/passwd:/etc/passwd:ro \
+		-v /dev/bus/usb:/dev/bus/usb \
+		--privileged \
 		-h rock64-build-env \
 		-v $(CURDIR):$(CURDIR) \
 		-w $(CURDIR) \
