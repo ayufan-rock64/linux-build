@@ -48,3 +48,8 @@ RUN git clone https://github.com/rockchip-linux/rkdeveloptool && \
 
 RUN ln -s /usr/aarch64-linux-gnu/lib/ld-linux-aarch64.so.1 /lib/
 ENV LD_LIBRARY_PATH=/usr/aarch64-linux-gnu/lib:$LD_LIBRARY_PATH
+
+# Enable passwordless sudo for users under the "sudo" group
+RUN sed -i -e \
+      's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
+      /etc/sudoers
