@@ -31,7 +31,7 @@ case "$VARIANT" in
         ;;
 
     i3)
-        SIZE=2048
+        SIZE=2560
         ;;
 
     mate)
