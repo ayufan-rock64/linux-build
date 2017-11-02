@@ -12,7 +12,7 @@ help:
 	@echo " " $$(grep -h '^.PHONY: [^#]*$$' Makefile* | cut -d: -f2- | sort)
 
 arm-trusted-firmware kernel kernel-mainline u-boot:
-	@echo Run `make sync`
+	@echo Run "make sync"
 	@exit 1
 
 .PHONY: sync		# download all subtrees

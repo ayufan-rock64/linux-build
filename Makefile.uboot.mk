@@ -53,5 +53,5 @@ u-boot-clear-spi: out/u-boot/idbloader.img
 	rkdeveloptool wl 64 $<
 	rkdeveloptool rd
 
-.PHONY: u-boot		# compile u-boot
-u-boot: out/u-boot/idbloader.img
+.PHONY: u-boot-build		# compile u-boot
+u-boot-build: out/u-boot/idbloader.img
