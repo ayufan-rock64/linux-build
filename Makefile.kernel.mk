@@ -22,8 +22,8 @@ $(KERNEL_PACKAGE): kernel/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 
 $(KERNEL_HEADERS_PACKAGES): $(KERNEL_PACKAGE)
 
-.PHONY: kernel		# compile kernel package
-kernel: $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
+.PHONY: kernel-build		# compile kernel package
+kernel-build: $(KERNEL_PACKAGE) $(KERNEL_HEADERS_PACKAGES)
 
 .PHONY: kernel-menuconfig		# edit kernel config and save as defconfig
 kernel-menuconfig:
@@ -32,8 +32,8 @@ kernel-menuconfig:
 	$(KERNEL_MAKE) savedefconfig
 	cp $(KERNEL_DIR)/defconfig $(KERNEL_DIR)/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 
-.PHONY: kernel-build
-kernel-build:
+.PHONY: kernel-build-image
+kernel-build-image:
 	$(KERNEL_MAKE) Image dtbs -j$$(nproc)
 
 .PHONY: kernel-build-with-modules

@@ -4,8 +4,8 @@ UBOOT_MAKE ?= make -C $(UBOOT_DIR) \
 $(UBOOT_DIR)/.config: $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
 	$(UBOOT_MAKE) $(UBOOT_DEFCONFIG)
 
-out/u-boot/idbloader.img: $(UBOOT_DIR)/.config
-	cp rkbin/rk33/rk3328_bl31_v1.34.bin u-boot/bl31.elf
+out/u-boot/idbloader.img: $(UBOOT_DIR)/.config $(BL31)
+	cp -u $(BL31) u-boot/bl31.elf
 	$(UBOOT_MAKE) -j $$(nproc)
 	$(UBOOT_MAKE) -j $$(nproc) u-boot.itb
 	mkdir -p out/u-boot
@@ -20,6 +20,10 @@ u-boot-menuconfig:
 	$(UBOOT_MAKE) ARCH=arm64 menuconfig
 	$(UBOOT_MAKE) ARCH=arm64 savedefconfig
 	cp $(UBOOT_DIR)/defconfig $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
+
+.PHONY: u-boot-clear
+u-boot-clear:
+	rm -rf out/u-boot/
 
 .PHONY: u-boot-boot
 u-boot-boot:		# boot u-boot over USB

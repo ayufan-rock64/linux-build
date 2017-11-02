@@ -20,6 +20,7 @@ IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)
 
 all: linux-rock64
 
+include Makefile.atf.mk
 include Makefile.uboot.mk
 include Makefile.package.mk
 include Makefile.kernel.mk

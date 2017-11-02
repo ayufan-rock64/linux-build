@@ -10,3 +10,5 @@
 *.deb
 /package/rtk_bt
 *.changes
+/arm-trusted-firmware
+/tmp

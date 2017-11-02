@@ -11,6 +11,10 @@ help:
 	@echo Extra targets:
 	@echo " " $$(grep -h '^.PHONY: [^#]*$$' Makefile* | cut -d: -f2- | sort)
 
+arm-trusted-firmware kernel kernel-mainline u-boot:
+	@echo Run `make sync`
+	@exit 1
+
 .PHONY: sync		# download all subtrees
 sync:
 	repo init -u https://github.com/ayufan-rock64/linux-manifests -b default --depth=1 --no-clone-bundle
