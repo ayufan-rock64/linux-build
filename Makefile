@@ -4,7 +4,7 @@ export BOOT_TOOLS_BRANCH ?= master
 export KERNEL_DIR ?= kernel
 export UBOOT_DIR ?= u-boot
 
-BUILD_SYSTEMS := artful zesty xenial jessie stretch
+BUILD_SYSTEMS := bionic xenial jessie stretch
 BUILD_VARIANTS := minimal mate i3 openmediavault
 BUILD_ARCHS := armhf arm64
 BUILD_MODELS := rock64

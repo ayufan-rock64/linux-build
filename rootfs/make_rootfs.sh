@@ -78,7 +78,7 @@ case $DISTRO in
 		TAR_OPTIONS="-z"
 		DISTRIB="arch"
 		;;
-	xenial|zesty|artful)
+	xenial|zesty|artful|bionic)
 		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/ubuntu-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
@@ -171,7 +171,9 @@ export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 # add non-free
 sed -i 's/main contrib$/main contrib non-free/g' /etc/apt/sources.list
-if [[ "$DISTRIB" == "debian" ]]; then
+if [[ "$DISTRO" == "stretch" ]]; then
+	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu bionic main"
+elif [[ "$DISTRIB" == "debian" ]]; then
 	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu xenial main"
 else
 	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu $DISTRO main"
