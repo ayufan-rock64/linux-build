@@ -55,6 +55,11 @@ fi
 
 TEMP=$(mktemp -d)
 cleanup() {
+	if [[ "$DEBUG" == "shell" ]]; then
+		pushd "$DEST"
+		bash
+		popd
+	fi
 	if [ -e "$DEST/proc/cmdline" ]; then
 		umount "$DEST/proc"
 	fi
