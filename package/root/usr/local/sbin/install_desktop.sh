@@ -28,7 +28,7 @@ fi
 PACKAGES=(
 	aisleriot
 	geany
-	gnomine
+	gnome-mines
 	gnome-sudoku
 	mplayer
 	scratch
