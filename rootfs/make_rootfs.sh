@@ -187,7 +187,8 @@ apt-get -y update
 apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
 	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
-	network-manager psmisc flash-kernel u-boot-tools ifupdown
+	network-manager psmisc flash-kernel u-boot-tools ifupdown resolvconf \
+	net-tools
 if [[ "$DISTRIB" == "debian" ]]; then
 	apt-get -y install firmware-realtek
 elif [[ "$DISTRIB" == "ubuntu" ]]; then
