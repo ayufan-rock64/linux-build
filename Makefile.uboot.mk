@@ -4,12 +4,19 @@ UBOOT_MAKE ?= make -C $(UBOOT_DIR) \
 $(UBOOT_DIR)/.config: $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
 	$(UBOOT_MAKE) $(UBOOT_DEFCONFIG)
 
+ifneq (,$(FORCE))
+.PHONY: out/u-boot/idbloader.img
+endif
 out/u-boot/idbloader.img: $(UBOOT_DIR)/.config $(BL31)
 	cp -u $(BL31) u-boot/bl31.elf
 	$(UBOOT_MAKE) -j $$(nproc)
 	$(UBOOT_MAKE) -j $$(nproc) u-boot.itb
 	mkdir -p out/u-boot
+ifneq (,$(USE_UBOOT_TPL))
 	$(UBOOT_DIR)/tools/mkimage -n rk3328 -T rksd -d $(UBOOT_DIR)/tpl/u-boot-tpl.bin $@.tmp
+else
+	$(UBOOT_DIR)/tools/mkimage -n rk3328 -T rksd -d rkbin/rk33/rk3328_ddr_786MHz_v1.06.bin $@.tmp
+endif
 	cat $(UBOOT_DIR)/spl/u-boot-spl.bin >> $@.tmp
 	dd if=$(UBOOT_DIR)/u-boot.itb of=$@.tmp seek=$$((0x200-64)) conv=notrunc
 	mv $@.tmp $@
@@ -25,8 +32,8 @@ u-boot-menuconfig:
 u-boot-clear:
 	rm -rf out/u-boot/
 
-.PHONY: u-boot-boot
-u-boot-boot:		# boot u-boot over USB
+.PHONY: u-boot-boot		# boot u-boot over USB
+u-boot-boot: out/u-boot/idbloader.img
 	rkdeveloptool db rkbin/rk33/rk3328_loader_v1.08.244_for_spi_nor_build_Aug_7_2017.bin
 	sleep 1s
 	rkdeveloptool rid
