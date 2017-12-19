@@ -30,11 +30,9 @@ bionic-minimal-rock64: bionic-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz \
 .PHONY: bionic-mate-rock64
 bionic-mate-rock64: bionic-mate-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: bionic-i3-rock64
-bionic-i3-rock64: bionic-i3-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
-
 .PHONY: bionic-rock64		# build all bionic variants
-bionic-rock64: bionic-minimal-rock64
+bionic-rock64: bionic-minimal-rock64 \
+	bionic-mate-rock64
 
 .PHONY: stretch-rock64		# build all stretch variants
 stretch-rock64: stretch-minimal-rock64
