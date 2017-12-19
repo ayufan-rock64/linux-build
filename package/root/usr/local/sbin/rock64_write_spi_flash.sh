@@ -23,6 +23,7 @@ done
 case $(findmnt / -n -o SOURCE) in
     /dev/mmcblk0p7)
         dd if=/dev/mmcblk0p1 of=/dev/mtd1
+        ;;
 
     /dev/mmcblk1p7)
         dd if=/dev/mmcblk1p1 of=/dev/mtd1
