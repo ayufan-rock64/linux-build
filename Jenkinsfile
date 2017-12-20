@@ -28,7 +28,7 @@ node('docker && linux-build') {
           ]) {
               stage('Prepare') {
                 sh '''#!/bin/bash
-                  set +xe
+                  set -xe
                   export CCACHE_DIR=$WORKSPACE/ccache
                   ccache -M 0 -F 0
                   git clean -ffdx -e ccache
@@ -49,7 +49,7 @@ node('docker && linux-build') {
 
               stage('U-boot') {
                 sh '''#!/bin/bash
-                  set +xe
+                  set -xe
                   export CCACHE_DIR=$WORKSPACE/ccache
                   make u-boot-build
                 '''
@@ -57,7 +57,7 @@ node('docker && linux-build') {
 
               stage('Kernel') {
                 sh '''#!/bin/bash
-                  set +xe
+                  set -xe
                   export CCACHE_DIR=$WORKSPACE/ccache
                   make kernel-build KERNEL_DIR=kernel
                   make kernel-build KERNEL_DIR=kernel-mainline
@@ -66,7 +66,7 @@ node('docker && linux-build') {
 
               stage('Images') {
                 sh '''#!/bin/bash
-                  set +xe
+                  set -xe
                   export CCACHE_DIR=$WORKSPACE/ccache
                   make -j$(nproc) $MAKE_TARGET
                 '''
@@ -95,14 +95,18 @@ node('docker && linux-build') {
 
             stage('Tagging') {
               sh '''#!/bin/bash
-                repo forall -e -c git tag "$GITHUB_USER/$GITHUB_REPO/$VERSION"
+                # use -ve, otherwise we could leak GITHUB_TOKEN...
+                set -ve
+                repo forall -g tagged -e -c git tag "$GITHUB_USER/$GITHUB_REPO/$VERSION"
               '''
 
               if (params.GITHUB_UPLOAD) {
                 retry(2) {
                   sh '''#!/bin/bash
+                    # use -ve, otherwise we could leak GITHUB_TOKEN...
+                    set -ve
                     echo "machine github.com login user password $GITHUB_TOKEN" > ~/.netrc
-                    repo forall -e -c git push ayufan "$GITHUB_USER/$GITHUB_REPO/$VERSION" -f
+                    repo forall -g tagged -e -c git push ayufan "$GITHUB_USER/$GITHUB_REPO/$VERSION" -f
                     rm ~/.netrc
                   '''
                 }
