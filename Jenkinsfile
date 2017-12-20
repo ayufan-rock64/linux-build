@@ -93,6 +93,24 @@ node('docker && linux-build') {
               '''
             }
 
+            stage('Tagging') {
+              sh '''#!/bin/bash
+                repo forall -e -c git tag "$GITHUB_USER/$GITHUB_REPO/$VERSION"
+              '''
+
+              if (params.GITHUB_UPLOAD) {
+                retry(2) {
+                  sh '''#!/bin/bash
+                    echo "machine github.com login user password $GITHUB_TOKEN" > ~/.netrc
+                    repo forall -e -c git push ayufan "$GITHUB_USER/$GITHUB_REPO/$VERSION" -f
+                    rm ~/.netrc
+                  '''
+                }
+              } else {
+                 echo 'Flagged as an no tagging release job'
+              }
+            }
+
             stage('Release') {
               if (params.GITHUB_UPLOAD) {
                 sh '''#!/bin/bash
