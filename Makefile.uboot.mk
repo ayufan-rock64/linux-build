@@ -53,11 +53,12 @@ u-boot-flash-spi: out/u-boot/idbloader.img
 	rkdeveloptool rd
 
 .PHONY: u-boot-clear-spi		# clear u-boot to SPI
-u-boot-clear-spi: out/u-boot/idbloader.img
+u-boot-clear-spi:
+	dd if=/dev/zero of=out/u-boot/clear.img count=1
 	rkdeveloptool db rkbin/rk33/rk3328_loader_v1.08.244_for_spi_nor_build_Aug_7_2017.bin
 	sleep 1s
 	rkdeveloptool rid
-	rkdeveloptool wl 64 $<
+	rkdeveloptool wl 64 out/u-boot/clear.img
 	rkdeveloptool rd
 
 .PHONY: u-boot-build		# compile u-boot
