@@ -34,14 +34,18 @@ u-boot-clear:
 
 .PHONY: u-boot-boot		# boot u-boot over USB
 u-boot-boot: out/u-boot/idbloader.img
-	rkdeveloptool db rkbin/rk33/rk3328_loader_v1.08.244_for_spi_nor_build_Aug_7_2017.bin
+	rkdeveloptool db rkbin/rk33/rk3328_loader_ddr333_v1.08.244.bin
 	sleep 1s
 	rkdeveloptool rid
 	rkdeveloptool wl 512 $(UBOOT_DIR)/u-boot.itb
 	rkdeveloptool rd
 	sleep 1s
 
+ifneq (,$(USE_UBOOT_TPL))
+	cat $(UBOOT_DIR)/tpl/u-boot-tpl.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool l
+else
 	cat rkbin/rk33/rk3328_ddr_786MHz_v1.06.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool l
+endif
 	cat u-boot/spl/u-boot-spl.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool L
 
 .PHONY: u-boot-flash-spi		# flash u-boot to SPI
