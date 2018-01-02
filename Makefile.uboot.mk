@@ -37,6 +37,7 @@ u-boot-boot: out/u-boot/idbloader.img
 	rkdeveloptool db rkbin/rk33/rk3328_loader_ddr333_v1.08.244.bin
 	sleep 1s
 	rkdeveloptool rid
+	rkdeveloptool wl 64 out/u-boot/clear.img
 	rkdeveloptool wl 512 $(UBOOT_DIR)/u-boot.itb
 	rkdeveloptool rd
 	sleep 1s
@@ -47,6 +48,14 @@ else
 	cat rkbin/rk33/rk3328_ddr_786MHz_v1.06.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool l
 endif
 	cat u-boot/spl/u-boot-spl.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool L
+
+.PHONY: u-boot-flash		# boot u-boot to eMMC
+u-boot-flash: out/u-boot/idbloader.img
+	rkdeveloptool db rkbin/rk33/rk3328_loader_ddr333_v1.08.244.bin
+	sleep 1s
+	rkdeveloptool rid
+	rkdeveloptool wl 64 $<
+	rkdeveloptool rd
 
 .PHONY: u-boot-flash-spi		# flash u-boot to SPI
 u-boot-flash-spi: out/u-boot/idbloader.img
