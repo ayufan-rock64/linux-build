@@ -25,7 +25,7 @@ Feel free to edit any of the files and send a PR to this repository or any in th
 
 It uses a bunch of different repositories:
 - [kernel](https://github.com/ayufan-rock64/linux-kernel) - patched Rockchip's kernel (4.4),
-- [kernel-mainline](https://github.com/ayufan-rock64/linux-kernel-mainline) - patched mainline kernel (>= 4.13),
+- [kernel-mainline](https://github.com/ayufan-rock64/linux-mainline-kernel) - patched mainline kernel (>= 4.13),
 - [u-boot](https://github.com/ayufan-rock64/linux-u-boot) - patched mainline u-boot,
 - [rkbin](https://github.com/ayufan-rock64/rkbin) - precompiled bootloader binary blobs.
 
