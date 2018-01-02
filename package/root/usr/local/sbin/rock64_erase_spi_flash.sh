@@ -20,6 +20,6 @@ while true; do
     fi
 done
 
-dd if=/dev/zero of=/dev/mtd1
+dd if=/dev/zero of=/dev/mtdblock1 count=1 bs=4k
 
 echo Done.

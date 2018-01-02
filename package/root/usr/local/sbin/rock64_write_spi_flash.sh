@@ -22,11 +22,11 @@ done
 
 case $(findmnt / -n -o SOURCE) in
     /dev/mmcblk0p7)
-        dd if=/dev/mmcblk0p1 of=/dev/mtd1
+        dd if=/dev/mmcblk0p1 of=/dev/mtdblock1 bs=64k
         ;;
 
     /dev/mmcblk1p7)
-        dd if=/dev/mmcblk1p1 of=/dev/mtd1
+        dd if=/dev/mmcblk1p1 of=/dev/mtdblock1 bs=64k
         ;;
 
     *)
