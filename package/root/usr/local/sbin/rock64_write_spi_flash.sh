@@ -20,18 +20,34 @@ while true; do
     fi
 done
 
-case $(findmnt / -n -o SOURCE) in
+MNT_DEV=$(findmnt / -n -o SOURCE)
+
+write_nand() {
+    if ! MTD=$(grep \"$1\" /proc/mtd | cut -d: -f1); then
+        echo "$1 partition on MTD is not found"
+        return 1
+    fi
+
+    echo "Writing /dev/$MTD with content of $2"
+    nandwrite "/dev/$MTD" < "$2"
+}
+
+case $MNT_DEV in
     /dev/mmcblk0p7)
-        dd if=/dev/mmcblk0p1 of=/dev/mtdblock1 bs=64k
+        write_nand loader /dev/mmcblk0p1
         ;;
 
     /dev/mmcblk1p7)
-        dd if=/dev/mmcblk1p1 of=/dev/mtdblock1 bs=64k
+        write_nand loader /dev/mmcblk1p1
+        ;;
+
+    /dev/sd*p7)
+        write_nand loader "${MNT_DEV/p7/p1}"
         ;;
 
     *)
         echo "Cannot detect boot device."
-        echo "The bootloader can only be copied when booted from eMMC or SD."
+        echo "The bootloader can only be copied when booted from eMMC, SD or USB."
         exit 1
         ;;
 esac

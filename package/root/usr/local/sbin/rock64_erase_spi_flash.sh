@@ -20,6 +20,11 @@ while true; do
     fi
 done
 
-dd if=/dev/zero of=/dev/mtdblock1 count=1 bs=4k
+if ! MTD=$(grep \"loader\" /proc/mtd | cut -d: -f1); then
+    echo "loader partition on MTD is not found"
+    return 1
+fi
+
+flash_erase "/dev/$MTD"
 
 echo Done.
