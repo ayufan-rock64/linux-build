@@ -7,6 +7,11 @@ if [[ "$(id -u)" -ne "0" ]]; then
     exit 1
 fi
 
+if ! which nandwrite &>/dev/null; then
+    echo "Install mtd-utils with 'apt-get install mtd-utils'"
+    exit 1
+fi
+
 echo "Doing this will overwrite data stored on SPI Flash"
 echo "  and it will require that you use eMMC or SD"
 echo "  as your boot device."
