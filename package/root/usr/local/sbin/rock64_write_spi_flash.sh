@@ -34,6 +34,7 @@ write_nand() {
     fi
 
     echo "Writing /dev/$MTD with content of $2"
+    flash_erase "/dev/$MTD"
     nandwrite "/dev/$MTD" < "$2"
 }
 
