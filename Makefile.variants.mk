@@ -48,3 +48,12 @@ linux-rock64: \
 	stretch-rock64 \
 	jessie-rock64 \
 	linux-virtual
+
+.PHONY: linux-minimal-rock64		# build all linux variants
+linux-minimal-rock64: \
+	bionic-minimal-rock64 \
+	xenial-minimal-rock64 \
+	stretch-minimal-rock64 \
+	jessie-minimal-rock64 \
+	jessie-openmediavault-rock64 \
+	linux-virtual
