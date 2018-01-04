@@ -26,4 +26,6 @@ include Makefile.package.mk
 include Makefile.kernel.mk
 include Makefile.system.mk
 include Makefile.variants.mk
+include Makefile.loader.mk
 include Makefile.dev.mk
+
