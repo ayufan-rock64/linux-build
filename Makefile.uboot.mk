@@ -28,6 +28,28 @@ u-boot-menuconfig:
 	$(UBOOT_MAKE) ARCH=arm64 savedefconfig
 	cp $(UBOOT_DIR)/defconfig $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
 
+.PHONY: u-boot-build		# compile u-boot
+u-boot-build: out/u-boot/idbloader.img
+
 .PHONY: u-boot-clear
 u-boot-clear:
 	rm -rf out/u-boot/
+
+out/u-boot/%/boot.scr: blobs/%.cmd
+	mkdir -p $$(dirname $@)
+	mkimage -C none -A arm -T script -d $< $@
+
+out/u-boot/%/boot.img: out/u-boot/%/boot.scr
+	dd if=/dev/zero of=$@ bs=1M count=2
+	mkfs.vfat -n "u-boot-script" $@
+	mcopy -sm -i $@ $< ::
+
+u-boot-%.img: out/u-boot/%/boot.img out/u-boot/idbloader.img
+	build/mk-image.sh -c rk3328 -t system -s 128 -b $< -o "$@.tmp"
+	mv "$@.tmp" $@
+
+.PHONY: u-boot-flash-spi
+u-boot-flash-spi: u-boot-flash-spi.img.xz
+
+.PHONY: u-boot-erase-spi
+u-boot-erase-spi: u-boot-erase-spi.img.xz

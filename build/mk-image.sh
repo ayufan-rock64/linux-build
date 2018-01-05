@@ -86,19 +86,13 @@ generate_system_image() {
 		exit 1
 	fi
 
-	if [ ! -f "${ROOTFS_PATH}" ]; then
-		echo -e "\e[31m CAN'T FIND ROOTFS IMAGE \e[0m"
-		usage
-		exit 1
-	fi
-
 	SYSTEM="${OUT_IMAGE}"
 	rm -rf ${SYSTEM}
 
 	echo "Generate System image : ${SYSTEM} !"
 
 	if [[ -z "$SIZE" ]]; then
-		SIZE=256
+		SIZE=120
 	fi
 
 	dd if=/dev/zero of=${SYSTEM} bs=1M count=0 seek=$SIZE status=none
@@ -127,8 +121,11 @@ generate_system_image() {
 	echo "Burn boot..."
 	dd if=${BOOT_PATH} of=${SYSTEM} seek=${BOOT_START} conv=notrunc status=none
 
-	echo "Burn rootfs..."
-	dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START} conv=notrunc status=none
+	if [ -n "${ROOTFS_PATH}" ]; then
+		echo "Burn rootfs..."
+		dd if=${ROOTFS_PATH} of=${SYSTEM} seek=${ROOTFS_START} conv=notrunc status=none
+	fi
+
 	dd if=/dev/zero of=${SYSTEM} count=2048 oflag=append conv=notrunc
 
 	echo Updating GPT...
@@ -139,7 +136,9 @@ generate_system_image() {
 	parted -s ${SYSTEM} unit s mkpart loader2 ${LOADER2_START} $(expr ${ATF_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart atf ${ATF_START} $(expr ${BOOT_START} - 1)
 	parted -s ${SYSTEM} unit s mkpart boot fat16 ${BOOT_START} $(expr ${ROOTFS_START} - 1)
-	parted -s ${SYSTEM} unit s mkpart root ext4 ${ROOTFS_START} 100%
+	if [ -n "${ROOTFS_PATH}" ]; then
+		parted -s ${SYSTEM} unit s mkpart root ext4 ${ROOTFS_START} 100%
+	fi
 	parted -s ${SYSTEM} set 6 legacy_boot on
 }
 

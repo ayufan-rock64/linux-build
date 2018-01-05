@@ -47,7 +47,9 @@ linux-rock64: \
 	xenial-rock64 \
 	stretch-rock64 \
 	jessie-rock64 \
-	linux-virtual
+	linux-virtual \
+	u-boot-flash-spi \
+	u-boot-erase-spi
 
 .PHONY: linux-minimal-rock64		# build all linux variants
 linux-minimal-rock64: \
@@ -56,4 +58,6 @@ linux-minimal-rock64: \
 	stretch-minimal-rock64 \
 	jessie-minimal-rock64 \
 	jessie-openmediavault-rock64 \
-	linux-virtual
+	linux-virtual \
+	u-boot-flash-spi \
+	u-boot-erase-spi
