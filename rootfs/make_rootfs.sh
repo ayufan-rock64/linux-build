@@ -219,7 +219,7 @@ EOF
 $MODEL
 EOF
 		cat > "$DEST/etc/fstab" <<EOF
-LABEL=boot /boot/efi vfat defaults 0 0
+LABEL=boot /boot/efi vfat defaults,sync 0 0
 EOF
 		cat > "$DEST/etc/hosts" <<EOF
 127.0.0.1 localhost
