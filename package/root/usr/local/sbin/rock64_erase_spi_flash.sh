@@ -30,6 +30,6 @@ if ! MTD=$(grep \"loader\" /proc/mtd | cut -d: -f1); then
     return 1
 fi
 
-flash_erase "/dev/$MTD"
+flash_erase "/dev/$MTD" 0 0
 
 echo Done.
