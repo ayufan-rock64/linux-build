@@ -12,7 +12,12 @@ loader-boot: out/u-boot/idbloader.img
 	make loader-download-mode
 	rkdeveloptool rid
 	rkdeveloptool wl 64 out/u-boot/clear.img
+ifneq (,$(USE_MINILOADER))
+	rkdeveloptool wl $$((8192*2)) out/u-boot/uboot.img
+	rkdeveloptool wl $$((8192*3)) out/u-boot/trust.img
+else
 	rkdeveloptool wl 512 $(UBOOT_DIR)/u-boot.itb
+endif
 	rkdeveloptool rd
 	sleep 1s
 
@@ -21,7 +26,11 @@ ifneq (,$(USE_UBOOT_TPL))
 else
 	cat rkbin/rk33/rk3328_ddr_786MHz_v1.06.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool l
 endif
+ifneq (,$(USE_MINILOADER))
+	cat rkbin/rk33/rk3328_miniloader_v2.44.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool L
+else
 	cat u-boot/spl/u-boot-spl.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool L
+endif
 
 .PHONY: loader-flash		# flash loader to the device
 loader-flash: out/u-boot/idbloader.img
