@@ -1,12 +1,17 @@
-BL31 ?= arm-trusted-firmware/build/rk3328/release/bl31/bl31.elf
+ATF_PLAT ?= rk322xh
+BL31 ?= arm-trusted-firmware/build/$(ATF_PLAT)/release/bl31/bl31.elf
 
-arm-trusted-firmware/build/rk3328/release/bl31/bl31.elf: arm-trusted-firmware
+arm-trusted-firmware/build/$(ATF_PLAT)/release/bl31/bl31.elf: arm-trusted-firmware
 	make -C $< realclean
-	make -C $< CROSS_COMPILE=aarch64-linux-gnu- PLAT=rk3328 bl31
+	make -C $< CROSS_COMPILE=aarch64-linux-gnu- PLAT=$(ATF_PLAT) bl31
 
-arm-trusted-firmware/build/rk3328/debug/bl31/bl31.elf: arm-trusted-firmware
+arm-trusted-firmware/build/$(ATF_PLAT)/debug/bl31/bl31.elf: arm-trusted-firmware
 	make -C $< realclean
-	make -C $< CROSS_COMPILE=aarch64-linux-gnu- PLAT=rk3328 bl31 DEBUG=1
+	make -C $< CROSS_COMPILE=aarch64-linux-gnu- PLAT=$(ATF_PLAT) bl31 DEBUG=1
+
+ifneq (,$(FORCE))
+.PHONY: $(BL31)
+endif
 
 .PHONY: atf-build
 atf-build: $(BL31)
