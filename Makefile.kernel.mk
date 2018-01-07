@@ -41,6 +41,11 @@ kernel-build-with-modules:
 	$(KERNEL_MAKE) Image modules dtbs -j$$(nproc)
 	$(KERNEL_MAKE) modules_install INSTALL_MOD_PATH=$(CURDIR)/out/linux_modules
 
+.PHONY: kernel-dts-update
+kernel-dts-update:
+	$(KERNEL_MAKE) dtbs -j$$(nproc)
+	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/dtb
+
 .PHONY: kernel-update
 kernel-update:
 	rsync --partial --checksum -rv $(KERNEL_DIR)/arch/arm64/boot/Image root@$(REMOTE_HOST):$(REMOTE_DIR)/boot/efi/Image

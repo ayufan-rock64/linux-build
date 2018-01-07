@@ -4,9 +4,6 @@ UBOOT_MAKE ?= make -C $(UBOOT_DIR) \
 $(UBOOT_DIR)/.config: $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
 	$(UBOOT_MAKE) $(UBOOT_DEFCONFIG)
 
-ifneq (,$(FORCE))
-.PHONY: out/u-boot/idbloader.img
-endif
 out/u-boot/idbloader.img: $(UBOOT_DIR)/.config $(BL31)
 	cp -u $(BL31) u-boot/bl31.elf
 	$(UBOOT_MAKE) -j $$(nproc)
@@ -29,7 +26,9 @@ u-boot-menuconfig:
 	mv $(UBOOT_DIR)/defconfig $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
 
 .PHONY: u-boot-build		# compile u-boot
-u-boot-build: out/u-boot/idbloader.img
+u-boot-build:
+	rm -f out/u-boot/idbloader.img
+	make out/u-boot/idbloader.img
 
 .PHONY: u-boot-clear
 u-boot-clear:

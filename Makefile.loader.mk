@@ -11,6 +11,7 @@ endif
 loader-boot: out/u-boot/idbloader.img
 	make loader-download-mode
 	rkdeveloptool rid
+	dd if=/dev/zero of=out/u-boot/clear.img count=1
 	rkdeveloptool wl 64 out/u-boot/clear.img
 ifneq (,$(USE_MINILOADER))
 	rkdeveloptool wl $$((8192*2)) out/u-boot/uboot.img
