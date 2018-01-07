@@ -30,7 +30,7 @@ kernel-menuconfig:
 	$(KERNEL_MAKE) $(KERNEL_DEFCONFIG)
 	$(KERNEL_MAKE) HOSTCC=gcc menuconfig
 	$(KERNEL_MAKE) savedefconfig
-	cp $(KERNEL_DIR)/defconfig $(KERNEL_DIR)/arch/arm64/configs/$(KERNEL_DEFCONFIG)
+	mv $(KERNEL_DIR)/defconfig $(KERNEL_DIR)/arch/arm64/configs/$(KERNEL_DEFCONFIG)
 
 .PHONY: kernel-build-image
 kernel-build-image:
