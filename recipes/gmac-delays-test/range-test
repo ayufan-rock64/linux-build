@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# build based on awesome tkaiser work: https://github.com/armbian/build/issues/546
+
+if [[ $# -lt 1 ]]; then
+	echo "usage: $0 <host> <tx-seq-range> <rx-seq-range>"
+	exit 1
+fi
+
+set -eo pipefail
+
+DRIVER="rk_gmac-dwmac"
+INTERFACE="ethernet@ff540000"
+INTERFACE_DRIVER="ff540000.ethernet"
+
+HOST="$1"
+shift
+TIMEOUT=${TIMEOUT:-20}
+
+stderr() {
+	echo "$(date --rfc-3339=seconds): $HOST[tx$TX:rx$RX]: $@" 1>&2
+}
+
+run_timeout() {
+	timeout -k $((TIMEOUT+2)) $((TIMEOUT+1)) \
+		"$@"
+}
+
+run_test_cycle() {
+	run_timeout \
+		taskset 8 iperf3 -M 1480 -f k -c "$HOST" "$@" -t ${TIMEOUT} | \
+		awk -F" " '/sender$/ {printf ("%0.1f",$7/1000); print "\t"$9}' | \
+		sed 's/sender/0/'
+}
+
+apply_patch() {
+	rmdir /sys/kernel/config/device-tree/overlays/gmac-delays
+	mkdir -p /sys/kernel/config/device-tree/overlays/gmac-delays
+	dtc -I dts -Odtb -o /sys/kernel/config/device-tree/overlays/gmac-delays/dtbo
+	cat /sys/kernel/config/device-tree/overlays/gmac-delays/status 1>&2
+}
+
+revert_patch() {
+	rmdir /sys/kernel/config/device-tree/overlays/gmac-delays
+}
+
+generate_tx_rx_patch() {
+	cat <<EOF
+/dts-v1/;
+
+/ {
+	fragment@0 {
+		target-path = "/$INTERFACE";
+		__overlay__ {
+			tx_delay = <$1>;
+			rx_delay = <$2>;
+		};
+	};
+};
+EOF
+}
+
+restart_device() {
+	cd "/sys/bus/platform/drivers/$DRIVER"
+	echo "$INTERFACE_DRIVER" > unbind
+	echo "$INTERFACE_DRIVER" > bind
+	ETHNAME=$(ls -1 $INTERFACE_DRIVER/net/)
+	stderr "Waiting for $ETHNAME..."
+	for i in $(seq 1 15); do
+		if ping -c 1 "$HOST" -w 1 >/dev/null; then
+			return 0
+		fi
+		sleep 1s
+	done
+	stderr "Unreachable"
+}
+
+run_test() {
+	local TX="$1"
+	local RX="$2"
+
+	stderr "Changing TX/RX..."
+	generate_tx_rx_patch "$TX" "$RX" | apply_patch
+
+	stderr "Restarting..."
+	restart_device
+
+	stderr "Transmitting..."
+	local TX_Result=$(run_test_cycle || echo -e "-\t-")
+	stderr "Receving..."
+	local RX_Result=$(run_test_cycle -R || echo -e "-\t-")
+
+	local LoadAverage=$(uptime | awk -F" " '/average/ {print $9}' | tr -d ',')
+	echo -e "$(printf "%2s" ${TX})/$(printf "%2s" ${RX}):\t${TX_Result}\t${RX_Result}\t${LoadAverage}"
+}
+
+get_seq() {
+	if [[ -n "$2" ]]; then
+		seq "$@"
+	elif [[ -n "$1" ]]; then
+		echo "$1"
+	fi
+}
+
+for tx in $(get_seq $1); do
+	for rx in $(get_seq $2); do
+		run_test "$tx" "$rx" || true
+	done
+done
+
+stderr "Reverting patches"
+revert_patch
+
+stderr "Restarting..."
+restart_device

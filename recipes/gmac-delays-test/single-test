@@ -1,0 +1,23 @@
+#!/bin/bash
+
+HOST="$1"
+shift
+TIMEOUT=${TIMEOUT:-20}
+
+run_timeout() {
+	timeout -k $((TIMEOUT+2)) $((TIMEOUT+1)) \
+		"$@"
+}
+
+run_test_cycle() {
+	run_timeout \
+		taskset 8 iperf3 -M 1480 -f k -c "$HOST" "$@" -t ${TIMEOUT} | \
+		awk -F" " '/sender$/ {printf ("%0.1f",$7/1000); print "\t"$9}' | \
+		sed 's/sender/0/'
+}
+
+TX_Result=$(run_test_cycle || echo -e "-\t-")
+RX_Result=$(run_test_cycle -R || echo -e "-\t-")
+LoadAverage=$(uptime | awk -F" " '/average/ {print $9}' | tr -d ',')
+
+echo -e "$(printf "%2s" ${TX})/$(printf "%2s" ${RX}):\t${TX_Result}\t${RX_Result}\t${LoadAverage}"
