@@ -38,6 +38,8 @@ shell:
 		$$(id -Gz | xargs -0 -n1 -I{} echo "--group-add={}") \
 		-v /etc/passwd:/etc/passwd:ro \
 		-v /dev/bus/usb:/dev/bus/usb \
+		-v $(SSH_AUTH_SOCK):$(SSH_AUTH_SOCK) \
+		-e SSH_AUTH_SOCK \
 		--privileged \
 		-h rock64-build-env \
 		-v $(CURDIR):$(CURDIR) \
