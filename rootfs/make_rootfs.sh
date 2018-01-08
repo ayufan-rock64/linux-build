@@ -86,12 +86,14 @@ case $DISTRO in
 	xenial|zesty|artful|bionic)
 		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/ubuntu-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
+		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/ubuntu-${DISTRO}-minimal-${version}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
 		DISTRIB="ubuntu"
 		;;
 	sid|jessie|stretch)
 		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/debian-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
+		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/debian-${DISTRO}-minimal-${version}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
 		DISTRIB="debian"
 		;;
@@ -108,7 +110,11 @@ TARBALL="tmp/$(basename $ROOTFS)"
 mkdir -p "$BUILD"
 if [ ! -e "$TARBALL" ]; then
 	echo "Downloading $DISTRO rootfs tarball ..."
-	wget -O "$TARBALL" "$ROOTFS"
+	if ! wget -O "$TARBALL" "$ROOTFS"; then
+		TARBALL="tmp/$(basename $FALLBACK_ROOTFS)"
+		echo "Downloading fallback $DISTRO rootfs tarball ..."
+		wget -O "$TARBALL" "$FALLBACK_ROOTFS"
+	fi
 fi
 
 # Extract with BSD tar
