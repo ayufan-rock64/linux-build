@@ -42,6 +42,10 @@ case "$VARIANT" in
         SIZE=2048
         ;;
 
+    containers)
+        SIZE=2048
+        ;;
+
     *)
         echo "Unknown VARIANT: $VARIANT"
         exit 1
