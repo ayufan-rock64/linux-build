@@ -266,6 +266,10 @@ EOF
 			openmediavault)
 				do_chroot /usr/local/sbin/install_openmediavault.sh
 				;;
+
+			containers)
+				do_chroot /usr/local/sbin/install_container_linux.sh
+				;;
 		esac
 		do_chroot systemctl enable ssh-keygen
 		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"

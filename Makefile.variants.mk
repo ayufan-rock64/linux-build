@@ -2,6 +2,9 @@
 xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz \
 	xenial-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
+.PHONY: xenial-containers-rock64
+xenial-containers-rock64: xenial-containers-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+
 .PHONY: xenial-mate-rock64
 xenial-mate-rock64: xenial-mate-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
@@ -24,6 +27,7 @@ stretch-openmediavault-rock64: stretch-openmediavault-rock64-$(IMAGE_SUFFIX)-arm
 
 .PHONY: xenial-rock64		# build all xenial variants
 xenial-rock64: xenial-minimal-rock64 \
+	xenial-containers-rock64 \
 	xenial-mate-rock64 \
 	xenial-i3-rock64
 
@@ -60,6 +64,7 @@ linux-rock64: \
 linux-minimal-rock64: \
 	bionic-minimal-rock64 \
 	xenial-minimal-rock64 \
+	xenial-containers-rock64 \
 	stretch-minimal-rock64 \
 	stretch-openmediavault-rock64 \
 	jessie-minimal-rock64 \
