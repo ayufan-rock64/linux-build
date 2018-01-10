@@ -21,7 +21,7 @@ jessie-openmediavault-rock64: jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-armhf
 .PHONY: stretch-minimal-rock64
 stretch-minimal-rock64: stretch-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: jessie-openmediavault-rock64
+.PHONY: stretch-openmediavault-rock64
 stretch-openmediavault-rock64: stretch-openmediavault-rock64-$(IMAGE_SUFFIX)-armhf.img.xz \
 	stretch-openmediavault-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
 
@@ -43,8 +43,7 @@ bionic-rock64: bionic-minimal-rock64 \
 	bionic-mate-rock64
 
 .PHONY: stretch-rock64		# build all stretch variants
-stretch-rock64: stretch-minimal-rock64 \
-	stretch-openmediavault-rock64
+stretch-rock64: stretch-minimal-rock64
 
 .PHONY: jessie-rock64		# build all jessie variants
 jessie-rock64: jessie-minimal-rock64 \
@@ -66,7 +65,6 @@ linux-minimal-rock64: \
 	xenial-minimal-rock64 \
 	xenial-containers-rock64 \
 	stretch-minimal-rock64 \
-	stretch-openmediavault-rock64 \
 	jessie-minimal-rock64 \
 	jessie-openmediavault-rock64 \
 	linux-virtual \
