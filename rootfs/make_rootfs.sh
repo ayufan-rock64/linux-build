@@ -141,9 +141,9 @@ do_chroot() {
 	mount -o bind /tmp "$DEST/tmp"
 	chroot "$DEST" mount -t proc proc /proc
 	chroot "$DEST" mount -t sysfs sys /sys
+	chroot "$DEST" mount --bind /dev/null /proc/mdstat
 	chroot "$DEST" $cmd
-	chroot "$DEST" umount /sys
-	chroot "$DEST" umount /proc
+	chroot "$DEST" umount /sys /proc/mdstat /proc
 	umount "$DEST/tmp"
 }
 
@@ -295,6 +295,7 @@ mkdir -p "$DEST/usr"
 rm -f "$DEST/usr/bin/qemu-arm-static"
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
 rm -f "$DEST/usr/sbin/policy-rc.d"
+rm -f "$DEST/usr/local/bin/mdadm"
 rm -f "$DEST/var/lib/dbus/machine-id"
 rm -f "$DEST/SHA256SUMS"
 
