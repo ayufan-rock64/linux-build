@@ -60,6 +60,9 @@ cleanup() {
 		bash
 		popd
 	fi
+	if [ -e "$DEST/proc/mdstat" ]; then
+		umount "$DEST/proc/mdstat" || true
+	fi
 	if [ -e "$DEST/proc/cmdline" ]; then
 		umount "$DEST/proc"
 	fi
