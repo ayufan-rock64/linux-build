@@ -110,11 +110,13 @@ TARBALL="tmp/$(basename $ROOTFS)"
 mkdir -p "$BUILD"
 if [ ! -e "$TARBALL" ]; then
 	echo "Downloading $DISTRO rootfs tarball ..."
-	if ! wget -O "$TARBALL" "$ROOTFS"; then
+	pushd tmp
+	if ! wget -c "$ROOTFS"; then
 		TARBALL="tmp/$(basename $FALLBACK_ROOTFS)"
 		echo "Downloading fallback $DISTRO rootfs tarball ..."
-		wget -O "$TARBALL" "$FALLBACK_ROOTFS"
+		wget -c "$FALLBACK_ROOTFS"
 	fi
+	popd
 fi
 
 # Extract with BSD tar
