@@ -111,10 +111,10 @@ mkdir -p "$BUILD"
 if [ ! -e "$TARBALL" ]; then
 	echo "Downloading $DISTRO rootfs tarball ..."
 	pushd tmp
-	if ! wget -c "$ROOTFS"; then
-		TARBALL="tmp/$(basename $FALLBACK_ROOTFS)"
+	if ! flock "$(basename "$ROOTFS").lock" wget -c "$ROOTFS"; then
+		TARBALL="tmp/$(basename "$FALLBACK_ROOTFS")"
 		echo "Downloading fallback $DISTRO rootfs tarball ..."
-		wget -c "$FALLBACK_ROOTFS"
+		flock "$(basename "$FALLBACK_ROOTFS").lock" wget -c "$FALLBACK_ROOTFS"
 	fi
 	popd
 fi
