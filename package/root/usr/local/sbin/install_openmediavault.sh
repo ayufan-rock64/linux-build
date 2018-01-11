@@ -48,9 +48,8 @@ deb https://openmediavault.github.io/packages/ $RELEASE-proposed main
 EOF
 
 # Add OMV and OMV Plugin developer keys
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 24863F0C716B980B 7E7A6C592EF35D13 7AA630A1EDEE7D73
 apt-get update -y
-apt-get --yes --force-yes --allow-unauthenticated install openmediavault-keyring
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7AA630A1EDEE7D73
 
 # install debconf-utils, postfix and OMV
 debconf-set-selections <<< "postfix postfix/mailname string openmediavault"
@@ -58,7 +57,7 @@ debconf-set-selections <<< "postfix postfix/main_mailer_type string 'No configur
 apt-get -y install debconf-utils postfix
 
 # install openmediavault
-apt-get --yes install openmediavault
+apt-get --yes install openmediavault openmediavault-keyring
 
 # install OMV extras, enable folder2ram, tweak some settings
 FILE=$(mktemp)
