@@ -72,3 +72,9 @@ linux-minimal-rock64: \
 	linux-virtual \
 	u-boot-flash-spi \
 	u-boot-erase-spi
+
+.PHONY: linux-packages-rock64		# build all packages only
+linux-packages-rock64: \
+	linux-virtual \
+	u-boot-flash-spi \
+	u-boot-erase-spi
