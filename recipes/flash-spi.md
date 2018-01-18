@@ -7,13 +7,6 @@ Traditionally, booting Linux on the [ROCK64](http://wiki.pine64.org/index.php/RO
   * microSD
   * eMMC
 
-  1. [New installation](#new-installation): If you're starting from scratch
-  2. [Existing installation](#existing-installation): If you're already running Linux on your _ROCK64_
-
-## New installation
-
-If you're starting from scratch:
-
 ### 1. Write the U-Boot image
 
   1. Download the latest [u-boot-flash-spi.img.xz](https://github.com/ayufan-rock64/linux-build/releases) image
@@ -54,23 +47,6 @@ Make sure you remove the microSD card containing the `u-boot-flash-spi` image, o
   3. microSD
   4. USB drive
   5. PXE
-
-## Existing installation
-
-If you already have an [ayufan](https://github.com/ayufan-rock64/linux-build/releases) Linux release on your _ROCK64_:
-
-  * For version `0.5.x`: Download the [rock64_write_spi_flash.sh](https://github.com/ayufan-rock64/linux-build/blob/master/package/root/usr/local/sbin/rock64_write_spi_flash.sh) script, and run it
-  * For version `0.6.x`: Run:
-
-```
-apt-get update
-apt-get upgrade
-rock64_write_spi_flash.sh
-```
-
-Once complete, reboot. It should "just work".
-
-If you're not running an `ayufan` Linux build `v0.5+`, then follow the procedure for [New installation](#new-installation).
 
 If you're currently running the OS from microSD, and want to switch to a USB/SSD drive, follow the [instructions on this page](https://forum.pine64.org/showthread.php?tid=4971).
 
