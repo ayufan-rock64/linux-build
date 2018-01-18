@@ -19,10 +19,8 @@ If you're starting from scratch:
   1. Download the latest [u-boot-flash-spi.img.xz](https://github.com/ayufan-rock64/linux-build/releases) image
   2. Write it to a microSD card
 
-    ```bash
     # From Linux or macOS
     xz -k -d -c -v -T 3 u-boot-flash-spi.img.xz | dd of=/dev/<sdcard> bs=1M
-    ```
 
 Make sure you write to the correction location, it **will destroy all data**.
 
@@ -30,7 +28,10 @@ Make sure you write to the correction location, it **will destroy all data**.
 
   1. Insert the microSD card
   2. Wait for it to boot. It will automatically erase the SPI memory, and flash _U-Boot_
-  3. You should see: `SF: ... bytes @ 0x8000 Written: OK`, and the power LED (white LED) should flicker once per second
+  3. You should see: the power LED (white LED) flicker once per second, and:
+
+    SF: ... bytes @ 0x8000 Written: OK
+
   4. Remove the microSD card
 
 ### 3. Prepare Linux
@@ -39,8 +40,8 @@ Tested successfully with `Debian Stretch Minimal 0.6.15-175`
 
   1. Prepare your device (USB drive, microSD, PXE, whatever) with your chosen [Linux distribution](http://wiki.pine64.org/index.php/ROCK64_Software_Release)
   2. Boot method:
-    a. **Boot from microSD/eMMC/USB drive:** write the image using `dd` or `Etcher`
-    b. **Boot from PXE:** we assume you already know what you're doing
+    * **Boot from microSD/eMMC/USB drive:** write the image using `dd` or `Etcher`
+    * **Boot from PXE:** we assume you already know what you're doing
   4. Reset the _ROCK64_
   5. You should see _U-Boot_ starting from SPI memory, and then booting Linux
 
@@ -58,8 +59,12 @@ Make sure you remove the microSD card containing the `u-boot-flash-spi` image, o
 
 If you already have an [ayufan](https://github.com/ayufan-rock64/linux-build/releases) Linux release on your _ROCK64_:
 
-  - For version `0.5.x`: Download the [rock64_write_spi_flash.sh](https://github.com/ayufan-rock64/linux-build/blob/master/package/root/usr/local/sbin/rock64_write_spi_flash.sh) script, and run it
-  - For version `0.6.x`: Run `apt-get update; apt-get upgrade`, then run `rock64_write_spi_flash.sh`
+  * For version `0.5.x`: Download the [rock64_write_spi_flash.sh](https://github.com/ayufan-rock64/linux-build/blob/master/package/root/usr/local/sbin/rock64_write_spi_flash.sh) script, and run it
+  * For version `0.6.x`: Run:
+
+    apt-get update
+    apt-get upgrade
+    rock64_write_spi_flash.sh
 
 Once complete, reboot. It should "just work".
 
