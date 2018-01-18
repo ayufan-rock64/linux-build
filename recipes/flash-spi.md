@@ -1,67 +1,62 @@
 # Flashing and Erasing the SPI
 
-Traditionally, booting Linux on the [ROCK64](http://wiki.pine64.org/index.php/ROCK64_Main_Page) required an eMMC or microSD card, however it is now possible to boot **without** those, assuming the SPI memory has been flashed.
-
-The _ROCK64_ contains an onboard 128Mbit SPI flash memory, which can be flashed with [U-Boot](https://github.com/ayufan-rock64/linux-u-boot) in order to provide additional boot options:
+Traditionally, booting Linux on the [ROCK64](http://wiki.pine64.org/index.php/ROCK64_Main_Page) required an eMMC or microSD card, however it is now possible to boot **without** those, assuming the SPI memory has been flashed. The _ROCK64_ contains an onboard 128Mbit SPI flash memory, which can be flashed with [U-Boot](https://github.com/ayufan-rock64/linux-u-boot) in order to provide additional boot options:
 
   * USB2 / USB3 drive
   * PXE
-
-This how-to is split in two sections:
+  * microSD
+  * eMMC
 
   1. [New installation](#new-installation): If you're starting from scratch
   2. [Existing installation](#existing-installation): If you're already running Linux on your _ROCK64_
 
 ## New installation
 
-If you're starting from scratch, you will need to perform the following tasks:
-
-  1. Write the _U-Boot_ image to a microSD card
-  2. Boot the _ROCK64_ from the microSD card to begin flashing
-  3. Prepare Linux on your USB/PXE/microSD/eMMC device
+If you're starting from scratch:
 
 ### 1. Write the U-Boot image
 
-Download the latest [u-boot-flash-spi.img.xz](https://github.com/ayufan-rock64/linux-build/releases) image, and write it to a microSD card.
+  1. Download the latest [u-boot-flash-spi.img.xz](https://github.com/ayufan-rock64/linux-build/releases) image
+  2. Write it to a microSD card
 
-```bash
-# From Linux or macOS
-xz -k -d -c -v -T 3 u-boot-flash-spi.img.xz | dd of=/dev/<sdcard> bs=1M
-```
+    ```bash
+    # From Linux or macOS
+    xz -k -d -c -v -T 3 u-boot-flash-spi.img.xz | dd of=/dev/<sdcard> bs=1M
+    ```
 
-This will decompress, extract, and write _U-Boot_ to `/dev/<sdcard>`. Make sure you write to the correction location, as this process **will destroy all data**.
+Make sure you write to the correction location, it **will destroy all data**.
 
 ### 2. Boot the ROCK64
 
-Insert the microSD card and wait for it to boot. The card will automatically begin erasing the SPI memory, and flashing _U-Boot_.
-
-Once complete, you should see: `SF: ... bytes @ 0x8000 Written: OK`. On success, you should also see the power LED (white LED) flickering once per second.
-
-At this point, you can remove the microSD card.
+  1. Insert the microSD card
+  2. Wait for it to boot. It will automatically erase the SPI memory, and flash _U-Boot_
+  3. You should see: `SF: ... bytes @ 0x8000 Written: OK`, and the power LED (white LED) should flicker once per second
+  4. Remove the microSD card
 
 ### 3. Prepare Linux
 
-If you haven't already done so, prepare your device (USB drive, microSD, PXE, whatever) with your chosen [Linux distribution](http://wiki.pine64.org/index.php/ROCK64_Software_Release).
+Tested successfully with `Debian Stretch Minimal 0.6.15-175`
 
-> To boot from a USB drive, you will need to write one of those images using `dd` or `Etcher`. Once complete, connect the USB drive to your _ROCK64_ (obviously).
-
-This procedure has been tested successfully with `Debian Stretch Minimal 0.6.15-175`.
-
-> To boot from PXE, we assume you already know what you're doing.
+  1. Prepare your device (USB drive, microSD, PXE, whatever) with your chosen [Linux distribution](http://wiki.pine64.org/index.php/ROCK64_Software_Release)
+  2. Boot method:
+    a. **Boot from microSD/eMMC/USB drive:** write the image using `dd` or `Etcher`
+    b. **Boot from PXE:** we assume you already know what you're doing
+  4. Reset the _ROCK64_
+  5. You should see _U-Boot_ starting from SPI memory, and then booting Linux
 
 Make sure you remove the microSD card containing the `u-boot-flash-spi` image, otherwise on reset it will erase/write the SPI memory once again.
 
-Reset the _ROCK64_, and it will search for your USB device, and boot directly from it (thanks to U-Boot in the SPI memory).
-
 **Boot order:**
 
-  1. microSD
-  2. USB drive
-  3. PXE
+  1. SPI flash
+  2. eMMC (disable with jumper)
+  3. microSD
+  4. USB drive
+  5. PXE
 
 ## Existing installation
 
-If you already have an `ayufan` Linux release running on your _ROCK64_:
+If you already have an [ayufan](https://github.com/ayufan-rock64/linux-build/releases) Linux release on your _ROCK64_:
 
   - For version `0.5.x`: Download the [rock64_write_spi_flash.sh](https://github.com/ayufan-rock64/linux-build/blob/master/package/root/usr/local/sbin/rock64_write_spi_flash.sh) script, and run it
   - For version `0.6.x`: Run `apt-get update; apt-get upgrade`, then run `rock64_write_spi_flash.sh`
