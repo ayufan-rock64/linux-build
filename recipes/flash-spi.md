@@ -61,10 +61,9 @@ If you already have an [ayufan](https://github.com/ayufan-rock64/linux-build/rel
 
   * For version `0.5.x`: Download the [rock64_write_spi_flash.sh](https://github.com/ayufan-rock64/linux-build/blob/master/package/root/usr/local/sbin/rock64_write_spi_flash.sh) script, and run it
   * For version `0.6.x`: Run:
-
-    apt-get update
-    apt-get upgrade
-    rock64_write_spi_flash.sh
+   apt-get update
+   apt-get upgrade
+   rock64_write_spi_flash.sh
 
 Once complete, reboot. It should "just work".
 
