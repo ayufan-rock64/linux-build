@@ -2,7 +2,7 @@
 
 _U-Boot_ provides the ability to select which OS image/kernel to use when booting.
 
-The following instructions were borrowed from user `maal` on the [PINE64 forum](https://forum.pine64.org/showthread.php?tid=5363&pid=34795#pid34795).
+The following instructions were borrowed from user **maal** on the [PINE64 forum](https://forum.pine64.org/showthread.php?tid=5363&pid=34795#pid34795).
 
 ### 1. Mount the boot partition
 
@@ -14,7 +14,7 @@ mount -t vfat /dev/<device> /boot/efi
 
 ### 2. Edit extlinux.conf
 
-Add the following entries to `/boot/efi/extlinux/extlinux.conf:
+Add the following entries to `/boot/efi/extlinux/extlinux.conf`:
 
 ```
 timeout 120
@@ -46,7 +46,7 @@ label kernel-4.15
 
 This will default boot from the `kernel-4.15` label after a 2 minute (120 seconds) timeout.
 
-This might seem obvious, but make sure to copy your new kernel and OS files (ex: `Image-4.15, initrd-4.15, dtb-4.15`) to `/boot/efi/`.
+This might seem obvious, but make sure to copy your new kernel and OS files (ex: `Image-4.15, initrd-4.15.img, dtb-4.15`) to `/boot/efi/`.
 
 ### 3. Reboot
 
@@ -71,7 +71,7 @@ Enter your choice, and it should boot the desired image/kernel.
 ```
 Enter choice: 2
 2:      kernel-4.15
-Retrieving file: /boot/Image-4.15
+Retrieving file: /Image-4.15
 ...
 ```
 
