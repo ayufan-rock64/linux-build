@@ -17,7 +17,7 @@ mount -t vfat /dev/<device> /boot/efi
 Add the following entries to `/boot/efi/extlinux/extlinux.conf`:
 
 ```
-timeout 120
+timeout 1200
 default kernel-4.15
 menu title ROCK64 Boot Menu
 ```
@@ -27,7 +27,7 @@ Also, make sure you copy and modify the `label/kernel/initrd/fdt/append` lines f
 The final `/boot/efi/extlinux/extlinux.conf` file should look like similar to this:
 
 ```
-timeout 120
+timeout 1200
 default kernel-4.15
 menu title ROCK64 Boot Menu
 
@@ -44,7 +44,7 @@ label kernel-4.15
     append earlycon=uart8250,mmio32,0xff130000 rw root=LABEL=linux-root rootwait rootfstype=ext4 init=/sbin/init coherent_pool=1M ethaddr=${ethaddr} eth1addr=${eth1addr} serial=${serial#} rock64_label=kernel-4.15
 ```
 
-This will default boot from the `kernel-4.15` label after a 2 minute (120 seconds) timeout.
+This will default boot from the `kernel-4.15` label after a 2 minute (1200 * 1/10s = 120 seconds) timeout. *(thanks to [easyfab](https://forum.pine64.org/showthread.php?tid=5363&pid=34983#pid34983) for the correction).
 
 This might seem obvious, but make sure to copy your new kernel and OS files (ex: `Image-4.15, initrd-4.15.img, dtb-4.15`) to `/boot/efi/`.
 
