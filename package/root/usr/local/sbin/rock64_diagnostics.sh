@@ -324,14 +324,14 @@ UploadSupportLogs() {
    	[[ -n ${VERIFY} ]] && (echo -e "Running file integrity checks... " ; VerifyFiles >> ${Log})
 
 	#check network connection
-	fping sprunge.us | grep -q alive || \
+	fping ix.io | grep -q alive || \
 	(echo "Network/firewall problem detected. Please fix this or upload ${Log} manually." >&2 ; exit 1)
 
 	echo -ne "\nIP obfuscated log uploaded to \c"
 	# obfuscate IPv4 addresses somehow but not too much
 	cat ${Log} | \
 		sed -E 's/([0-9]{1,3}\.)([0-9]{1,3}\.)([0-9]{1,3}\.)([0-9]{1,3})/XXX.XXX.\3\4/g' \
-		| curl -F 'sprunge=<-' http://sprunge.us
+		| curl -F 'f:1=<-' http://ix.io
 
 	echo -e "Please post the above URL on the forum where you've been asked for it."
 } # UploadSupportLogs
