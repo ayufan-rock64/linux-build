@@ -7,20 +7,22 @@ fi
 
 dev=$(findmnt / -n -o SOURCE)
 
-if [[ "${dev:0:11}" == "/dev/mmcblk" ]]
-then
-	DISK=${dev:0:12}
-	NAME="sd/emmc"
-elif [[ "${dev:0:7}" == "/dev/sd" ]]
-then
-	DISK=${dev:0:8}
-	NAME="hdd/ssd"
-else
-	echo "Unknown disk for $dev"
-	exit 1
-fi
+case $dev in
+	/dev/mmcblk*)
+		DISK=${dev:0:12}
+		NAME="sd/emmc"
+		;;
 
-echo "Resizing $DISK ($NAME -- $dev)..."
+	/dev/sd*)
+		DISK=${dev:0:8}
+		NAME="hdd/ssd"
+		;;
+
+	*)
+		echo "Unknown disk for $dev"
+		exit 1
+		;;
+esac
 
 set -xe
 
