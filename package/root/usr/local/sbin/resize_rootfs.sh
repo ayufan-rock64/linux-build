@@ -24,6 +24,8 @@ case $dev in
 		;;
 esac
 
+echo "Resizing $DISK ($NAME -- $dev)..."
+
 set -xe
 
 gdisk "$DISK" <<EOF
