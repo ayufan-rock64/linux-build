@@ -9,12 +9,12 @@ It is **not recommended** to install an **experimental release**, except to obta
 
 This document aims to answer the questions:
 
-  1. [What](#what-is-included) is included in an `ayufan` release?
-  2. [How](#how-are-they-built) are `ayufan` releases built?
-  3. [Can](#can-they-be-trusted) `ayufan` releases be trusted?
-  4. [But](#but-i-want-my-own) can I modify an `ayufan` release?
-  5. [Who](#who-is-ayufan) is `ayufan`?
-  6. [Are](#are-there-alternatives) there alternatives to `ayufan` releases?
+  1. [What](#what-is-included) is included in an _ayufan_ release?
+  2. [How](#how-are-they-built) are _ayufan_ releases built?
+  3. [Can](#can-they-be-trusted) _ayufan_ releases be trusted?
+  4. [But](#but-i-want-my-own) can I modify an _ayufan_ release?
+  5. [Who](#who-is-ayufan) is _ayufan_?
+  6. [Are](#are-there-alternatives) there alternatives to _ayufan_ releases?
 
 ## What is included
 
@@ -28,7 +28,7 @@ Every build contains the following files available for download:
 
 Let's focus on the Debian package `linux-rock64-package-0.x.x_all.deb`, whose contents can be [found here](https://github.com/ayufan-rock64/linux-build/tree/master/package/root).
 
-This package is installed on all `ayufan` builds. It's essentially the _"custom"_ stuff added to each base OS.
+This package is installed on all _ayufan_ builds. It's essentially the _"custom"_ stuff added to each base OS.
 
 ```
 # linux-rock64 package contents
