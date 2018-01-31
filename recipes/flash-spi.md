@@ -10,7 +10,7 @@ Traditionally, booting Linux on the [ROCK64](http://wiki.pine64.org/index.php/RO
 ### 1. Write the U-Boot image
 
   1. Download the latest [u-boot-flash-spi.img.xz](https://github.com/ayufan-rock64/linux-build/releases) image
-  2. Write it to a microSD card
+  2. Write it to a microSD card using `dd` or `Etcher`
 
     # From Linux or macOS
     xz -k -d -c -v -T 3 u-boot-flash-spi.img.xz | dd of=/dev/<sdcard> bs=1M
