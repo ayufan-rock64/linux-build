@@ -128,7 +128,7 @@ You're always free to inspect the sources, build logs, and compare outputs with 
 
 ## But I want my own
 
-Since all build scripts and sources are available, it is possible to create your own distribution to run on the `rock64`. Many people have done so, including [@aw](https://github.com/aw) who got a custom Devuan Jessie running on the `rock64`.
+Since all build scripts and sources are available, it is possible to create your own distribution to run on the `rock64`. Many people have done so with systems such as Devuan and RancherOS.
 
 We won't go into details on _how_ to do it, but it's definitely possible if you're knowledgeable with Linux.
 
