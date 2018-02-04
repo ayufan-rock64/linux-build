@@ -4,13 +4,6 @@ This repository contains a set of scripts to build ROCK64 linux images.
 
 This is community maintained project in my free time. Don't expect everything to be perfect and working. Rather be prepared that there are problems, as always try to fix them and contribute, but if you can't drop the issue here so we can track the progress and resolution of the problem.
 
-  1. [Releases](#Releases)
-  2. [Issues](#Issues)
-  3. [Contributing](#Contributing)
-  4. [Components](#Components)
-  5. [Usage](#Usage)
-  6. [Documentation](#Documentation)
-
 ### Releases
 
 You can always download [latest stable](https://github.com/ayufan-rock64/linux-build/releases/latest) release. The **releases** are meant to be stable versions.
