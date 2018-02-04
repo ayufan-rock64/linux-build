@@ -88,13 +88,13 @@ See all of them with `make help`.
 
 For technical information, see the following documents:
 
-  * [ayufan-release-contents.md](blob/HEAD/recipes/ayufan-release-contents.md): Explains the contents of the linux image builds
-  * [binfmt-misc.md](blob/HEAD/recipes/binfmt-misc.md): Run binaries from other architectures (ex: `arm64 on x86_64`)
-  * [configure-distcc.md](blob/HEAD/recipes/configure-distcc.md): Distribute compile jobs across multiple computers
-  * [dist-upgrade.md](blob/HEAD/recipes/dist-upgrade.md): Upgrade from an older build (ex: `0.5.x -> 0.6.x`)
-  * [dual-booting.md](blob/HEAD/recipes/dual-booting.md): Provides a menu to choose your OS/kernel at boot time
-  * [flash-spi.md](blob/HEAD/recipes/flash-spi.md): Flash the SPI memory to enable booting from USB or PXE
-  * [kernel-upgrade.md](blob/HEAD/recipes/kernel-upgrade.md): Upgrade your linux kernel to a newer version
+  * [ayufan-release-contents.md](recipes/ayufan-release-contents.md): Explains the contents of the linux image builds
+  * [binfmt-misc.md](recipes/binfmt-misc.md): Run binaries from other architectures (ex: `arm64 on x86_64`)
+  * [configure-distcc.md](recipes/configure-distcc.md): Distribute compile jobs across multiple computers
+  * [dist-upgrade.md](recipes/dist-upgrade.md): Upgrade from an older build (ex: `0.5.x -> 0.6.x`)
+  * [dual-booting.md](recipes/dual-booting.md): Provides a menu to choose your OS/kernel at boot time
+  * [flash-spi.md](recipes/flash-spi.md): Flash the SPI memory to enable booting from USB or PXE
+  * [kernel-upgrade.md](recipes/kernel-upgrade.md): Upgrade your linux kernel to a newer version
 
 ## License
 
