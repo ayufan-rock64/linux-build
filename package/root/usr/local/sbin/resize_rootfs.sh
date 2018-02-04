@@ -5,24 +5,26 @@ if [[ "$(id -u)" -ne "0" ]]; then
 	exit 1
 fi
 
-case $(findmnt / -n -o SOURCE) in
-	/dev/mmcblk0p7)
-		DISK=/dev/mmcblk0
-		NAME=emmc
+dev=$(findmnt / -n -o SOURCE)
+
+case $dev in
+	/dev/mmcblk*)
+		DISK=${dev:0:12}
+		NAME="sd/emmc"
 		;;
 
-	/dev/mmcblk1p7)
-		DISK=/dev/mmcblk1
-		NAME=sd
+	/dev/sd*)
+		DISK=${dev:0:8}
+		NAME="hdd/ssd"
 		;;
 
 	*)
-		echo "Unknown disk for /"
+		echo "Unknown disk for $dev"
 		exit 1
 		;;
 esac
 
-echo "Resizing $DISK ($NAME)..."
+echo "Resizing $DISK ($NAME -- $dev)..."
 
 set -xe
 
@@ -46,4 +48,4 @@ EOF
 
 partprobe "$DISK"
 
-resize2fs "${DISK}p7"
+resize2fs "$dev"
