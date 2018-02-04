@@ -4,6 +4,13 @@ This repository contains a set of scripts to build ROCK64 linux images.
 
 This is community maintained project in my free time. Don't expect everything to be perfect and working. Rather be prepared that there are problems, as always try to fix them and contribute, but if you can't drop the issue here so we can track the progress and resolution of the problem.
 
+  1. [Releases](#Releases)
+  2. [Issues](#Issues)
+  3. [Contributing](#Contributing)
+  4. [Components](#Components)
+  5. [Usage](#Usage)
+  6. [Documentation](#Documentation)
+
 ### Releases
 
 You can always download [latest stable](https://github.com/ayufan-rock64/linux-build/releases/latest) release. The **releases** are meant to be stable versions.
@@ -83,6 +90,18 @@ You can easily compile everything stored in this repository by ensuring that you
 
 The Makefile exposes a number of targets.
 See all of them with `make help`.
+
+## Documentation
+
+For technical information, see the following documents:
+
+  * [ayufan-release-contents.md](blob/HEAD/recipes/ayufan-release-contents.md): Explains the contents of the linux image builds
+  * [binfmt-misc.md](blob/HEAD/recipes/binfmt-misc.md): Run binaries from other architectures (ex: `arm64 on x86_64`)
+  * [configure-distcc.md](blob/HEAD/recipes/configure-distcc.md): Distribute compile jobs across multiple computers
+  * [dist-upgrade.md](blob/HEAD/recipes/dist-upgrade.md): Upgrade from an older build (ex: `0.5.x -> 0.6.x`)
+  * [dual-booting.md](blob/HEAD/recipes/dual-booting.md): Provides a menu to choose your OS/kernel at boot time
+  * [flash-spi.md](blob/HEAD/recipes/flash-spi.md): Flash the SPI memory to enable booting from USB or PXE
+  * [kernel-upgrade.md](blob/HEAD/recipes/kernel-upgrade.md): Upgrade your linux kernel to a newer version
 
 ## License
 
