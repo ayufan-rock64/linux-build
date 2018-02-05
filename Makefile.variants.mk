@@ -1,81 +1,81 @@
-.PHONY: xenial-minimal-rock64
-xenial-minimal-rock64: xenial-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz \
-	xenial-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: xenial-minimal-$(BOARD_TARGET)
+xenial-minimal-$(BOARD_TARGET): xenial-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
+	xenial-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: xenial-containers-rock64
-xenial-containers-rock64: xenial-containers-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: xenial-containers-$(BOARD_TARGET)
+xenial-containers-$(BOARD_TARGET): xenial-containers-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: xenial-mate-rock64
-xenial-mate-rock64: xenial-mate-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: xenial-mate-$(BOARD_TARGET)
+xenial-mate-$(BOARD_TARGET): xenial-mate-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: xenial-i3-rock64
-xenial-i3-rock64: xenial-i3-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: xenial-i3-$(BOARD_TARGET)
+xenial-i3-$(BOARD_TARGET): xenial-i3-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: jessie-minimal-rock64
-jessie-minimal-rock64: jessie-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: jessie-minimal-$(BOARD_TARGET)
+jessie-minimal-$(BOARD_TARGET): jessie-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: jessie-openmediavault-rock64
-jessie-openmediavault-rock64: jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-armhf.img.xz \
-	jessie-openmediavault-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: jessie-openmediavault-$(BOARD_TARGET)
+jessie-openmediavault-$(BOARD_TARGET): jessie-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
+	jessie-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: stretch-minimal-rock64
-stretch-minimal-rock64: stretch-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: stretch-minimal-$(BOARD_TARGET)
+stretch-minimal-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: jessie-openmediavault-rock64
-stretch-openmediavault-rock64: stretch-openmediavault-rock64-$(IMAGE_SUFFIX)-armhf.img.xz \
-	stretch-openmediavault-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: jessie-openmediavault-$(BOARD_TARGET)
+stretch-openmediavault-$(BOARD_TARGET): stretch-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
+	stretch-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: xenial-rock64		# build all xenial variants
-xenial-rock64: xenial-minimal-rock64 \
-	xenial-containers-rock64 \
-	xenial-mate-rock64 \
-	xenial-i3-rock64
+.PHONY: xenial-$(BOARD_TARGET)		# build all xenial variants
+xenial-$(BOARD_TARGET): xenial-minimal-$(BOARD_TARGET) \
+	xenial-containers-$(BOARD_TARGET) \
+	xenial-mate-$(BOARD_TARGET) \
+	xenial-i3-$(BOARD_TARGET)
 
-.PHONY: bionic-minimal-rock64
-bionic-minimal-rock64: bionic-minimal-rock64-$(IMAGE_SUFFIX)-armhf.img.xz \
-	bionic-minimal-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: bionic-minimal-$(BOARD_TARGET)
+bionic-minimal-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
+	bionic-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: bionic-mate-rock64
-bionic-mate-rock64: bionic-mate-rock64-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: bionic-mate-$(BOARD_TARGET)
+bionic-mate-$(BOARD_TARGET): bionic-mate-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: bionic-rock64		# build all bionic variants
-bionic-rock64: bionic-minimal-rock64 \
-	bionic-mate-rock64
+.PHONY: bionic-$(BOARD_TARGET)		# build all bionic variants
+bionic-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET) \
+	bionic-mate-$(BOARD_TARGET)
 
-.PHONY: stretch-rock64		# build all stretch variants
-stretch-rock64: stretch-minimal-rock64 \
-	stretch-openmediavault-rock64
+.PHONY: stretch-$(BOARD_TARGET)		# build all stretch variants
+stretch-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET) \
+	stretch-openmediavault-$(BOARD_TARGET)
 
-.PHONY: jessie-rock64		# build all jessie variants
-jessie-rock64: jessie-minimal-rock64 \
-	jessie-openmediavault-rock64
+.PHONY: jessie-$(BOARD_TARGET)		# build all jessie variants
+jessie-$(BOARD_TARGET): jessie-minimal-$(BOARD_TARGET) \
+	jessie-openmediavault-$(BOARD_TARGET)
 
-.PHONY: linux-rock64		# build all linux variants
-linux-rock64: \
-	bionic-rock64 \
-	xenial-rock64 \
-	stretch-rock64 \
-	jessie-rock64 \
+.PHONY: linux-$(BOARD_TARGET)		# build all linux variants
+linux-$(BOARD_TARGET): \
+	bionic-$(BOARD_TARGET) \
+	xenial-$(BOARD_TARGET) \
+	stretch-$(BOARD_TARGET) \
+	jessie-$(BOARD_TARGET) \
 	linux-virtual \
 	u-boot-flash-spi \
 	u-boot-erase-spi
 
-.PHONY: linux-minimal-rock64		# build all linux variants
-linux-minimal-rock64: \
-	bionic-minimal-rock64 \
-	xenial-minimal-rock64 \
-	xenial-containers-rock64 \
-	stretch-minimal-rock64 \
-	stretch-openmediavault-rock64 \
-	jessie-minimal-rock64 \
-	jessie-openmediavault-rock64 \
+.PHONY: linux-minimal-$(BOARD_TARGET)		# build all linux variants
+linux-minimal-$(BOARD_TARGET): \
+	bionic-minimal-$(BOARD_TARGET) \
+	xenial-minimal-$(BOARD_TARGET) \
+	xenial-containers-$(BOARD_TARGET) \
+	stretch-minimal-$(BOARD_TARGET) \
+	stretch-openmediavault-$(BOARD_TARGET) \
+	jessie-minimal-$(BOARD_TARGET) \
+	jessie-openmediavault-$(BOARD_TARGET) \
 	linux-virtual \
-	u-boot-flash-spi \
-	u-boot-erase-spi
+	u-boot-flash-spi-$(BOARD_TARGET) \
+	u-boot-erase-spi-$(BOARD_TARGET)
 
-.PHONY: linux-packages-rock64		# build all packages only
-linux-packages-rock64: \
+.PHONY: linux-packages-$(BOARD_TARGET)		# build all packages only
+linux-packages-$(BOARD_TARGET): \
 	linux-virtual \
 	linux-package \
-	u-boot-flash-spi \
-	u-boot-erase-spi
+	u-boot-flash-spi-$(BOARD_TARGET) \
+	u-boot-erase-spi-$(BOARD_TARGET)

@@ -1,4 +1,3 @@
-ATF_PLAT ?= rk322xh
 BL31 ?= arm-trusted-firmware/build/$(ATF_PLAT)/release/bl31/bl31.elf
 
 arm-trusted-firmware/build/$(ATF_PLAT)/release/bl31/bl31.elf: arm-trusted-firmware

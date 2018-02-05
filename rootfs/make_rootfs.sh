@@ -219,7 +219,20 @@ EOF
 		do_chroot bash "/install_script.bash"
 		rm -f "$DEST/install_script.bash"
 		echo -n UTC > "$DEST/etc/timezone"
-		echo "Rockchip RK3328 Rock64" > "$DEST/etc/flash-kernel/machine"
+		case $MODEL in
+			rock64)
+				echo "Pine64 Rock64" > "$DEST/etc/flash-kernel/machine"
+				;;
+
+			rockpro64)
+				echo "Pine64 RockPro64" > "$DEST/etc/flash-kernel/machine"
+				;;
+
+			*)
+				echo "Unsupported model: $MODEL"
+				;;
+		esac
+
 		cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64.list" <<EOF
 deb http://deb.ayufan.eu/orgs/ayufan-rock64/releases /
 

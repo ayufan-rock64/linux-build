@@ -1,0 +1,7 @@
+Machine: Pine64 RockPro64
+Method: generic
+DTB-Kernel-Version: 4.4.70
+DTB-Id: rockchip/rk3399-rockpro64.dtb
+Boot-Kernel-Path: /boot/efi/Image
+Boot-Initrd-Path: /boot/efi/initrd.img
+Boot-DTB-Path: /boot/efi/dtb

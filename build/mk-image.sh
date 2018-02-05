@@ -10,13 +10,14 @@ TARGET=""
 SIZE=""
 ROOTFS_PATH=""
 BOOT_PATH=""
+BOARD_TARGET=""
 
 PATH=$PATH:$TOOLPATH
 
 source $LOCALPATH/build/partitions.sh
 
 usage() {
-	echo -e "\nUsage: build/mk-image.sh -c rk3288 -t system -s 4000 -b boot.img -r rk-rootfs-build/linaro-rootfs.img \n"
+	echo -e "\nUsage: build/mk-image.sh -c rk3288 -d path-with-idbloader -t system -s 4000 -b boot.img -r rk-rootfs-build/linaro-rootfs.img \n"
 	echo -e "       build/mk-image.sh -c rk3288 -t boot\n"
 }
 finish() {
@@ -26,7 +27,7 @@ finish() {
 trap finish ERR
 
 OLD_OPTIND=$OPTIND
-while getopts "c:t:s:r:b:o:h" flag; do
+while getopts "c:t:s:r:b:o:d:h" flag; do
 	case $flag in
 		c)
 			CHIP="$OPTARG"
@@ -47,6 +48,9 @@ while getopts "c:t:s:r:b:o:h" flag; do
 		b)
 			BOOT_PATH="$OPTARG"
 			;;
+		d)
+			OUT="$OPTARG"
+			;;
 		o)
 			OUT_IMAGE="$OPTARG"
 			;;
@@ -62,6 +66,8 @@ if [ ! $CHIP ] && [ ! $TARGET ]; then
 	usage
 	exit
 fi
+
+BOARD_TARGET="${BOARD_TARGET-$CHIP}"
 
 generate_boot_image() {
 	BOOT=${OUT}/boot.img
@@ -100,21 +106,26 @@ generate_system_image() {
 	# burn u-boot
 	echo "Burn u-boot..."
 	if [ "$CHIP" == "rk3288" ] || [ "$CHIP" == "rk3036" ]; then
-		dd if=${OUT}/u-boot/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc status=none
+		dd if=${OUT}/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc status=none
 	elif [ "$CHIP" == "rk3399" ]; then
-		dd if=${OUT}/u-boot/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc status=none
+		dd if=${OUT}/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc status=none
 
-		dd if=${OUT}/u-boot/uboot.img of=${SYSTEM} seek=${LOADER2_START} conv=notrunc status=none
-		dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc status=none
-	elif [ "$CHIP" == "rk3328" ]; then
-		dd if=${OUT}/u-boot/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc status=none
-
-		if [[ -e ${OUT}/u-boot/uboot.img ]]; then
-			dd if=${OUT}/u-boot/uboot.img of=${SYSTEM} seek=${LOADER2_START} conv=notrunc status=none
+		if [[ -e ${OUT}/uboot.img ]]; then
+			dd if=${OUT}/uboot.img of=${SYSTEM} seek=${LOADER2_START} conv=notrunc status=none
 		fi
 
-		if [[ -e ${OUT}/u-boot/trust.img ]]; then
-			dd if=${OUT}/u-boot/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc status=none
+		if [[ -e ${OUT}/trust.img ]]; then
+			dd if=${OUT}/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc status=none
+		fi
+	elif [ "$CHIP" == "rk3328" ]; then
+		dd if=${OUT}/idbloader.img of=${SYSTEM} seek=${LOADER1_START} conv=notrunc status=none
+
+		if [[ -e ${OUT}/uboot.img ]]; then
+			dd if=${OUT}/uboot.img of=${SYSTEM} seek=${LOADER2_START} conv=notrunc status=none
+		fi
+
+		if [[ -e ${OUT}/trust.img ]]; then
+			dd if=${OUT}/trust.img of=${SYSTEM} seek=${ATF_START} conv=notrunc status=none
 		fi
 	fi
 

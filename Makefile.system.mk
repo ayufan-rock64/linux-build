@@ -18,6 +18,6 @@ PACKAGES := linux-rock64-package-$(RELEASE_NAME)_all.deb \
 		"$(filter $(BUILD_MODELS), $(subst -, ,$@))" \
 		$^
 
-%.img: %-system.img out/u-boot/idbloader.img
-	build/mk-image.sh -c rk3328 -t system -r "$<" -b "$(subst -system.img,-boot.img,$<)" -o "$@.tmp"
+%.img: %-system.img out/u-boot-$(BOARD_TARGET)/idbloader.img
+	build/mk-image.sh -c $(BOARD_CHIP) -d out/u-boot-$(BOARD_TARGET) -t system -r "$<" -b "$(subst -system.img,-boot.img,$<)" -o "$@.tmp"
 	mv "$@.tmp" "$@"
