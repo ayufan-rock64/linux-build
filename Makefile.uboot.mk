@@ -57,8 +57,8 @@ u-boot-%-$(BOARD_TARGET).img: out/u-boot/%/boot.img $(UBOOT_LOADER)
 	build/mk-image.sh -c $(BOARD_CHIP) -d out/u-boot-$(BOARD_TARGET) -t system -s 128 -b $< -o "$@.tmp"
 	mv "$@.tmp" $@
 
-.PHONY: u-boot-flash-spi
-u-boot-flash-spi: u-boot-flash-spi-$(BOARD_TARGET).img.xz
+.PHONY: u-boot-flash-spi-$(BOARD_TARGET)
+u-boot-flash-spi-$(BOARD_TARGET): u-boot-flash-spi-$(BOARD_TARGET).img.xz
 
-.PHONY: u-boot-erase-spi
-u-boot-erase-spi: u-boot-erase-spi-$(BOARD_TARGET).img.xz
+.PHONY: u-boot-erase-spi-$(BOARD_TARGET)
+u-boot-erase-spi-$(BOARD_TARGET): u-boot-erase-spi-$(BOARD_TARGET).img.xz
