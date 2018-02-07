@@ -1,4 +1,5 @@
 Machine: Rockchip RK3328 Rock64
+Machine: Pine64 Rock64
 Machine: PINE64 ROCK64
 Method: generic
 DTB-Kernel-Version: 4.4.70
