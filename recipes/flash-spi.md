@@ -49,7 +49,3 @@ Make sure you remove the microSD card containing the `u-boot-flash-spi` image, o
   5. PXE
 
 If you're currently running the OS from microSD, and want to switch to a USB/SSD drive, follow the [instructions on this page](https://forum.pine64.org/showthread.php?tid=4971).
-
-## FAQ
-
-  Please search the [ROCK64 forum](https://forum.pine64.org/forumdisplay.php?fid=85), and [ROCK64 IRC logs](http://irc.pine64.uk/?) for existing discussion threads.

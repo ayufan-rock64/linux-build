@@ -4,11 +4,13 @@ _U-Boot_ provides the ability to select which OS image/kernel to use when bootin
 
 The following instructions were borrowed from user **maal** on the [PINE64 forum](https://forum.pine64.org/showthread.php?tid=5363&pid=34795#pid34795).
 
+**Note: This is experimental and may break upgradability.**
+
 ### 1. Mount the boot partition
 
 If it's not already mounted, make sure `/boot/efi` is mounted. The `<device>` should be `sda6` if booted from USB, `mmcblk0p6` or `mmcblk1p6` if booted from microSD.
 
-```
+```bash
 mount -t vfat /dev/<device> /boot/efi
 ```
 
@@ -74,7 +76,3 @@ Enter choice: 2
 Retrieving file: /Image-4.15
 ...
 ```
-
-## FAQ
-
-  Please search the [ROCK64 forum](https://forum.pine64.org/forumdisplay.php?fid=85), and [ROCK64 IRC logs](http://irc.pine64.uk/?) for existing discussion threads.
