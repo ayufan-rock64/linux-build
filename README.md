@@ -53,8 +53,6 @@ You can easily compile everything stored in this repository by ensuring that you
 
     ```bash
     $ make shell
-    Building environment...
-    sha256:0aa8a81c687f58bc9b46e33ea6b5f01188c85874ceb729767dfe882b2783abd2
     Entering shell...
     ayufan@rock64-build-env:~/Sources/linux-build$ make sync
     repo init -u https://github.com/ayufan-rock64/linux-manifests -b default --depth=1 --no-clone-bundle

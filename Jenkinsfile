@@ -18,7 +18,7 @@ node('docker && linux-build') {
       stage('Environment') {
         checkout scm
 
-        def environment = docker.build('build-environment:build-rock64-image', 'environment')
+        def environment = docker.image('ayufan/rock64-dockerfiles:x86_64')
 
         environment.inside("--privileged -u 0:0") {
           withEnv([
