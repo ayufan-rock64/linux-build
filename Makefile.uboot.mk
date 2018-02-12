@@ -33,7 +33,7 @@ u-boot-menuconfig:
 	$(UBOOT_MAKE) ARCH=arm64 $(UBOOT_DEFCONFIG)
 	$(UBOOT_MAKE) ARCH=arm64 menuconfig
 	$(UBOOT_MAKE) ARCH=arm64 savedefconfig
-	mv $(UBOOT_DIR)/defconfig $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
+	mv $(UBOOT_OUTPUT_DIR)/defconfig $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
 
 .PHONY: u-boot-build		# compile u-boot
 u-boot-build:
