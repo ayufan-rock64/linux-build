@@ -21,7 +21,7 @@ BOARD_CHIP ?= rk3328
 else ifeq (rockpro64,$(BOARD_TARGET))
 ATF_PLAT ?= rk3399
 UBOOT_DEFCONFIG ?= rockpro64-rk3399_defconfig
-BL31 ?= $(CURDIR)/rkbin/rk33/rk3399_bl31_v1.00.elf
+BL31 ?= rkbin/rk33/rk3399_bl31_v1.00.elf
 BOARD_CHIP ?= rk3399
 USE_UBOOT_SPL ?= yes
 else
