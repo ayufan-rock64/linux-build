@@ -7,3 +7,4 @@ DTB-Id: rockchip/rk3328-rock64.dtb
 Boot-Kernel-Path: /boot/efi/Image
 Boot-Initrd-Path: /boot/efi/initrd.img
 Boot-DTB-Path: /boot/efi/dtb
+
