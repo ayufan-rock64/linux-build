@@ -57,8 +57,8 @@ linux-$(BOARD_TARGET): \
 	stretch-$(BOARD_TARGET) \
 	jessie-$(BOARD_TARGET) \
 	linux-virtual \
-	u-boot-flash-spi \
-	u-boot-erase-spi
+	u-boot-flash-spi-$(BOARD_TARGET) \
+	u-boot-erase-spi-$(BOARD_TARGET)
 
 .PHONY: linux-minimal-$(BOARD_TARGET)		# build all linux variants
 linux-minimal-$(BOARD_TARGET): \
