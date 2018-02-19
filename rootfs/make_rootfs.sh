@@ -205,7 +205,7 @@ if [[ "$DISTRIB" == "debian" ]]; then
 elif [[ "$DISTRIB" == "ubuntu" ]]; then
 	apt-get -y install landscape-common linux-firmware
 fi
-apt-get dist-upgrade -y
+#apt-get dist-upgrade -y
 fake-hwclock save
 if [[ "$DEBUSER" != "root" ]]; then
 	adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
