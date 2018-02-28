@@ -441,6 +441,7 @@ MonitorMode() {
 	LastIrqStat=0
 	LastSoftIrqStat=0
 	LastCpuStatCheck=0
+	LastTotal=0
 
 	DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq"
 	CPUs=normal
@@ -461,7 +462,8 @@ MonitorMode() {
 		else
 			CpuFreq='n/a'
 		fi
-		echo -e "\n$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) $(ProcessStats)\c"
+		ProcessStats
+		echo -e "\n$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}\c"
 		if [ "X${SocTemp}" != "Xn/a" ]; then
 			read SocTemp </sys/devices/virtual/thermal/thermal_zone0/temp
 			if [ ${SocTemp} -ge 1000 ]; then
@@ -484,30 +486,37 @@ ProcessStats() {
 		IOWaitLoad=$5
 		IrqCombinedLoad=$6
 	else
-		set $(awk -F" " '/^cpu / {print $2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8}' </proc/stat)
-		UserStat=$1
-		NiceStat=$2
-		SystemStat=$3
-		IdleStat=$4
-		IOWaitStat=$5
-		IrqStat=$6
-		SoftIrqStat=$7
+		procStatLine=(`sed -n 's/^cpu\s//p' /proc/stat`)
+		UserStat=${procStatLine[0]}
+		NiceStat=${procStatLine[1]}
+		SystemStat=${procStatLine[2]}
+		IdleStat=${procStatLine[3]}
+		IOWaitStat=${procStatLine[4]}
+		IrqStat=${procStatLine[5]}
+		SoftIrqStat=${procStatLine[6]}
 
+		Total=0
+		for eachstat in ${procStatLine[@]}; do
+			Total=$(( ${Total} + ${eachstat} ))
+		done
+		
 		UserDiff=$(( ${UserStat} - ${LastUserStat} ))
 		NiceDiff=$(( ${NiceStat} - ${LastNiceStat} ))
 		SystemDiff=$(( ${SystemStat} - ${LastSystemStat} ))
-		IdleDiff=$(( ${IdleStat} - ${LastIdleStat} ))
 		IOWaitDiff=$(( ${IOWaitStat} - ${LastIOWaitStat} ))
 		IrqDiff=$(( ${IrqStat} - ${LastIrqStat} ))
 		SoftIrqDiff=$(( ${SoftIrqStat} - ${LastSoftIrqStat} ))
 
-		Total=$(( ${UserDiff} + ${NiceDiff} + ${SystemDiff} + ${IdleDiff} + ${IOWaitDiff} + ${IrqDiff} + ${SoftIrqDiff} ))
-		CPULoad=$(( ( ${Total} - ${IdleDiff} ) * 100 / ${Total} ))
-		UserLoad=$(( ${UserDiff} *100 / ${Total} ))
-		SystemLoad=$(( ${SystemDiff} *100 / ${Total} ))
-		NiceLoad=$(( ${NiceDiff} *100 / ${Total} ))
-		IOWaitLoad=$(( ${IOWaitDiff} *100 / ${Total} ))
-		IrqCombinedLoad=$(( ( ${IrqDiff} + ${SoftIrqDiff} ) *100 / ${Total} ))
+		diffIdle=$(( ${IdleStat} - ${LastIdleStat} ))
+		diffTotal=$(( ${Total} - ${LastTotal} ))
+		diffX=$(( ${diffTotal} - ${diffIdle} ))
+		CPULoad=$(( ${diffX}* 100 / ${diffTotal} ))
+		UserLoad=$(( ${UserDiff}* 100 / ${diffTotal} ))
+		SystemLoad=$(( ${SystemDiff}* 100 / ${diffTotal} ))
+		NiceLoad=$(( ${NiceDiff}* 100 / ${diffTotal} ))
+		IOWaitLoad=$(( ${IOWaitDiff}* 100 / ${diffTotal} ))
+		IrqCombined=$(( ${IrqDiff} + ${SoftIrqDiff} ))
+		IrqCombinedLoad=$(( ${IrqCombined}* 100 / ${diffTotal} ))
 
 		LastUserStat=${UserStat}
 		LastNiceStat=${NiceStat}
@@ -516,9 +525,10 @@ ProcessStats() {
 		LastIOWaitStat=${IOWaitStat}
 		LastIrqStat=${IrqStat}
 		LastSoftIrqStat=${SoftIrqStat}
+		LastTotal=${Total}
 	fi
-	echo -e "$(printf "%3s" ${CPULoad})%$(printf "%4s" ${SystemLoad})%$(printf "%4s" ${UserLoad})%$(printf "%4s" ${NiceLoad})%$(printf "%4s" ${IOWaitLoad})%$(printf "%4s" ${IrqCombinedLoad})%"
 
+	procStats=$(echo -e "$(printf "%3s" ${CPULoad})%$(printf "%4s" ${SystemLoad})%$(printf "%4s" ${UserLoad})%$(printf "%4s" ${NiceLoad})%$(printf "%4s" ${IOWaitLoad})%$(printf "%4s" ${IrqCombinedLoad})%")
 } # ProcessStats
 
 Main "$@"
