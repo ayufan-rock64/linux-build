@@ -41,6 +41,7 @@ PACKAGES=(
 	xserver-xorg
 	mesa-utils-extra
 	gstreamer1.0-rockchip1
+	xserver-xorg-video-armsoc
 )
 
 # Add packages based on desktop selection.
