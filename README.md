@@ -82,6 +82,18 @@ You can easily compile everything stored in this repository by ensuring that you
 The Makefile exposes a number of targets.
 See all of them with `make help`.
 
+## Documentation
+
+For technical information, see the following documents:
+
+  * [release-contents.md](recipes/release-contents.md): Explains the contents of the linux image builds
+  * [binfmt-misc.md](recipes/binfmt-misc.md): Run binaries from other architectures (ex: `arm64 on x86_64`)
+  * [configure-distcc.md](recipes/configure-distcc.md): Distribute compile jobs across multiple computers
+  * [dist-upgrade.md](recipes/dist-upgrade.md): Upgrade from an older build (ex: `0.5.x -> 0.6.x`)
+  * [dual-booting.md](recipes/dual-booting.md): Provides a menu to choose your OS/kernel at boot time
+  * [flash-spi.md](recipes/flash-spi.md): Flash the SPI memory to enable booting from USB or PXE
+  * [kernel-upgrade.md](recipes/kernel-upgrade.md): Upgrade your linux kernel to a newer version
+
 ## License
 
 These scripts are made available under the MIT license in the hope they might be useful to others. See LICENSE.txt for details.
