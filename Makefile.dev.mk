@@ -30,7 +30,7 @@ shell:
 	@echo Entering shell...
 	@docker run --rm \
 		-it \
-		-e HOME -v $(HOME):$(HOME) \
+		-e HOME -v $(HOME):$(HOME) -v $(CURDIR)/bashrc:$(HOME)/.bashrc \
 		-e USER \
 		-u $$(id -u):$$(id -g) \
 		$$(id -Gz | xargs -0 -n1 -I{} echo "--group-add={}") \
