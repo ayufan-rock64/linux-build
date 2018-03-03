@@ -5,7 +5,7 @@ set -e
 DESKTOP="$1"
 
 if [ -z "$DESKTOP" ]; then
-	echo "Usage: $0 <mate|i3|gnome|xfce4>"
+	echo "Usage: $0 <mate|i3|gnome|xfce4|lxde>"
 	exit 1
 fi
 
@@ -35,7 +35,7 @@ PACKAGES=(
 	smplayer
 	smplayer-themes
 	smtube
-	libmali-rk-utgard-2th-r7p0
+	libmali-rk-utgard-450-r7p0
 	libdrm-rockchip1
 	xserver-xorg
 	mesa-utils-extra
@@ -121,6 +121,13 @@ case $DESKTOP-$DISTRO in
 			xfce4
 			xfce4-goodies
 			slim
+		)
+		;;
+
+	lxde-Ubuntu|lxde-Debian)
+		PACKAGES+=(
+			lxde
+			lxdm
 		)
 		;;
 
