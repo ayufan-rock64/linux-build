@@ -44,11 +44,12 @@ You can easily compile everything stored in this repository by ensuring that you
 1. Working [Docker Engine](https://docs.docker.com/engine/installation/),
 1. Working [binfmt-misc](recipes/binfmt-misc.md) support,
 1. Installed `make` (`sudo apt-get install make`).
+1. Latest version of `repo` tool - installed according to [Android installation notes](https://source.android.com/setup/downloading#installing-repo)
 
 ### Compilation
 
-1. Enter Docker Shell: `make shell`,
 1. Synchronise the sources: `make sync`,
+1. Enter Docker Shell: `make shell`,
 1. Build all variants: `make`.
 
     ```bash
