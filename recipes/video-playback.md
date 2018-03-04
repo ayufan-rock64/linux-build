@@ -6,7 +6,27 @@ The [ayufan's ppa](https://launchpad.net/~ayufan/+archive/ubuntu/rock64-ppa) con
 
 The modified FFmpeg includes an `h264_rkmpp`, `hevc_rkmpp`, `vp8_rkmpp` and `vp9_rkmpp` video decoders.
 
-## Install
+## Latest releases (>= 0.6.25)
+
+### Requirements
+
+- `libmali-rk-utgard-450-r7p0` installed, at least the `1.6-1ayufan9`
+- `linux-rock64-package` installed, at least the `0.6.25``
+- `linux-image` installed, at least the `4.4.112-rockchip-ayufan-191`
+
+You can check package version with `apt-cache policy linux-rock64-package`.
+
+### Use
+
+Use `rkmpv` that will configure `mpv` for HW accelerated video playback:
+
+```bash
+rkmpv file.mkv
+```
+
+## For older releases (< 0.6.25)
+
+### Install
 
 First, install needed packages
 
@@ -22,7 +42,7 @@ If you want to bring back support for GLES in X11, ensure to revert back to:
 apt-get install libmali-rk-utgard-450-r7p0
 ```
 
-## Verify
+### Verify
 
 Make sure that you use correct versions of FFmpeg and mpv from [ayufan's ppa](https://launchpad.net/~ayufan/+archive/ubuntu/rock64-ppa) with `apt-cache policy ffmpeg mpv`:
 
@@ -47,7 +67,7 @@ mpv:
         500 http://ports.ubuntu.com/ubuntu-ports bionic/universe arm64 Packages
 ```
 
-## Run
+### Run
 
 ```bash
 mpv --vo=gpu --gpu-context=drm --hwdec=rkmpp video.mkv
@@ -70,7 +90,7 @@ VO: [gpu] 1280x640 drm_prime[nv12]
 ...
 ```
 
-## Alternative way
+### Alternative way
 
 It is possible to have GLES2 and MPV working without reinstalling the package over and over.
 
