@@ -38,9 +38,13 @@ bionic-minimal-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-a
 .PHONY: bionic-mate-$(BOARD_TARGET)
 bionic-mate-$(BOARD_TARGET): bionic-mate-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
+.PHONY: bionic-lxde-$(BOARD_TARGET)
+bionic-lxde-$(BOARD_TARGET): bionic-lxde-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
+
 .PHONY: bionic-$(BOARD_TARGET)		# build all bionic variants
 bionic-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET) \
-	bionic-mate-$(BOARD_TARGET)
+	bionic-mate-$(BOARD_TARGET) \
+	bionic-lxde-$(BOARD_TARGET)
 
 .PHONY: stretch-$(BOARD_TARGET)		# build all stretch variants
 stretch-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET) \

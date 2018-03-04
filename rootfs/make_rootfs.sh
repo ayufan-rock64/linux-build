@@ -281,6 +281,11 @@ EOF
 				do_chroot systemctl set-default graphical.target
 				;;
 
+			lxde)
+				do_chroot /usr/local/sbin/install_desktop.sh lxde
+				do_chroot systemctl set-default graphical.target
+				;;
+
 			openmediavault)
 				do_chroot /usr/local/sbin/install_openmediavault.sh
 				;;
