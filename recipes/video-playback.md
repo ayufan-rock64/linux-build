@@ -70,6 +70,26 @@ VO: [gpu] 1280x640 drm_prime[nv12]
 ...
 ```
 
+## Alternative way
+
+It is possible to have GLES2 and MPV working without reinstalling the package over and over.
+
+```bash
+mkdir -p /usr/lib/aarch64-linux-gnu/gbm
+cd /usr/lib/aarch64-linux-gnu/gbm
+wget https://github.com/ayufan-rock64/libmali/raw/rockchip/lib/aarch64-linux-gnu/libmali-utgard-450-r7p0-gbm.so
+ln -sf libmali-utgard-450-r7p0-gbm.so libMali.so
+ln -sf libmali-utgard-450-r7p0-gbm.so libgbm.so
+ln -sf libmali-utgard-450-r7p0-gbm.so libgbm.so.1
+ln -sf libmali-utgard-450-r7p0-gbm.so libgbm.so.1.0.0
+```
+
+And then using `LD_PRELOAD_PATH` to instruct `mpv` to use different library:
+
+```bash
+LD_PRELOAD_PATH=/usr/lib/aarch64-linux-gnu/gbm mpv --vo=gpu --gpu-context=drm --hwdec=rkmpp video.mkv
+```
+
 ## Thanks
 
 You should thank [LongChair](https://github.com/LongChair) and [Kwiboo](https://github.com/Kwiboo/) for making this work!
