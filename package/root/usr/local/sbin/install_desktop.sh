@@ -35,11 +35,17 @@ PACKAGES=(
 	smplayer
 	smplayer-themes
 	smtube
-	libmali-rk-utgard-450-r7p0
-	libdrm-rockchip1
 	xserver-xorg
 	mesa-utils-extra
+)
+
+# Video/3d acceleration packages
+PACKAGES+=(
 	xserver-xorg-video-armsoc
+	libdrm-rockchip1
+	libmali-rk-utgard-450-r7p0
+	ffmpeg
+	mpv
 )
 
 # Additional packages
