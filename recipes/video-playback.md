@@ -22,6 +22,31 @@ If you want to bring back support for GLES in X11, ensure to revert back to:
 apt-get install libmali-rk-utgard-450-r7p0
 ```
 
+## Verify
+
+Make sure that you use correct versions of FFmpeg and mpv from [ayufan's ppa](https://launchpad.net/~ayufan/+archive/ubuntu/rock64-ppa) with `apt-cache policy ffmpeg mpv`:
+
+```text
+ffmpeg:
+  Installed: 7:3.5~git20180113-1ayufan2
+  Candidate: 7:3.5~git20180113-1ayufan2
+  Version table:
+ *** 7:3.5~git20180113-1ayufan2 990
+        990 http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu bionic/main arm64 Packages
+        100 /var/lib/dpkg/status
+     7:3.4.2-1 500
+        500 http://ports.ubuntu.com/ubuntu-ports bionic/universe arm64 Packages
+mpv:
+  Installed: 0.28.0-1ayufan3
+  Candidate: 0.28.0-1ayufan3
+  Version table:
+ *** 0.28.0-1ayufan3 990
+        990 http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu bionic/main arm64 Packages
+        100 /var/lib/dpkg/status
+     0.27.0-2ubuntu4 500
+        500 http://ports.ubuntu.com/ubuntu-ports bionic/universe arm64 Packages
+```
+
 ## Run
 
 ```bash
