@@ -6,7 +6,7 @@ The following instructions were borrowed from user **maal** on the [PINE64 forum
 
 **Note: This is experimental and may break upgradability.**
 
-### 1. Mount the boot partition
+## 1. Mount the boot partition
 
 If it's not already mounted, make sure `/boot/efi` is mounted. The `<device>` should be `sda6` if booted from USB, `mmcblk0p6` or `mmcblk1p6` if booted from microSD.
 
@@ -14,7 +14,7 @@ If it's not already mounted, make sure `/boot/efi` is mounted. The `<device>` sh
 mount -t vfat /dev/<device> /boot/efi
 ```
 
-### 2. Edit extlinux.conf
+## 2. Edit extlinux.conf
 
 Add the following entries to `/boot/efi/extlinux/extlinux.conf`:
 
@@ -50,11 +50,11 @@ This will default boot from the `kernel-4.15` label after a 2 minute (1200 * 1/1
 
 This might seem obvious, but make sure to copy your new kernel and OS files (ex: `Image-4.15, initrd-4.15.img, dtb-4.15`) to `/boot/efi/`.
 
-### 3. Reboot
+## 3. Reboot
 
 Unmount the boot partition, then reboot:
 
-```
+```bash
 umount /dev/<device>
 reboot
 ```
