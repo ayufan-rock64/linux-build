@@ -53,7 +53,7 @@ case "$1" in
     jessie-minimal|jessie-openmediavault|stretch-minimal|xenial-i3|xenial-mate|xenial-minimal)
         REPO="ayufan-rock64/linux-build"
         PREFIX="$1-rock64-"
-        SUFFIX="-[0-9]*-arm*.img.xz"
+        SUFFIX="-[0-9]*-arm64.img.xz"
         ARCHIVER="xz -d"
         ;;
 
