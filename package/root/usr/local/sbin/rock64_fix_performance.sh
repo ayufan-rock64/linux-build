@@ -31,31 +31,7 @@ Enable_RPS_and_tweak_IRQ_Affinity() {
 	echo 32768 >/sys/class/net/eth0/queues/rx-0/rps_flow_cnt
 }
 
-Add_USB_Quirks() {
-	Quirksfile=/etc/modprobe.d/rk3328-usb-storage-quirks.conf
-	if [ ! -f ${Quirksfile} ]; then
-		# UAS blacklist Norelsys NS1068X and NS1066X
-		echo "options usb-storage quirks=0x2537:0x1066:u,0x2537:0x1068:u" >${Quirksfile}
-		chmod 644 ${Quirksfile}
-	fi
-
-	# check for connected Seagate or WD HDD enclosures and blacklist them all
-	lsusb | awk -F" " '{print "0x"$6}' | sed 's/:/:0x/' | sort | uniq | while read ; do
-		case ${REPLY} in
-			"0x0bc2:"*|"0x1058:"*)
-				grep -q "${REPLY}" ${Quirksfile} || sed -i "1 s/\$/,${REPLY}:u/" ${Quirksfile}
-				;;
-		esac
-	done
-
-	NeedUpate="$(find ${Quirksfile} -mtime 0)"
-	if [ "X${NeedUpate}" = "X${Quirksfile}" ]; then
-		update-initramfs -u
-	fi
-}
-
-Tweak_Ondemand_Governor &
-Enable_RPS_and_tweak_IRQ_Affinity &
-Add_USB_Quirks &
+Tweak_Ondemand_Governor
+Enable_RPS_and_tweak_IRQ_Affinity
 
 exit 0
