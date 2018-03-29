@@ -16,10 +16,10 @@ else ifneq (,$(USE_UBOOT_TPL))
 	$(UBOOT_OUTPUT_DIR)/tools/mkimage -n $(BOARD_CHIP) -T rksd -d $(UBOOT_OUTPUT_DIR)/tpl/u-boot-tpl.bin $@.tmp
 	cat $(UBOOT_OUTPUT_DIR)/spl/u-boot-spl.bin >> $@.tmp
 else ifeq (rock64,$(BOARD_TARGET))
-	$(UBOOT_OUTPUT_DIR)/tools/mkimage -n $(BOARD_CHIP) -T rksd -d rkbin/rk33/rk3328_ddr_786MHz_v1.06.bin $@.tmp
+	$(UBOOT_OUTPUT_DIR)/tools/mkimage -n $(BOARD_CHIP) -T rksd -d $(DDR) $@.tmp
 	cat $(UBOOT_OUTPUT_DIR)/spl/u-boot-spl.bin >> $@.tmp
 else ifeq (rockpro64,$(BOARD_TARGET))
-	$(UBOOT_OUTPUT_DIR)/tools/mkimage -n $(BOARD_CHIP) -T rksd -d rkbin/rk33/rk3399_ddr_800MHz_v1.08.bin $@.tmp
+	$(UBOOT_OUTPUT_DIR)/tools/mkimage -n $(BOARD_CHIP) -T rksd -d $(DDR) $@.tmp
 	cat $(UBOOT_OUTPUT_DIR)/spl/u-boot-spl.bin >> $@.tmp
 else
 	@echo "Invalid $(BOARD_TARGET)"

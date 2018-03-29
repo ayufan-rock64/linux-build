@@ -25,7 +25,7 @@ endif
 ifneq (,$(USE_UBOOT_TPL))
 	cat $(UBOOT_OUTPUT_DIR)/tpl/u-boot-tpl.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool l
 else
-	cat rkbin/rk33/rk3328_ddr_786MHz_v1.06.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool l
+	cat $(DDR) | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool l
 endif
 ifneq (,$(USE_MINILOADER))
 	cat rkbin/rk33/rk3328_miniloader_v2.44.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool L

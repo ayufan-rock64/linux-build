@@ -49,6 +49,7 @@ For technical information, see the following documents:
 - [flash-spi.md](recipes/flash-spi.md): Flash the SPI memory to enable booting from USB or PXE
 - [kernel-upgrade.md](recipes/kernel-upgrade.md): Upgrade your linux kernel to a newer version
 - [additional-devices.md](recipes/additional-devices.md): Use additional devices, like 100Mbit Ethernet
+- [overclocking.md](recipes/overclocking.md): Bump some specs :)
 
 ## License
 
