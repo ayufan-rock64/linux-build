@@ -48,6 +48,7 @@ For technical information, see the following documents:
 - [dual-booting.md](recipes/dual-booting.md): Provides a menu to choose your OS/kernel at boot time
 - [flash-spi.md](recipes/flash-spi.md): Flash the SPI memory to enable booting from USB or PXE
 - [kernel-upgrade.md](recipes/kernel-upgrade.md): Upgrade your linux kernel to a newer version
+- [additional-devices.md](recipes/additional-devices.md): Use additional devices, like 100Mbit Ethernet
 
 ## License
 
