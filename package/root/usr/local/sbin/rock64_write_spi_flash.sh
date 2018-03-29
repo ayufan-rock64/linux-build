@@ -25,7 +25,7 @@ while true; do
     fi
 done
 
-MNT_DEV=$(findmnt / -n -o SOURCE)
+MNT_DEV=$(findmnt /boot/efi -n -o SOURCE)
 
 write_nand() {
     if ! MTD=$(grep \"$1\" /proc/mtd | cut -d: -f1); then
@@ -39,16 +39,16 @@ write_nand() {
 }
 
 case $MNT_DEV in
-    /dev/mmcblk0p7)
+    /dev/mmcblk0p6)
         write_nand loader /dev/mmcblk0p1
         ;;
 
-    /dev/mmcblk1p7)
+    /dev/mmcblk1p6)
         write_nand loader /dev/mmcblk1p1
         ;;
 
-    /dev/sd*p7)
-        write_nand loader "${MNT_DEV/p7/p1}"
+    /dev/sd*p6)
+        write_nand loader "${MNT_DEV/p6/p1}"
         ;;
 
     *)
