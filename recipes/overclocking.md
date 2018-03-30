@@ -4,11 +4,29 @@ It is possible to slightly bump Rock64 specs.
 
 ## CPU
 
-TBD
+Currently CPU is clocked at 1296MHz max. Feel free to check:
 
-## eMMC
+```bash
+cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq
+```
 
-TBD
+## GPU
+
+Currently GPU is clocked at 500MHz max. Feel free to check:
+
+```bash
+cat /sys/class/devfreq/ff300000.gpu/load
+cat /sys/class/devfreq/ff300000.gpu/trans_stat
+```
+
+## Video Decoder
+
+Currently video decoder is clocked at 500MHz max. Feel free to check (it crashes as of 0.6.28):
+
+```bash
+cat /sys/class/devfreq/ff360000.rkvdec/load
+cat /sys/class/devfreq/ff360000.rkvdec/trans_stat
+```
 
 ## RAM
 
