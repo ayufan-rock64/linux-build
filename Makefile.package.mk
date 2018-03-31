@@ -5,6 +5,7 @@ linux-rock64-$(RELEASE_NAME)_arm64.deb: $(PACKAGES)
 		--depends "linux-rock64-package (= $(RELEASE_NAME))" \
 		--depends "linux-image-$(KERNEL_RELEASE) (= $(RELEASE_NAME))" \
 		--depends "linux-headers-$(KERNEL_RELEASE) (= $(RELEASE_NAME))" \
+		--depends "u-boot-rock64 (= $(RELEASE_NAME))" \
 		--force \
 		--url https://gitlab.com/ayufan-rock64/linux-build \
 		--description "Rock64 Linux virtual package: depends on kernel and compatibility package" \

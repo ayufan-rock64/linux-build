@@ -25,6 +25,12 @@ while true; do
     fi
 done
 
+if ! dpkg --verify u-boot-rock64; then
+    echo "Verification of 'u-boot-rock64' failed."
+    echo "Your disk might have got corrupted."
+    exit 1
+fi
+
 MNT_DEV=$(findmnt /boot/efi -n -o SOURCE)
 
 write_nand() {
@@ -38,24 +44,6 @@ write_nand() {
     nandwrite "/dev/$MTD" < "$2"
 }
 
-case $MNT_DEV in
-    /dev/mmcblk0p6)
-        write_nand loader /dev/mmcblk0p1
-        ;;
-
-    /dev/mmcblk1p6)
-        write_nand loader /dev/mmcblk1p1
-        ;;
-
-    /dev/sd*p6)
-        write_nand loader "${MNT_DEV/p6/p1}"
-        ;;
-
-    *)
-        echo "Cannot detect boot device."
-        echo "The bootloader can only be copied when booted from eMMC, SD or USB."
-        exit 1
-        ;;
-esac
+write_nand loader /usr/lib/u-boot-rock64/idbloader.img
 
 echo Done.

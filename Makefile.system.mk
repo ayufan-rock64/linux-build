@@ -1,4 +1,5 @@
 PACKAGES := linux-rock64-package-$(RELEASE_NAME)_all.deb \
+	$(UBOOT_PACKAGE) \
 	$(KERNEL_PACKAGE) \
 	$(KERNEL_HEADERS_PACKAGES)
 

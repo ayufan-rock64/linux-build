@@ -2,6 +2,7 @@ UBOOT_OUTPUT_DIR ?= $(CURDIR)/tmp/u-boot-$(BOARD_TARGET)
 UBOOT_LOADER ?= out/u-boot-$(BOARD_TARGET)/idbloader.img
 UBOOT_MAKE ?= make -C $(UBOOT_DIR) KBUILD_OUTPUT=$(UBOOT_OUTPUT_DIR) BL31=$(realpath $(BL31)) \
 	CROSS_COMPILE="ccache aarch64-linux-gnu-"
+UBOOT_PACKAGE ?= u-boot-rock64-$(RELEASE_NAME)_all.deb
 
 tmp/u-boot-$(BOARD_TARGET)/.config: $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
 	$(UBOOT_MAKE) $(UBOOT_DEFCONFIG) 
@@ -56,6 +57,27 @@ out/u-boot/%/boot.img: out/u-boot/%/boot.scr
 u-boot-%-$(BOARD_TARGET).img: out/u-boot/%/boot.img $(UBOOT_LOADER)
 	build/mk-image.sh -c $(BOARD_CHIP) -d out/u-boot-$(BOARD_TARGET) -t system -s 128 -b $< -o "$@.tmp"
 	mv "$@.tmp" $@
+
+$(UBOOT_PACKAGE): u-boot-package $(UBOOT_LOADER)
+	fpm -s dir -t deb -n u-boot-rock64 -v $(RELEASE_NAME) \
+		-p $@ \
+		--deb-priority optional --category admin \
+		--force \
+		--deb-compression bzip2 \
+		--deb-field "Multi-Arch: foreign" \
+		--after-install u-boot-package/scripts/postinst.deb \
+		--before-remove u-boot-package/scripts/prerm.deb \
+		--url https://gitlab.com/ayufan-rock64/linux-build \
+		--description "Rock64 U-boot package" \
+		-m "Kamil Trzciński <ayufan@ayufan.eu>" \
+		--license "MIT" \
+		--vendor "Kamil Trzciński" \
+		-a all \
+		u-boot-package/root/=/
+		$(UBOOT_LOADER)=/usr/lib/u-boot-rock64/idbloader.img
+
+.PHONY: u-boot-package
+u-boot-package: $(UBOOT_PACKAGE)
 
 .PHONY: u-boot-flash-spi-$(BOARD_TARGET)
 u-boot-flash-spi-$(BOARD_TARGET): u-boot-flash-spi-$(BOARD_TARGET).img.xz
