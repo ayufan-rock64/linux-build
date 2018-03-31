@@ -2,12 +2,70 @@
 
 It is possible to slightly bump Rock64 specs.
 
+**Keep in mind that this can break your board.**
+
 ## CPU
 
 Currently CPU is clocked at 1296MHz max. Feel free to check:
 
+### Check frequency and health
+
+You can quickly run rock64 diagnostics to see most vital parameters of your board (CPU frequency, temperature of SoC, and CPU usage):
+
+```bash
+rock64_diagnostics.sh -m
+```
+
+You can always quickly check current actual CPU frequency:
+
 ```bash
 cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq
+```
+
+### Add additional operating point (dynamically)
+
+Use dt overlays to add additional 1.392GHz operating point (requires at least 0.6.13):
+
+```bash
+enable_dtoverlay 1398mhz cpu0-opp-table okay "opp-1392000000 {
+            opp-hz = /bits/ 64 <1392000000>;
+            opp-microvolt = <1350000>;
+            opp-microvolt-L0 = <1350000>;
+            opp-microvolt-L1 = <1325000>;
+            clock-latency-ns = <40000>;
+}"
+```
+
+Then, force to reload frequency table:
+
+```bash
+echo cpufreq-dt > /sys/bus/platform/drivers/cpufreq-dt/unbind
+echo cpufreq-dt > /sys/bus/platform/drivers/cpufreq-dt/bind
+```
+
+At very least verify that a new operating point is loaded:
+
+```bash
+cat /sys/devices/system/cpu/cpufreq/policy0/scaling_available_frequencies 
+408000 600000 816000 1008000 1200000 1296000 1392000
+```
+
+### Stability testing
+
+With every overclocking it is important to perform stability testing. The best for that is [cpuburn](https://github.com/ssvb/cpuburn-arm):
+
+```bash
+cd /usr/src
+git clone https://github.com/ssvb/cpuburn-arm
+cd cpuburn-arm
+gcc -o cpuburn-a53 cpuburn-a53.S
+./cpuburn-a53
+```
+
+On other terminal session run:
+
+```bash
+rock64_diagnostics.sh -m
 ```
 
 ## GPU
