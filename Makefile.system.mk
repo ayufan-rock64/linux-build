@@ -1,4 +1,4 @@
-PACKAGES := linux-rock64-package-$(RELEASE_NAME)_all.deb \
+PACKAGES := linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb \
 	$(UBOOT_PACKAGE) \
 	$(KERNEL_PACKAGE) \
 	$(KERNEL_HEADERS_PACKAGES)
@@ -9,7 +9,7 @@ PACKAGES := linux-rock64-package-$(RELEASE_NAME)_all.deb \
 %.img.xz: %.img
 	pxz -f -3 $<
 
-%-system.img: $(PACKAGES) linux-rock64-$(RELEASE_NAME)_arm64.deb
+%-system.img: $(PACKAGES) linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb
 	sudo bash rootfs/build-system-image.sh \
 		"$$(readlink -f $@)" \
 		"$$(readlink -f $(subst -system.img,-boot.img,$@))" \

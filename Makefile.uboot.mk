@@ -2,7 +2,7 @@ UBOOT_OUTPUT_DIR ?= $(CURDIR)/tmp/u-boot-$(BOARD_TARGET)
 UBOOT_LOADER ?= out/u-boot-$(BOARD_TARGET)/idbloader.img
 UBOOT_MAKE ?= make -C $(UBOOT_DIR) KBUILD_OUTPUT=$(UBOOT_OUTPUT_DIR) BL31=$(realpath $(BL31)) \
 	CROSS_COMPILE="ccache aarch64-linux-gnu-"
-UBOOT_PACKAGE ?= u-boot-rock64-$(RELEASE_NAME)_all.deb
+UBOOT_PACKAGE ?= u-boot-$(BOARD_TARGET)-$(RELEASE_NAME)_all.deb
 
 tmp/u-boot-$(BOARD_TARGET)/.config: $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
 	$(UBOOT_MAKE) $(UBOOT_DEFCONFIG) 
@@ -59,7 +59,7 @@ u-boot-%-$(BOARD_TARGET).img: out/u-boot/%/boot.img $(UBOOT_LOADER)
 	mv "$@.tmp" $@
 
 $(UBOOT_PACKAGE): u-boot-package $(UBOOT_LOADER)
-	fpm -s dir -t deb -n u-boot-rock64 -v $(RELEASE_NAME) \
+	fpm -s dir -t deb -n u-boot-$(BOARD_TARGET) -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
 		--force \
@@ -74,7 +74,7 @@ $(UBOOT_PACKAGE): u-boot-package $(UBOOT_LOADER)
 		--vendor "Kamil Trzciński" \
 		-a all \
 		u-boot-package/root/=/
-		$(UBOOT_LOADER)=/usr/lib/u-boot-rock64/idbloader.img
+		$(UBOOT_LOADER)=/usr/lib/u-boot-$(BOARD_TARGET)/idbloader.img
 
 .PHONY: u-boot-package
 u-boot-package: $(UBOOT_PACKAGE)
