@@ -152,9 +152,9 @@ do_chroot() {
 
 do_install() {
 	FILE=$(basename "$1")
-	cp "$1" "$DEST/$(basename "$1")"
+	cp "$1" "$DEST/$FILE"
 	yes | do_chroot dpkg -i "$FILE"
-	do_chroot rm "$FILE"
+	rm -f "$DEST/$FILE"
 }
 
 # Run stuff in new system.
@@ -199,7 +199,7 @@ apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-serv
 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
 	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
 	network-manager psmisc flash-kernel u-boot-tools ifupdown resolvconf \
-	net-tools mtd-utils rsync
+	net-tools mtd-utils rsync device-tree-compiler debsums
 if [[ "$DISTRIB" == "debian" ]]; then
 	apt-get -y install firmware-realtek
 elif [[ "$DISTRIB" == "ubuntu" ]]; then
