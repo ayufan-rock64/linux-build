@@ -73,7 +73,7 @@ $(UBOOT_PACKAGE): u-boot-package $(UBOOT_LOADER)
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
 		-a all \
-		u-boot-package/root/=/
+		u-boot-package/root/=/ \
 		$(UBOOT_LOADER)=/usr/lib/u-boot-$(BOARD_TARGET)/idbloader.img
 
 .PHONY: u-boot-package
