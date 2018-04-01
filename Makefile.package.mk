@@ -24,6 +24,7 @@ linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb: package
 		--depends cron \
 		--depends gdisk \
 		--depends parted \
+		--depends device-tree-compiler \
 		--deb-compression bzip2 \
 		--deb-field "Multi-Arch: foreign" \
 		--after-install package/scripts/postinst.deb \
