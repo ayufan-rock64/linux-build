@@ -63,6 +63,7 @@ $(UBOOT_PACKAGE): u-boot-package $(UBOOT_LOADER)
 		-p $@ \
 		--deb-priority optional --category admin \
 		--force \
+		--depends debsums \
 		--deb-compression bzip2 \
 		--deb-field "Multi-Arch: foreign" \
 		--after-install u-boot-package/scripts/postinst.deb \

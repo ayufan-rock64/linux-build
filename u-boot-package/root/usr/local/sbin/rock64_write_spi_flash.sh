@@ -25,7 +25,7 @@ while true; do
     fi
 done
 
-if ! dpkg --verify u-boot-rock64; then
+if ! debsums -s u-boot-rock64; then
     echo "Verification of 'u-boot-rock64' failed."
     echo "Your disk might have got corrupted."
     exit 1
