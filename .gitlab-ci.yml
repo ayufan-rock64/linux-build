@@ -1,0 +1,5 @@
+image: alpine
+
+test:
+  script:
+    - echo Hello World
