@@ -1,5 +1,41 @@
-image: alpine
+image: ayufan/rock64-dockerfiles:x86_64
 
-test:
+stages:
+  - build
+
+variables:
+  USE_CCACHE: "true"
+  RELEASE_NAME: "$CI_JOB_REF_NAME"
+  RELEASE: "$CI_JOB_ID"
+  CCACHE_DIR: "/data/shared/ccache"
+
+before_script:
+  - ccache -M 0 -F 0
+  - repo init -u https://github.com/ayufan-rock64/linux-manifests -b default --depth=1 --no-clone-bundle
+
+u-boot:
+  stage: build
   script:
-    - echo Hello World
+    - repo sync -j 20 -c --force-sync u-boot arm-trusted-firmware rkbin
+    - make u-boot-build
+  artifacts:
+    paths:
+      - "*.deb"
+
+kernel:
+  stage: build
+  script:
+    - repo sync -j 20 -c --force-sync kernel
+    - make kernel-build KERNEL_DIR=kernel
+  artifacts:
+    paths:
+      - "*.deb"
+
+kernel-mainline:
+  stage: build
+  script:
+    - repo sync -j 20 -c --force-sync kernel-mainline
+    - make kernel-build KERNEL_DIR=kernel-mainline
+  artifacts:
+    paths:
+      - "*.deb"
