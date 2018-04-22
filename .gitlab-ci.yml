@@ -105,7 +105,7 @@ release:
     - github-release edit --tag "${VERSION}" --name "$RELEASE_TITLE" --description "$DESCRIPTION"
 
 .build_rock64: &build_rock64
-  stage: build
+  stage: images
   only: [tags]
   script:
     - repo sync -j 20 -c --force-sync rkbin
