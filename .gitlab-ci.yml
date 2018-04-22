@@ -10,8 +10,8 @@ variables:
   USE_CCACHE: "true"
   CCACHE_DIR: "/data/shared/ccache"
 
-  VERSION: ${CI_COMMIT_TAG}
-  RELEASE_NAME: "$CI_JOB_REF_NAME"
+  VERSION: "${CI_COMMIT_TAG}"
+  RELEASE_NAME: "${CI_COMMIT_TAG}"
   RELEASE_TITLE: "${CI_COMMIT_TAG}: gitlab-ci-linux-build-${CI_PIPELINE_ID}"
   RELEASE: "$CI_JOB_ID"
   PIPELINE_URL: $CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID
@@ -33,8 +33,8 @@ draft:
     - github-release release --tag "${VERSION}" --name "$RELEASE_TITLE" --description "$DESCRIPTION" --target "$CI_COMMIT_SHA" --draft
     - repo sync -j 20 -c --force-sync
     - repo manifest -r -o manifest.xml
-    - repo forall -g tagged -e -c git tag "$GITHUB_USER/$GITHUB_REPO/$VERSION"
     - echo "machine github.com login user password $GITHUB_TOKEN" > ~/.netrc
+    - repo forall -g tagged -e -c git tag "$GITHUB_USER/$GITHUB_REPO/$VERSION"
     - repo forall -g tagged -e -c git push ayufan "$GITHUB_USER/$GITHUB_REPO/$VERSION" -f
     - upload manifest.xml
 
@@ -45,11 +45,9 @@ u-boot:
     - repo sync -j 20 -c --force-sync u-boot arm-trusted-firmware rkbin
     - make u-boot-virtual
     - upload_all *.deb
-    - upload_all u-boot-*.img
+    - upload_all *.xz
   artifacts:
     paths:
-      - "*.deb"
-      - "u-boot-*.img"
       - "out/u-boot-*/"
 
 kernel:
@@ -79,11 +77,10 @@ package:
   only: [tags]
   script:
     - make linux-virtual
-    - upload_all *.deb *.rpm
+    - upload_all *.deb
   artifacts:
     paths:
       - "*.deb"
-      - "*.rpm"
 
 pre-release:
   stage: pre-release
@@ -108,7 +105,6 @@ release:
   stage: images
   only: [tags]
   script:
-    - repo sync -j 20 -c --force-sync rkbin
     - make "$CI_JOB_NAME" BOARD_TARGET=rock64
     - upload_all *.xz
 
