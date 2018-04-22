@@ -67,6 +67,7 @@ kernel-mainline:
   script:
     - repo sync -j 20 -c --force-sync kernel-mainline
     - make kernel-build KERNEL_DIR=kernel-mainline
+    - rm -f linux-libc*.deb
     - upload_all *.deb
   artifacts:
     paths:
