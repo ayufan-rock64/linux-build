@@ -40,6 +40,7 @@ draft:
 
 u-boot:
   stage: build
+  only: [tags]
   script:
     - repo sync -j 20 -c --force-sync u-boot arm-trusted-firmware rkbin
     - make u-boot-virtual
@@ -53,6 +54,7 @@ u-boot:
 
 kernel:
   stage: build
+  only: [tags]
   script:
     - repo sync -j 20 -c --force-sync kernel
     - make kernel-build KERNEL_DIR=kernel
@@ -63,6 +65,7 @@ kernel:
 
 kernel-mainline:
   stage: build
+  only: [tags]
   script:
     - repo sync -j 20 -c --force-sync kernel-mainline
     - make kernel-build KERNEL_DIR=kernel-mainline
@@ -73,6 +76,7 @@ kernel-mainline:
 
 package:
   stage: package
+  only: [tags]
   script:
     - make linux-virtual
     - upload_all *.deb *.rpm
