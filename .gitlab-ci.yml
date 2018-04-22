@@ -21,7 +21,7 @@ stages: [draft, build, package, images, pre-release, release]
 before_script:
   - ccache -M 0 -F 0
   - repo init -u https://github.com/ayufan-rock64/linux-manifests -b default --depth=1 --no-clone-bundle
-  - 'export CHANGES=$(git tag -l --format="%(contents)" "$CI_COMMIT_TAG")'
+  - 'export CHANGES=$(cat RELEASE.md)'
   - 'export DESCRIPTION=$(echo -e "${CHANGES}\n\n${PIPELINE_URL}")'
   - 'upload() { github-release upload --tag "${VERSION}" --name "$(basename "$1")" --file "$1"; }'
   - 'upload_all() { for i in $*; do upload "$i"; done; }'
