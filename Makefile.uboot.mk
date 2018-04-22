@@ -86,3 +86,6 @@ u-boot-flash-spi-$(BOARD_TARGET): u-boot-flash-spi-$(BOARD_TARGET).img.xz
 
 .PHONY: u-boot-erase-spi-$(BOARD_TARGET)
 u-boot-erase-spi-$(BOARD_TARGET): u-boot-erase-spi-$(BOARD_TARGET).img.xz
+
+.PHONY: u-boot-virtual
+u-boot-virtual: u-boot-build u-boot-package u-boot-flash-spi-$(BOARD_TARGET) u-boot-erase-spi-$(BOARD_TARGET)
