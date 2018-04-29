@@ -5,19 +5,6 @@ xenial-minimal-$(BOARD_TARGET): xenial-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-a
 .PHONY: xenial-containers-$(BOARD_TARGET)
 xenial-containers-$(BOARD_TARGET): xenial-containers-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: xenial-mate-$(BOARD_TARGET)
-xenial-mate-$(BOARD_TARGET): xenial-mate-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
-
-.PHONY: xenial-i3-$(BOARD_TARGET)
-xenial-i3-$(BOARD_TARGET): xenial-i3-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
-
-.PHONY: jessie-minimal-$(BOARD_TARGET)
-jessie-minimal-$(BOARD_TARGET): jessie-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
-
-.PHONY: jessie-openmediavault-$(BOARD_TARGET)
-jessie-openmediavault-$(BOARD_TARGET): jessie-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
-	jessie-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
-
 .PHONY: stretch-minimal-$(BOARD_TARGET)
 stretch-minimal-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
@@ -27,9 +14,7 @@ stretch-openmediavault-$(BOARD_TARGET): stretch-openmediavault-$(BOARD_TARGET)-$
 
 .PHONY: xenial-$(BOARD_TARGET)		# build all xenial variants
 xenial-$(BOARD_TARGET): xenial-minimal-$(BOARD_TARGET) \
-	xenial-containers-$(BOARD_TARGET) \
-	xenial-mate-$(BOARD_TARGET) \
-	xenial-i3-$(BOARD_TARGET)
+	xenial-containers-$(BOARD_TARGET)
 
 .PHONY: bionic-minimal-$(BOARD_TARGET)
 bionic-minimal-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
@@ -50,16 +35,11 @@ bionic-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET) \
 stretch-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET) \
 	stretch-openmediavault-$(BOARD_TARGET)
 
-.PHONY: jessie-$(BOARD_TARGET)		# build all jessie variants
-jessie-$(BOARD_TARGET): jessie-minimal-$(BOARD_TARGET) \
-	jessie-openmediavault-$(BOARD_TARGET)
-
 .PHONY: linux-$(BOARD_TARGET)		# build all linux variants
 linux-$(BOARD_TARGET): \
 	bionic-$(BOARD_TARGET) \
 	xenial-$(BOARD_TARGET) \
 	stretch-$(BOARD_TARGET) \
-	jessie-$(BOARD_TARGET) \
 	linux-virtual \
 	u-boot-flash-spi-$(BOARD_TARGET) \
 	u-boot-erase-spi-$(BOARD_TARGET)
@@ -71,8 +51,6 @@ linux-minimal-$(BOARD_TARGET): \
 	xenial-containers-$(BOARD_TARGET) \
 	stretch-minimal-$(BOARD_TARGET) \
 	stretch-openmediavault-$(BOARD_TARGET) \
-	jessie-minimal-$(BOARD_TARGET) \
-	jessie-openmediavault-$(BOARD_TARGET) \
 	linux-virtual \
 	u-boot-flash-spi-$(BOARD_TARGET) \
 	u-boot-erase-spi-$(BOARD_TARGET)
