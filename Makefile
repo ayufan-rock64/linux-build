@@ -18,7 +18,7 @@ ifeq (rock64,$(BOARD_TARGET))
 ATF_PLAT ?= rk322xh
 UBOOT_DEFCONFIG ?= rock64-rk3328_defconfig
 BL31 ?= rkbin/rk33/rk3328_bl31_v1.39.bin
-DDR ?= rkbin/rk33/rk3328_ddr_333MHz_v1.08.bin
+DDR ?= rkbin/rk33/rk3328_ddr_786MHz_v1.12.bin
 BOARD_CHIP ?= rk3328
 else ifeq (rockpro64,$(BOARD_TARGET))
 ATF_PLAT ?= rk3399
