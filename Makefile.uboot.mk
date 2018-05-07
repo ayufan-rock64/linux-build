@@ -36,15 +36,6 @@ u-boot-menuconfig:
 	$(UBOOT_MAKE) ARCH=arm64 savedefconfig
 	mv $(UBOOT_OUTPUT_DIR)/defconfig $(UBOOT_DIR)/configs/$(UBOOT_DEFCONFIG)
 
-.PHONY: u-boot-build		# compile u-boot
-u-boot-build:
-	rm -f $(UBOOT_LOADER)
-	make $(UBOOT_LOADER)
-
-.PHONY: u-boot-clear
-u-boot-clear:
-	rm -rf $(UBOOT_LOADER)/..
-
 out/u-boot/%/boot.scr: blobs/%.cmd
 	mkdir -p $$(dirname $@)
 	mkimage -C none -A arm -T script -d $< $@
@@ -78,11 +69,21 @@ $(UBOOT_PACKAGE): u-boot-package $(UBOOT_LOADER)
 		u-boot-package/root/=/ \
 		$(UBOOT_LOADER)=/usr/lib/u-boot-$(BOARD_TARGET)/idbloader.img
 
-.PHONY: u-boot-package
-u-boot-package: $(UBOOT_PACKAGE)
+.PHONY: u-boot-loader		# compile u-boot loader
+u-boot-loader: $(UBOOT_LOADER)
+
+.PHONY: u-boot-build		# compile u-boot
+u-boot-build: $(UBOOT_LOADER) $(UBOOT_PACKAGE)
+
+.PHONY: u-boot-clear
+u-boot-clear:
+	rm -rf $(UBOOT_LOADER)/..
 
 .PHONY: u-boot-flash-spi-$(BOARD_TARGET)
 u-boot-flash-spi-$(BOARD_TARGET): u-boot-flash-spi-$(BOARD_TARGET).img.xz
 
 .PHONY: u-boot-erase-spi-$(BOARD_TARGET)
 u-boot-erase-spi-$(BOARD_TARGET): u-boot-erase-spi-$(BOARD_TARGET).img.xz
+
+.PHONY: u-boot-virtual
+u-boot-virtual: u-boot-build u-boot-flash-spi-$(BOARD_TARGET) u-boot-erase-spi-$(BOARD_TARGET)

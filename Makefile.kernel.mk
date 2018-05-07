@@ -15,8 +15,8 @@ endif
 KERNEL_PACKAGE ?= linux-image-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
 KERNEL_HEADERS_PACKAGES ?= linux-headers-$(KERNEL_RELEASE)_$(RELEASE_NAME)_arm64.deb
 
-$(KERNEL_PACKAGE): kernel/arch/arm64/configs/$(KERNEL_DEFCONFIG)
-	echo -n > kernel/.scmversion
+$(KERNEL_PACKAGE): $(KERNEL_DIR)/arch/arm64/configs/$(KERNEL_DEFCONFIG)
+	echo -n > $(KERNEL_DIR)/.scmversion
 	$(KERNEL_MAKE) $(KERNEL_DEFCONFIG)
 	$(KERNEL_MAKE) bindeb-pkg -j$$(nproc)
 
