@@ -19,16 +19,14 @@ apt-get install -y \
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
-add-apt-repository \
-   "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-   $(lsb_release -cs) \
-   stable"
-
 # TODO: workaround, add xenial for now
 RELEASE=$(lsb_release -cs)
 if [[ "$RELEASE" == "bionic" ]]; then
     RELEASE=xenial
 fi
+
+add-apt-repository \
+   "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $RELEASE stable"
 
 add-apt-repository \
    "deb http://apt.kubernetes.io/ kubernetes-$RELEASE main"
