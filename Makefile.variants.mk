@@ -30,7 +30,6 @@ stretch-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET) \
 .PHONY: linux-$(BOARD_TARGET)		# build all linux variants
 linux-$(BOARD_TARGET): \
 	bionic-$(BOARD_TARGET) \
-	xenial-$(BOARD_TARGET) \
 	stretch-$(BOARD_TARGET) \
 	linux-virtual \
 	u-boot-flash-spi-$(BOARD_TARGET) \
