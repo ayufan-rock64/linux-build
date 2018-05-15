@@ -24,8 +24,14 @@ add-apt-repository \
    $(lsb_release -cs) \
    stable"
 
+# TODO: workaround, add xenial for now
+RELEASE=$(lsb_release -cs)
+if [[ "$RELEASE" == "bionic" ]]; then
+    RELEASE=xenial
+fi
+
 add-apt-repository \
-   "deb http://apt.kubernetes.io/ kubernetes-$(lsb_release -cs) main"
+   "deb http://apt.kubernetes.io/ kubernetes-$RELEASE main"
 
 apt-get update -y
 apt-get install -y docker-ce docker-compose kubelet kubeadm kubectl

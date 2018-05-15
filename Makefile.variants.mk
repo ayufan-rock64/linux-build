@@ -1,10 +1,3 @@
-.PHONY: xenial-minimal-$(BOARD_TARGET)
-xenial-minimal-$(BOARD_TARGET): xenial-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
-	xenial-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
-
-.PHONY: xenial-containers-$(BOARD_TARGET)
-xenial-containers-$(BOARD_TARGET): xenial-containers-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
-
 .PHONY: stretch-minimal-$(BOARD_TARGET)
 stretch-minimal-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
@@ -12,13 +5,12 @@ stretch-minimal-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)
 stretch-openmediavault-$(BOARD_TARGET): stretch-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
 	stretch-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: xenial-$(BOARD_TARGET)		# build all xenial variants
-xenial-$(BOARD_TARGET): xenial-minimal-$(BOARD_TARGET) \
-	xenial-containers-$(BOARD_TARGET)
-
 .PHONY: bionic-minimal-$(BOARD_TARGET)
 bionic-minimal-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
 	bionic-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
+
+.PHONY: bionic-containers-$(BOARD_TARGET)
+bionic-containers-$(BOARD_TARGET): bionic-containers-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
 .PHONY: bionic-mate-$(BOARD_TARGET)
 bionic-mate-$(BOARD_TARGET): bionic-mate-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
@@ -28,7 +20,7 @@ bionic-lxde-$(BOARD_TARGET): bionic-lxde-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.i
 
 .PHONY: bionic-$(BOARD_TARGET)		# build all bionic variants
 bionic-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET) \
-	bionic-mate-$(BOARD_TARGET) \
+	bionic-containers-$(BOARD_TARGET) \
 	bionic-lxde-$(BOARD_TARGET)
 
 .PHONY: stretch-$(BOARD_TARGET)		# build all stretch variants
@@ -47,8 +39,7 @@ linux-$(BOARD_TARGET): \
 .PHONY: linux-minimal-$(BOARD_TARGET)		# build all linux variants
 linux-minimal-$(BOARD_TARGET): \
 	bionic-minimal-$(BOARD_TARGET) \
-	xenial-minimal-$(BOARD_TARGET) \
-	xenial-containers-$(BOARD_TARGET) \
+	bionic-containers-$(BOARD_TARGET) \
 	stretch-minimal-$(BOARD_TARGET) \
 	stretch-openmediavault-$(BOARD_TARGET) \
 	linux-virtual \
