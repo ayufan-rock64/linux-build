@@ -33,3 +33,9 @@ add-apt-repository \
 
 apt-get update -y
 apt-get install -y docker-ce docker-compose kubelet kubeadm kubectl
+
+echo "Disabling kubelet..."
+systemctl disable kubelet
+
+echo "Disabling zram-config as it does not work with kubeadm..."
+systemctl disable zram-config
