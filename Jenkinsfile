@@ -6,6 +6,7 @@ properties([
     choice(choices: 'all\njessie-minimal-rock64\njessie-openmediavault-rock64\nstretch-minimal-rock64\nxenial-i3-rock64\nxenial-mate-rock64\nxenial-minimal-rock64\nlinux-virtual', description: 'What makefile image to target', name: 'MAKE_TARGET')
     booleanParam(defaultValue: true, description: 'Whether to upload to Github for release or not', name: 'GITHUB_UPLOAD'),
     booleanParam(defaultValue: false, description: 'If build should be marked as pre-release', name: 'GITHUB_PRERELEASE'),
+    string(defaultValue: 'rock64 rockpro64', description: 'Board targets', name: 'BOARD_TARGETs'),
     string(defaultValue: 'ayufan-rock64', description: 'GitHub username or organization', name: 'GITHUB_USER'),
     string(defaultValue: 'linux-build', description: 'GitHub repository', name: 'GITHUB_REPO'),
   ])
@@ -24,7 +25,8 @@ node('docker && linux-build') {
           withEnv([
             "USE_CCACHE=true",
             "RELEASE_NAME=$VERSION",
-            "RELEASE=$BUILD_NUMBER"
+            "RELEASE=$BUILD_NUMBER",
+            "BOARD_TARGETs=$BOARD_TARGETs"
           ]) {
               stage('Prepare') {
                 sh '''#!/bin/bash
@@ -51,7 +53,9 @@ node('docker && linux-build') {
                 sh '''#!/bin/bash
                   set -xe
                   export CCACHE_DIR=$WORKSPACE/ccache
-                  make u-boot-build
+                  for i in $BOARD_TARGETs; do
+                    make u-boot-build BOARD_TARGET=$i
+                  done
                 '''
               }
 
@@ -59,7 +63,9 @@ node('docker && linux-build') {
                 sh '''#!/bin/bash
                   set -xe
                   export CCACHE_DIR=$WORKSPACE/ccache
-                  make kernel-build KERNEL_DIR=kernel
+                  for i in $BOARD_TARGETs; do
+                    make kernel-build KERNEL_DIR=kernel BOARD_TARGET=$i
+                  done
                 '''
               }
 
@@ -67,7 +73,9 @@ node('docker && linux-build') {
                 sh '''#!/bin/bash
                   set -xe
                   export CCACHE_DIR=$WORKSPACE/ccache
-                  make -j$(nproc) $MAKE_TARGET
+                  for i in $BOARD_TARGETs; do
+                    make -j$(nproc) BOARD_TARGET=$i $MAKE_TARGET
+                  done
                 '''
               }
           }

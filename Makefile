@@ -24,7 +24,7 @@ else ifeq (rockpro64,$(BOARD_TARGET))
 ATF_PLAT ?= rk3399
 UBOOT_DEFCONFIG ?= rockpro64-rk3399_defconfig
 BL31 ?= rkbin/rk33/rk3399_bl31_v1.00.elf
-DDR ?= rkbin/rk33/rk3399_ddr_800MHz_v1.08.bin
+DDR ?= rkbin/rk33/rk3399_ddr_666MHz_v1.11.bin
 BOARD_CHIP ?= rk3399
 USE_UBOOT_SPL ?= yes
 else
