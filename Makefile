@@ -35,7 +35,7 @@ REMOTE_HOST ?= rock64.home
 
 IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)
 
-all: linux-rock64
+all: linux-$(BOARD_TARGET)
 
 include Makefile.atf.mk
 include Makefile.uboot.mk
@@ -45,4 +45,3 @@ include Makefile.system.mk
 include Makefile.variants.mk
 include Makefile.loader.mk
 include Makefile.dev.mk
-
