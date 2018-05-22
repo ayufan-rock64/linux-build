@@ -1,10 +1,6 @@
 .PHONY: loader-download-mode
 loader-download-mode:
-ifneq (,$(FLASH_SPI))
-	rkdeveloptool db rkbin/rk33/rk3328_loader_v1.08.244_for_spi_nor_build_Aug_7_2017.bin
-else
-	rkdeveloptool db rkbin/rk33/rk3328_loader_ddr333_v1.08.244.bin
-endif
+	rkdeveloptool db $(LOADER_BIN)
 	sleep 1s
 
 .PHONY: loader-boot		# boot loader over USB
@@ -17,7 +13,7 @@ ifneq (,$(USE_MINILOADER))
 	rkdeveloptool wl $$((8192*2)) out/u-boot-$(BOARD_TARGET)/uboot.img
 	rkdeveloptool wl $$((8192*3)) out/u-boot-$(BOARD_TARGET)/trust.img
 else
-	rkdeveloptool wl 512 $(UBOOT_DIR)/u-boot.itb
+	rkdeveloptool wl 512 $(UBOOT_OUTPUT_DIR)/u-boot.itb
 endif
 	rkdeveloptool rd
 	sleep 1s
@@ -28,9 +24,9 @@ else
 	cat $(DDR) | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool l
 endif
 ifneq (,$(USE_MINILOADER))
-	cat rkbin/rk33/rk3328_miniloader_v2.44.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool L
+	cat $(MINILOADER_BIN) | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool L
 else
-	cat u-boot/spl/u-boot-spl.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool L
+	cat $(UBOOT_OUTPUT_DIR)/spl/u-boot-spl.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool L
 endif
 
 .PHONY: loader-flash		# flash loader to the device

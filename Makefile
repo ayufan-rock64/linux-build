@@ -20,13 +20,20 @@ UBOOT_DEFCONFIG ?= rock64-rk3328_defconfig
 BL31 ?= rkbin/rk33/rk3328_bl31_v1.39.bin
 DDR ?= rkbin/rk33/rk3328_ddr_786MHz_v1.13.bin
 BOARD_CHIP ?= rk3328
+ifneq (,$(FLASH_SPI))
+LOADER_BIN ?= rkbin/rk33/rk3328_loader_v1.08.244_for_spi_nor_build_Aug_7_2017.bin
+else
+LOADER_BIN ?= rkbin/rk33/rk3328_loader_ddr333_v1.08.244.bin
+endif
+MINILOADER_BIN ?= rkbin/rk33/rk3328_miniloader_v2.44.bin
 else ifeq (rockpro64,$(BOARD_TARGET))
 ATF_PLAT ?= rk3399
 UBOOT_DEFCONFIG ?= rockpro64-rk3399_defconfig
 BL31 ?= rkbin/rk33/rk3399_bl31_v1.16.elf
 DDR ?= rkbin/rk33/rk3399_ddr_800MHz_v1.12.bin
 BOARD_CHIP ?= rk3399
-USE_UBOOT_SPL ?= yes
+LOADER_BIN ?= rkbin/rk33/rk3399_loader_v1.10.112_support_1CS.bin
+MINILOADER_BIN ?= rkbin/rk33/rk3399_miniloader_v1.12.bin
 else
 $(error Unsupported BOARD_TARGET)
 endif
