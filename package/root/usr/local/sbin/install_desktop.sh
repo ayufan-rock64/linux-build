@@ -43,10 +43,22 @@ PACKAGES=(
 PACKAGES+=(
 	xserver-xorg-video-armsoc
 	libdrm-rockchip1
-	libmali-rk-utgard-450-r7p0
 	ffmpeg
 	mpv
 )
+
+if grep -qi rockpro64 /proc/device-tree/compatible; then
+	PACKAGES+=(
+		libmali-rk-midgard-t86x-r14p0
+	)
+elif grep -qi rock64 /proc/device-tree/compatible; then
+	PACKAGES+=(
+		libmali-rk-utgard-450-r7p0
+	)
+else
+	echo "Board not detected!"
+	exit 1
+fi
 
 # Additional packages
 PACKAGES+=(
