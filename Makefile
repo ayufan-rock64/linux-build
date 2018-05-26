@@ -30,7 +30,7 @@ else ifeq (rockpro64,$(BOARD_TARGET))
 ATF_PLAT ?= rk3399
 UBOOT_DEFCONFIG ?= rockpro64-rk3399_defconfig
 BL31 ?= rkbin/rk33/rk3399_bl31_v1.16.elf
-DDR ?= rkbin/rk33/rk3399_ddr_800MHz_v1.12.bin
+DDR ?= rkbin/rk33/rk3399_ddr_933MHz_v1.11.bin
 BOARD_CHIP ?= rk3399
 LOADER_BIN ?= rkbin/rk33/rk3399_loader_v1.10.112_support_1CS.bin
 MINILOADER_BIN ?= rkbin/rk33/rk3399_miniloader_v1.12.bin
