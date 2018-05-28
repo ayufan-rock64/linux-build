@@ -93,7 +93,7 @@ case $DISTRO in
 		TAR_OPTIONS="-J --strip-components=1 binary"
 		DISTRIB="ubuntu"
 		;;
-	sid|jessie|stretch)
+	sid|stretch)
 		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/debian-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
 		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/debian-${DISTRO}-minimal-${version}-${BUILD_ARCH}.tar.xz"
@@ -188,9 +188,9 @@ locale-gen en_US.UTF-8
 # add non-free
 sed -i 's/main contrib$/main contrib non-free/g' /etc/apt/sources.list
 if [[ "$DISTRO" == "stretch" ]]; then
-	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu bionic main"
-elif [[ "$DISTRIB" == "debian" ]]; then
 	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu xenial main"
+elif [[ "$DISTRIB" != "ubuntu" ]]; then
+	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu bionic main"
 else
 	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu $DISTRO main"
 fi
