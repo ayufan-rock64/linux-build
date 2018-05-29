@@ -12,6 +12,22 @@ if ! which nandwrite &>/dev/null; then
     exit 1
 fi
 
+BOARD=
+if grep -qi rockpro64 /proc/device-tree/compatible || grep -qi rockpro64 /etc/flash-kernel/machine; then
+    BOARD=rockpro64
+elif grep -qi rock64 /proc/device-tree/compatible || grep -qi rock64 /etc/flash-kernel/machine; then
+    BOARD=rock64
+else
+    exit "Unknown board."
+    exit 1
+fi
+
+LOADER="/usr/lib/u-boot-${BOARD}/idbloader.img"
+if ! -f "$LOADER"; then
+    echo "Missing board bootloader image: $LOADER"
+    exit 1
+fi
+
 echo "Doing this will overwrite data stored on SPI Flash"
 echo "  and it will require that you use eMMC or SD"
 echo "  as your boot device."
@@ -25,8 +41,8 @@ while true; do
     fi
 done
 
-if ! debsums -s u-boot-rock64; then
-    echo "Verification of 'u-boot-rock64' failed."
+if ! debsums -s "u-boot-${BOARD}"; then
+    echo "Verification of 'u-boot-${BOARD}' failed."
     echo "Your disk might have got corrupted."
     exit 1
 fi
@@ -44,6 +60,6 @@ write_nand() {
     nandwrite "/dev/$MTD" < "$2"
 }
 
-write_nand loader /usr/lib/u-boot-rock64/idbloader.img
+write_nand loader "$LOADER"
 
 echo Done.

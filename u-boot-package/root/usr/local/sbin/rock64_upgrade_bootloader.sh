@@ -7,6 +7,22 @@ if [[ "$(id -u)" -ne "0" ]]; then
     exit 1
 fi
 
+BOARD=
+if grep -qi rockpro64 /proc/device-tree/compatible || grep -qi rockpro64 /etc/flash-kernel/machine; then
+    BOARD=rockpro64
+elif grep -qi rock64 /proc/device-tree/compatible || grep -qi rock64 /etc/flash-kernel/machine; then
+    BOARD=rock64
+else
+    exit "Unknown board."
+    exit 1
+fi
+
+LOADER="/usr/lib/u-boot-${BOARD}/idbloader.img"
+if ! -f "$LOADER"; then
+    echo "Missing board bootloader image: $LOADER"
+    exit 1
+fi
+
 echo "Doing this will overwrite bootloader stored on your boot device it might break your system."
 echo "If this happens you will have to manually fix that outside of your Rock64."
 echo "If you are booting from SPI. You have to use 'rock64_write_spi_flash.sh'."
@@ -20,8 +36,8 @@ while true; do
     fi
 done
 
-if ! debsums -s u-boot-rock64; then
-    echo "Verification of 'u-boot-rock64' failed."
+if ! debsums -s "u-boot-${BOARD}"; then
+    echo "Verification of 'u-boot-${BOARD}' failed."
     echo "Your disk might have got corrupted."
     exit 1
 fi
@@ -30,7 +46,7 @@ MNT_DEV=$(findmnt /boot/efi -n -o SOURCE)
 
 case $MNT_DEV in
     /dev/mmcblk*p6|/dev/sd*p6)
-        dd if=/usr/lib/u-boot-rock64/idbloader.img of="${MNT_DEV/p6/p1}"
+        dd if=$LOADER of="${MNT_DEV/p6/p1}"
         ;;
 
     *)
