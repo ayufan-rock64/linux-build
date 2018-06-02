@@ -7,19 +7,29 @@ if [ "$(id -u)" -ne "0" ]; then
 	exit 1
 fi
 
+if grep -qi rockpro64 /proc/device-tree/compatible; then
+	MODEL=rockpro64
+fi
+
 print() {
 	printf "%-15s: %s %s\n" "$1" "$2 $3" "$4"
 }
 
 cpu_frequency() {
-	local cur=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq)
-	local mhz=$(awk "BEGIN {printf \"%.2f\",$cur/1000}")
-	print "CPU freq" $mhz "MHz"
+	if [ "$MODEL" == "rockpro64" ]; then
+		local BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+		local LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+                print "CPU freq b.L" $BigFreq $LittleFreq "MHz"
+        else
+		local CpuFreq=$(awk '{printf ("%.0f",$1/1000); }' < /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+		print "CPU freq" $CpuFreq "MHz"
+	fi
+
 }
 
 scaling_govenor() {
 	local gov=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)
-  	print "Governor" $gov
+	print "Governor" $gov
 }
 
 cpu_count() {
@@ -28,9 +38,16 @@ cpu_count() {
 }
 
 soc_temp() {
-	local RAW_TEMP=$(cat /sys/class/thermal/thermal_zone0/temp)
-	local TEMP=$(awk "BEGIN {printf \"%.2f\",$RAW_TEMP/1000}")
-	print "SoC Temp" $TEMP "C"
+	if [ "$MODEL" == rockpro64 ]; then
+		local LittleTemp=$(awk '{printf ("%.2f",$1/1000) };' </sys/class/thermal/thermal_zone1/temp) 2>/dev/null
+		local BigTemp=$(awk '{printf ("%.2f",$1/1000) };' </sys/class/thermal/thermal_zone0/temp) 2>/dev/null
+
+		print "SoC Temp b.L" $BigTemp $LittleTemp "C"
+	else
+		local CpuTemp=$(awk '{printf ("%.2f",$1/1000) };' </sys/class/thermal/thermal_zone0/temp) 2>/dev/null
+		print "SoC Temp" $CpuTemp "C"
+
+	fi
 }
 
 usage() {
