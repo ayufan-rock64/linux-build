@@ -1,0 +1,2 @@
+# this is needed to prevent to use zram swap devices
+RESUME=none
