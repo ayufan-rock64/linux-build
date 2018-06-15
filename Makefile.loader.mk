@@ -15,8 +15,15 @@ ifneq (,$(USE_MINILOADER))
 else
 	rkdeveloptool wl 512 $(UBOOT_OUTPUT_DIR)/u-boot.itb
 endif
+
+ifneq (,$(LOADER_RESTART))
+	@echo Restart device and press ENTER
+	@read XX
+	sleep 3s
+else
 	rkdeveloptool rd
 	sleep 1s
+endif
 
 ifneq (,$(USE_UBOOT_TPL))
 	cat $(UBOOT_OUTPUT_DIR)/tpl/u-boot-tpl.bin | openssl rc4 -K 7c4e0304550509072d2c7b38170d1711 | rkflashtool l
