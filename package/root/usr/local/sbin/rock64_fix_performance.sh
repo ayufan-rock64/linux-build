@@ -27,7 +27,8 @@ SMP_Affinity() {
 
 Enable_RPS_and_tweak_IRQ_Affinity() {
 	for i in 1 2 3 ; do
-		SMP_Affinity ahci 2
+		SMP_Affinity ahci 2 # pcie-sata-bridge
+		SMP_Affinity 0000:01: 2 # pcie-device
 		SMP_Affinity ehci 2
 		SMP_Affinity ohci 2
 		SMP_Affinity xhci 4
