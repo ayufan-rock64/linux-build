@@ -19,14 +19,21 @@ Tweak_Ondemand_Governor() {
 	popd
 }
 
+SMP_Affinity() {
+	for irq in $(awk -F":" "/$1/ {print \$1}" </proc/interrupts); do
+		echo "$2" >/proc/irq/$irq/smp_affinity
+	done
+}
+
 Enable_RPS_and_tweak_IRQ_Affinity() {
 	for i in 1 2 3 ; do
-		echo 2 >/proc/irq/$(awk -F":" "/ehci/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
-		echo 2 >/proc/irq/$(awk -F":" "/ohci/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
-		echo 4 >/proc/irq/$(awk -F":" "/xhci/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
-		echo 8 >/proc/irq/$(awk -F":" "/eth0/ {print \$1}" </proc/interrupts | sed 's/\ //g')/smp_affinity
+		SMP_Affinity ahci 2
+		SMP_Affinity ehci 2
+		SMP_Affinity ohci 2
+		SMP_Affinity xhci 4
+		SMP_Affinity eth0 8
 	done
-	echo 7 >/sys/class/net/eth0/queues/rx-0/rps_cpus
+	echo ff >/sys/class/net/eth0/queues/rx-0/rps_cpus
 	echo 32768 >/proc/sys/net/core/rps_sock_flow_entries
 	echo 32768 >/sys/class/net/eth0/queues/rx-0/rps_flow_cnt
 }
