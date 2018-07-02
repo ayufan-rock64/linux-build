@@ -50,6 +50,7 @@ For technical information, see the following documents:
 - [kernel-upgrade.md](recipes/kernel-upgrade.md): Upgrade your linux kernel to a newer version
 - [additional-devices.md](recipes/additional-devices.md): Use additional devices, like 100Mbit Ethernet
 - [overclocking.md](recipes/overclocking.md): Bump some specs :)
+- [extlinux.md](recipes/extlinux.md): Make it easy to switch kernel versions
 
 ## License
 

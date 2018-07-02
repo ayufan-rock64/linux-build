@@ -1,0 +1,8 @@
+# Configure timeout to choose the kernel
+# TIMEOUT="10"
+
+# Configure default kernel to boot: check all kernels in `/boot/extlinux/extlinux.conf`
+# DEFAULT="kernel-4.4.126-rockchip-ayufan-253"
+
+# Configure additional kernel configuration options
+APPEND="$APPEND root=LABEL=linux-root rootwait rootfstype=ext4"
