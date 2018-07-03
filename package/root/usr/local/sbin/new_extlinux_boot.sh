@@ -5,7 +5,7 @@ set -eo pipefail
 dev=$(findmnt / -n -o SOURCE)
 
 if [[ $# -ne 1 ]]; then
-	echo "usage: $0 <enable|disable>"
+	echo "usage: $0 <rootfs|flash-kernel>"
 	exit 1
 fi
 
@@ -25,14 +25,29 @@ case $dev in
 esac
 
 case "$1" in
-	enable)
-		echo "Enabling on $DISK..."
+	rootfs)
+		echo "Generating extlinux configuration on rootfs..."
+		update_extlinux.sh
+
+		echo "Switching boot to / on $DISK..."
 		parted -s "$DISK" set 7 legacy_boot on
 		parted -s "$DISK" set 6 legacy_boot off
+
+		echo "Removing flash-kernel.."
+		apt-get remove -y flash-kernel
+
+		echo "Purging files..."
+		rm -rf /boot/efi/{Image,Image.bak,initrd.img,initrd.img.bak,dtb,dtb.bak}
 		;;
 
-	disable)
-		echo "Disabling on $DISK..."
+	flash-kernel)
+		echo "Installing flash-kernel..."
+		apt-get install -y flash-kernel
+
+		echo "Generating flash-kernel..."
+		flash-kernel
+
+		echo "Switching boot to /boot/efi on $DISK..."
 		parted -s "$DISK" set 6 legacy_boot on
 		parted -s "$DISK" set 7 legacy_boot off
 		;;

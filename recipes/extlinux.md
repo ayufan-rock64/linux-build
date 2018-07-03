@@ -14,7 +14,7 @@ You can edit `/etc/default/extlinux` to configure for example command line.
 ## Enable it
 
 ```bash
-new_extlinux_boot.sh enable
+new_extlinux_boot.sh rootfs
 ```
 
 It will make to boot device from `/` instead of `/boot/efi` that was used before.
@@ -22,7 +22,7 @@ It will make to boot device from `/` instead of `/boot/efi` that was used before
 ## Disable it
 
 ```bash
-new_extlinux_boot.sh disable
+new_extlinux_boot.sh flash-kernel
 ```
 
 ## Manually regenerate configuration

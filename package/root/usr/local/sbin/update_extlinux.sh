@@ -31,13 +31,12 @@ linux-version list | linux-version sort --reverse | while read VERSION; do
   fi
   if [[ -f "/boot/dtb-$VERSION" ]]; then
     echo "    fdt /boot/dtb-$VERSION"
-  elif [[ -d "/boot/dtbs/$VERSION" ]]; then
-    echo "    devicetreedir /boot/dtbs/$VERSION"
-  elif [[ -d "/usr/lib/linux-image-$VERSION" ]]; then
-    echo "    devicetreedir /usr/lib/linux-image-$VERSION"
   else
-    echo "Missing dtb for $VERSION" 1>&2
-    exit 1
+    if [[ ! -d "/boot/dtbs/$VERSION" ]]; then
+      mkdir -p /boot/dtbs
+      cp -au "/usr/lib/linux-image-$VERSION" "/boot/dtbs/$VERSION"
+    fi
+    echo "    devicetreedir /boot/dtbs/$VERSION"
   fi
   echo "    append $APPEND"
   echo ""
