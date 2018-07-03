@@ -23,7 +23,7 @@ echo "menu title select kernel"
 [[ -n "$DEFAULT" ]] && echo "default $DEFAULT"
 echo ""
 
-linux-version list | while read VERSION; do
+linux-version list | linux-version sort --reverse | while read VERSION; do
   echo "label kernel-$VERSION"
   echo "    kernel /boot/vmlinuz-$VERSION"
   if [[ -f "/boot/initrd.img-$VERSION" ]]; then
