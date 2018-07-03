@@ -18,7 +18,7 @@ else
 fi
 
 LOADER="/usr/lib/u-boot-${BOARD}/idbloader.img"
-if ! -f "$LOADER"; then
+if [[ ! -f "$LOADER" ]]; then
     echo "Missing board bootloader image: $LOADER"
     exit 1
 fi
