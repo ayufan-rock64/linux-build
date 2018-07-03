@@ -36,7 +36,8 @@ linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb: package
 		--license "MIT" \
 		--vendor "Kamil Trzciński" \
 		-a all \
-		package/root/=/
+		package/root/=/ \
+		package/root-$(BOARD_TARGET)/=/
 
 linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.rpm: package
 	chmod -R go-w $<
