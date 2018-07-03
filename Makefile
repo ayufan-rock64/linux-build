@@ -26,6 +26,7 @@ else
 LOADER_BIN ?= rkbin/rk33/rk3328_loader_ddr333_v1.08.244.bin
 endif
 MINILOADER_BIN ?= rkbin/rk33/rk3328_miniloader_v2.44.bin
+SPI_BOOT ?= rksd
 else ifeq (rockpro64,$(BOARD_TARGET))
 ATF_PLAT ?= rk3399
 UBOOT_DEFCONFIG ?= rockpro64-rk3399_defconfig
@@ -35,6 +36,7 @@ BOARD_CHIP ?= rk3399
 LOADER_BIN ?= rkbin/rk33/rk3399_loader_v1.10.112_support_1CS.bin
 LOADER_RESTART ?= 1
 MINILOADER_BIN ?= rkbin/rk33/rk3399_miniloader_v1.12.bin
+# SPI_BOOT ?= rkspl # not-yet-supported
 else
 $(error Unsupported BOARD_TARGET)
 endif

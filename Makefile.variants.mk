@@ -32,8 +32,8 @@ linux-$(BOARD_TARGET): \
 	bionic-$(BOARD_TARGET) \
 	stretch-$(BOARD_TARGET) \
 	linux-virtual \
-	u-boot-flash-spi-$(BOARD_TARGET) \
-	u-boot-erase-spi-$(BOARD_TARGET)
+	u-boot-flash-spi \
+	u-boot-erase-spi
 
 .PHONY: linux-minimal-$(BOARD_TARGET)		# build all linux variants
 linux-minimal-$(BOARD_TARGET): \
@@ -42,12 +42,12 @@ linux-minimal-$(BOARD_TARGET): \
 	stretch-minimal-$(BOARD_TARGET) \
 	stretch-openmediavault-$(BOARD_TARGET) \
 	linux-virtual \
-	u-boot-flash-spi-$(BOARD_TARGET) \
-	u-boot-erase-spi-$(BOARD_TARGET)
+	u-boot-flash-spi \
+	u-boot-erase-spi
 
 .PHONY: linux-packages-$(BOARD_TARGET)		# build all packages only
 linux-packages-$(BOARD_TARGET): \
 	linux-virtual \
 	linux-package \
-	u-boot-flash-spi-$(BOARD_TARGET) \
-	u-boot-erase-spi-$(BOARD_TARGET)
+	u-boot-flash-spi \
+	u-boot-erase-spi
