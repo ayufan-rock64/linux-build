@@ -18,13 +18,11 @@ Upgrading to the latest greatest (and experimental) releases is quite simple:
 
 ## X11 and older releases
 
-When upgrading from older releases, some users have reported issues with X11 no longer starting. If you are upgrading an older (i.e. `0.5.x`) release with a desktop environment, it is advisable that you also do a 
+When upgrading from older releases, some users have reported issues with X11 no longer starting. If you are upgrading an older (i.e. `0.5.x`) release with a desktop environment, before rebooting the systemit is advisable that you run the following command: 
 
 ```bash
 sudo apt-get install xserver-xorg-video-armsoc
 ```
-
-before rebooting the system. 
 
 You may also want to check the contents of the `/etc/X11/xorg.conf.d/` directory, and if `20-modesetting.conf` is present, move or rename it. i.e. `sudo mv /etc/X11/xorg.conf.d/20-modesetting.conf /etc/X11/xorg.conf.d/20-modesetting.disabled` 
 
