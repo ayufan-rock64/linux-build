@@ -14,7 +14,7 @@ if size ${devtype} ${devnum}:${distro_bootpart} idbloader_spl.img; then
 
   # erase flash
   run blink_power blink_power
-  sf erase 0 3f0000
+  sf erase 0 400000
 
   # write flash
   run blink_power blink_power blink_power
@@ -27,7 +27,7 @@ elif size ${devtype} ${devnum}:${distro_bootpart} idbloader.img; then
 
   # erase flash
   run blink_power blink_power
-  sf erase 8000 3e8000
+  sf erase 8000 3f8000
 
   # write flash
   run blink_power blink_power blink_power
