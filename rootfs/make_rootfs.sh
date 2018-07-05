@@ -221,7 +221,8 @@ do_chroot apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant op
 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
 	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
 	network-manager psmisc u-boot-tools ifupdown resolvconf \
-	net-tools mtd-utils rsync device-tree-compiler debsums pciutils
+	net-tools mtd-utils rsync device-tree-compiler debsums pciutils \
+	linux-${MODEL}
 
 if [[ "$DISTRIB" == "debian" ]]; then
 	do_chroot apt-get -y install firmware-realtek

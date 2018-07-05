@@ -37,38 +37,6 @@ node('docker && linux-build') {
                 '''
               }
 
-              stage('Sources') {
-                sh '''#!/bin/bash
-                  set -xe
-
-                  export HOME=$WORKSPACE
-                  export USER=jenkins
-
-                  repo init -u https://github.com/ayufan-rock64/linux-manifests -b default --depth=1 --no-clone-bundle
-                  repo sync -j 20 -c --force-sync
-                '''
-              }
-
-              stage('U-boot') {
-                sh '''#!/bin/bash
-                  set -xe
-                  export CCACHE_DIR=$WORKSPACE/ccache
-                  for i in $BOARD_TARGETs; do
-                    make u-boot-build BOARD_TARGET=$i
-                  done
-                '''
-              }
-
-              stage('Kernel') {
-                sh '''#!/bin/bash
-                  set -xe
-                  export CCACHE_DIR=$WORKSPACE/ccache
-                  for i in $BOARD_TARGETs; do
-                    make kernel-build KERNEL_DIR=kernel BOARD_TARGET=$i
-                  done
-                '''
-              }
-
               stage('Images') {
                 sh '''#!/bin/bash
                   set -xe
@@ -87,41 +55,6 @@ node('docker && linux-build') {
             "GITHUB_USER=$GITHUB_USER",
             "GITHUB_REPO=$GITHUB_REPO"
           ]) {
-            stage('Freeze') {
-              sh '''#!/bin/bash
-                # use -ve, otherwise we could leak GITHUB_TOKEN...
-                set -ve
-                shopt -s nullglob
-
-                export HOME=$WORKSPACE
-                export USER=jenkins
-
-                repo manifest -r -o manifest.xml
-              '''
-            }
-
-            stage('Tagging') {
-              sh '''#!/bin/bash
-                # use -ve, otherwise we could leak GITHUB_TOKEN...
-                set -ve
-                repo forall -g tagged -e -c git tag "$GITHUB_USER/$GITHUB_REPO/$VERSION"
-              '''
-
-              if (params.GITHUB_UPLOAD) {
-                retry(2) {
-                  sh '''#!/bin/bash
-                    # use -ve, otherwise we could leak GITHUB_TOKEN...
-                    set -ve
-                    echo "machine github.com login user password $GITHUB_TOKEN" > ~/.netrc
-                    repo forall -g tagged -e -c git push ayufan "$GITHUB_USER/$GITHUB_REPO/$VERSION" -f
-                    rm ~/.netrc
-                  '''
-                }
-              } else {
-                 echo 'Flagged as an no tagging release job'
-              }
-            }
-
             stage('Release') {
               if (params.GITHUB_UPLOAD) {
                 sh '''#!/bin/bash
@@ -139,7 +72,7 @@ node('docker && linux-build') {
                       --name "manifest.xml" \
                       --file "manifest.xml"
 
-                  for file in *.xz *.deb; do
+                  for file in *.xz; do
                     github-release upload \
                         --tag "${VERSION}" \
                         --name "$(basename "$file")" \

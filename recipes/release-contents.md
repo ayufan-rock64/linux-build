@@ -25,7 +25,7 @@ Every build contains the following files available for download:
 * U-boot flash and erase images (since `0.6.10`)
 * Source code for all build scripts
 
-Let's focus on the Debian package `linux-rock64-package-0.x.x_all.deb`, whose contents can be [found here](https://github.com/ayufan-rock64/linux-build/tree/master/package/root).
+Let's focus on the Debian package `linux-rock64-package-0.x.x_all.deb`, whose contents can be [found here](https://github.com/ayufan-rock64/linux-package).
 
 This package is installed on all builds. It's essentially the _"custom"_ stuff added to each base OS.
 
