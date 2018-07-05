@@ -17,8 +17,9 @@ BOARD_TARGET ?= rock64
 
 IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)
 
-all: linux-$(BOARD_TARGET)
+all: linux-variants linux-virtual
 
+include Makefile.package.mk
 include Makefile.system.mk
 include Makefile.variants.mk
 include Makefile.dev.mk

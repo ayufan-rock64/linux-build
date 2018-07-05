@@ -4,7 +4,7 @@
 %.img.xz: %.img
 	pxz -f -3 $<
 
-%.img:
+%.img: $(PACKAGES)
 	sudo bash rootfs/build-system-image.sh \
 		"$$(readlink -f $@)" \
 		"$(filter $(BUILD_SYSTEMS), $(subst -, ,$(*F)))" \

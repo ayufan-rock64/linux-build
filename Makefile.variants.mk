@@ -27,8 +27,8 @@ bionic: bionic-minimal \
 stretch: stretch-minimal \
 	stretch-openmediavault
 
-.PHONY: linux		# build all linux variants
-linux: \
+.PHONY: linux-variants		# build all linux variants
+linux-variants: \
 	bionic \
 	stretch \
 	linux-virtual
