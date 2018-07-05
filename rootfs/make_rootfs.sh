@@ -217,21 +217,21 @@ export DEBIAN_FRONTEND=noninteractive
 
 do_chroot locale-gen en_US.UTF-8
 
-# do_chroot apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
-# 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
-# 	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
-# 	network-manager psmisc u-boot-tools ifupdown resolvconf \
-# 	net-tools mtd-utils rsync device-tree-compiler debsums pciutils
+do_chroot apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
+	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
+	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
+	network-manager psmisc u-boot-tools ifupdown resolvconf \
+	net-tools mtd-utils rsync device-tree-compiler debsums pciutils
 
-# if [[ "$DISTRIB" == "debian" ]]; then
-# 	do_chroot apt-get -y install firmware-realtek
-# elif [[ "$DISTRIB" == "ubuntu" ]]; then
-# 	do_chroot apt-get -y install landscape-common linux-firmware
-# fi
+if [[ "$DISTRIB" == "debian" ]]; then
+	do_chroot apt-get -y install firmware-realtek
+elif [[ "$DISTRIB" == "ubuntu" ]]; then
+	do_chroot apt-get -y install landscape-common linux-firmware
+fi
 
-#do_chroot apt-get dist-upgrade -y
+do_chroot apt-get dist-upgrade -y
 
-# do_chroot fake-hwclock save
+do_chroot fake-hwclock save
 
 if [[ "$DEBUSER" != "root" ]]; then
 	do_chroot adduser --gecos "$DEBUSER" --disabled-login "$DEBUSER" --uid 1000
