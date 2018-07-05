@@ -9,7 +9,7 @@ Traditionally, booting Linux on the [ROCK64](http://wiki.pine64.org/index.php/RO
 
 ## 1. Write the U-Boot image
 
-1. Download the latest [u-boot-flash-spi.img.xz](https://github.com/ayufan-rock64/linux-build/releases) image
+1. Download the latest [u-boot-flash-spi.img.xz](https://github.com/ayufan-rock64/linux-u-boot/releases/latest) image
 2. Write it to a microSD card using `dd` or `Etcher`
 
     ```bash
@@ -25,7 +25,7 @@ Make sure you write to the correction location, it **will destroy all data**.
 2. Wait for it to boot. It will automatically erase the SPI memory, and flash _U-Boot_
 3. You should see: the power LED (white LED) flicker once per second, and:
 
-    ```
+    ```text
     SF: ... bytes @ 0x8000 Written: OK
     ```
 

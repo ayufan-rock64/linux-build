@@ -60,19 +60,11 @@ cleanup() {
 		bash
 		popd
 	fi
-	if [ -e "$DEST/proc/mdstat" ]; then
-		umount "$DEST/proc/mdstat" || true
-	fi
-	if [ -e "$DEST/proc/cmdline" ]; then
-		umount "$DEST/proc"
-	fi
-	if [ -d "$DEST/sys/kernel" ]; then
-		umount "$DEST/sys"
-	fi
+	umount "$DEST/proc/mdstat" || true
+	umount "$DEST/proc" || true
+	umount "$DEST/sys" || true
 	umount "$DEST/tmp" || true
-	if [ -d "$TEMP" ]; then
-		rm -rf "$TEMP"
-	fi
+	rm -r "$TEMP"
 }
 trap cleanup EXIT
 
@@ -81,28 +73,39 @@ TAR_OPTIONS=""
 DISTRIB=""
 
 case $DISTRO in
-	arch)
-		ROOTFS="http://archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz"
-		TAR_OPTIONS="-z"
-		DISTRIB="arch"
-		;;
 	xenial|zesty|artful|bionic)
 		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/ubuntu-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
 		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/ubuntu-${DISTRO}-minimal-${version}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
 		DISTRIB="ubuntu"
+		EXTRA_ARCHS="arm64"
 		;;
+
 	sid|stretch)
 		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/debian-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
 		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/debian-${DISTRO}-minimal-${version}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
 		DISTRIB="debian"
+		EXTRA_ARCHS="arm64"
 		;;
+
 	*)
 		echo "Unknown distribution: $DISTRO"
 		exit 1
+		;;
+esac
+
+case "$VARIANT" in
+	openmediavault)
+		DEBUSER=root
+		DEBUSERPW=openmediavault
+		;;
+
+	*)
+		DEBUSER=rock64
+		DEBUSERPW=rock64
 		;;
 esac
 
@@ -124,9 +127,15 @@ fi
 
 # Extract with BSD tar
 echo -n "Extracting ... "
-set -x
+set -ex
 tar -xf "$TARBALL" -C "$DEST" $TAR_OPTIONS
 echo "OK"
+
+# Mount needed directories
+mount -o bind /tmp "$DEST/tmp"
+chroot "$DEST" mount -t proc proc /proc
+chroot "$DEST" mount -t sysfs sys /sys
+chroot "$DEST" mount --bind /dev/null /proc/mdstat
 
 # Add qemu emulation.
 cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
@@ -140,112 +149,56 @@ EOF
 chmod a+x "$DEST/usr/sbin/policy-rc.d"
 
 do_chroot() {
-	cmd="$@"
-	mount -o bind /tmp "$DEST/tmp"
-	chroot "$DEST" mount -t proc proc /proc
-	chroot "$DEST" mount -t sysfs sys /sys
-	chroot "$DEST" mount --bind /dev/null /proc/mdstat
-	chroot "$DEST" $cmd
-	chroot "$DEST" umount /sys /proc/mdstat /proc
-	umount "$DEST/tmp"
+	chroot "$DEST" "$@"
 }
 
 do_install() {
 	FILE=$(basename "$1")
 	cp "$1" "$DEST/$FILE"
-	yes | do_chroot dpkg -i "$FILE"
+	yes | do_chroot apt install "/$FILE"
 	rm -f "$DEST/$FILE"
 }
 
-# Run stuff in new system.
-case $DISTRIB in
-	arch)
-		echo "No longer supported"
-		exit 1
-		;;
-	debian|ubuntu)
-		rm "$DEST/etc/resolv.conf"
-		cp /etc/resolv.conf "$DEST/etc/resolv.conf"
-		case "$VARIANT" in
-			openmediavault)
-				DEBUSER=root
-				DEBUSERPW=openmediavault
-				;;
+rm "$DEST/etc/resolv.conf"
+cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 
-			*)
-				DEBUSER=rock64
-				DEBUSERPW=rock64
-				;;
-		esac
-		EXTRA_ARCHS="arm64"
-		do_chroot apt-key add - < rootfs/ayufan-ppa.gpg
-		do_chroot apt-key add - < rootfs/ayufan-deb-ayufan-eu.gpg
-		cat <<EOF > "$DEST/install_script.bash"
-#!/bin/sh
-set -ex
-export DEBIAN_FRONTEND=noninteractive
-locale-gen en_US.UTF-8
-# add non-free
-sed -i 's/main contrib$/main contrib non-free/g' /etc/apt/sources.list
-if [[ "$DISTRO" == "stretch" ]]; then
-	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu xenial main"
-elif [[ "$DISTRIB" != "ubuntu" ]]; then
-	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu bionic main"
-else
-	add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu $DISTRO main"
-fi
-apt-get -y update
-apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
-	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
-	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
-	network-manager psmisc flash-kernel u-boot-tools ifupdown resolvconf \
-	net-tools mtd-utils rsync device-tree-compiler debsums pciutils
-if [[ "$DISTRIB" == "debian" ]]; then
-	apt-get -y install firmware-realtek
-elif [[ "$DISTRIB" == "ubuntu" ]]; then
-	apt-get -y install landscape-common linux-firmware
-fi
-#apt-get dist-upgrade -y
-fake-hwclock save
-if [[ "$DEBUSER" != "root" ]]; then
-	adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
-	chown -R 1000:1000 /home/$DEBUSER
-	usermod -a -G sudo,audio,adm,input,video,plugdev,ssh $DEBUSER
-	chage -d 0 "$DEBUSER"
-fi
-echo "$DEBUSER:$DEBUSERPW" | chpasswd
-apt-get clean
-EOF
-		do_chroot bash "/install_script.bash"
-		rm -f "$DEST/install_script.bash"
-		echo -n UTC > "$DEST/etc/timezone"
-		case $MODEL in
-			rock64)
-				echo "Pine64 Rock64" > "$DEST/etc/flash-kernel/machine"
-				;;
+do_chroot apt-key add - < rootfs/ayufan-ppa.gpg
+do_chroot apt-key add - < rootfs/ayufan-deb-ayufan-eu.gpg
+echo -n UTC > "$DEST/etc/timezone"
 
-			rockpro64)
-				echo "Pine64 RockPro64" > "$DEST/etc/flash-kernel/machine"
-				;;
-
-			*)
-				echo "Unsupported model: $MODEL"
-				;;
-		esac
-
-		cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64.list" <<EOF
+# Configure package sources
+cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64.list" <<EOF
 deb http://deb.ayufan.eu/orgs/ayufan-rock64/releases /
 
 # uncomment to use pre-release kernels and compatibility packages
 # deb http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
 EOF
-		cat > "$DEST/etc/hostname" <<EOF
+
+cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list" <<EOF
+deb http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
+EOF
+
+if [[ "$DISTRO" == "stretch" ]]; then
+	do_chroot add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu xenial main"
+elif [[ "$DISTRIB" != "ubuntu" ]]; then
+	do_chroot add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu bionic main"
+else
+	do_chroot add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu $DISTRO main"
+fi
+
+# Add non-free packages
+sed -i 's/main contrib$/main contrib non-free/g' $DEST/etc/apt/sources.list
+
+# Configure system
+cat > "$DEST/etc/hostname" <<EOF
 $MODEL
 EOF
-		cat > "$DEST/etc/fstab" <<EOF
+
+cat > "$DEST/etc/fstab" <<EOF
 LABEL=boot /boot/efi vfat defaults,sync 0 0
 EOF
-		cat > "$DEST/etc/hosts" <<EOF
+
+cat > "$DEST/etc/hosts" <<EOF
 127.0.0.1 localhost
 127.0.1.1 $MODEL
 
@@ -256,53 +209,83 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
-		for arch in $EXTRA_ARCHS; do
-			if [[ "$arch" != "$BUILD_ARCH" ]]; then
-				do_chroot dpkg --add-architecture "$arch"
-				do_chroot apt-get update -y
-				do_chroot apt-get install -y "libc6:$arch" "libstdc++6:$arch"
-			fi
-		done
-		for package in "$@"; do
-			do_install "$package"
-		done
-		case "$VARIANT" in
-			mate)
-				do_chroot /usr/local/sbin/install_desktop.sh mate
-				do_chroot systemctl set-default graphical.target
-				;;
 
-			i3)
-				do_chroot /usr/local/sbin/install_desktop.sh i3
-				do_chroot systemctl set-default graphical.target
-				;;
+# Update packages
+do_chroot apt-get -y update
 
-			lxde)
-				do_chroot /usr/local/sbin/install_desktop.sh lxde
-				do_chroot systemctl set-default graphical.target
-				;;
+export DEBIAN_FRONTEND=noninteractive
 
-			openmediavault)
-				do_chroot /usr/local/sbin/install_openmediavault.sh
-				;;
+do_chroot locale-gen en_US.UTF-8
 
-			containers)
-				do_chroot /usr/local/sbin/install_container_linux.sh
-				;;
-		esac
-		do_chroot systemctl enable ssh-keygen
-		sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
-		rm -f "$DEST/etc/resolv.conf"
-		rm -f "$DEST"/etc/ssh/ssh_host_*
-		do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
-		do_chroot apt-get clean
+# do_chroot apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
+# 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
+# 	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
+# 	network-manager psmisc u-boot-tools ifupdown resolvconf \
+# 	net-tools mtd-utils rsync device-tree-compiler debsums pciutils
+
+# if [[ "$DISTRIB" == "debian" ]]; then
+# 	do_chroot apt-get -y install firmware-realtek
+# elif [[ "$DISTRIB" == "ubuntu" ]]; then
+# 	do_chroot apt-get -y install landscape-common linux-firmware
+# fi
+
+#do_chroot apt-get dist-upgrade -y
+
+# do_chroot fake-hwclock save
+
+if [[ "$DEBUSER" != "root" ]]; then
+	do_chroot adduser --gecos "$DEBUSER" --disabled-login "$DEBUSER" --uid 1000
+	do_chroot chown -R 1000:1000 "/home/$DEBUSER"
+	do_chroot usermod -a -G sudo,audio,adm,input,video,plugdev,ssh "$DEBUSER"
+	do_chroot chage -d 0 "$DEBUSER"
+fi
+
+echo "$DEBUSER:$DEBUSERPW" | do_chroot chpasswd
+
+for arch in $EXTRA_ARCHS; do
+	if [[ "$arch" != "$BUILD_ARCH" ]]; then
+		do_chroot dpkg --add-architecture "$arch"
+		do_chroot apt-get update -y
+		do_chroot apt-get install -y "libc6:$arch" "libstdc++6:$arch"
+	fi
+done
+
+for package in "$@"; do
+	do_install "$package"
+done
+
+case "$VARIANT" in
+	mate)
+		do_chroot /usr/local/sbin/install_desktop.sh mate
+		do_chroot systemctl set-default graphical.target
 		;;
 
-	*)
-		echo "Unsupported distrib:$DISTRIB and distro:$DISTRO..."
-		exit 1
+	i3)
+		do_chroot /usr/local/sbin/install_desktop.sh i3
+		do_chroot systemctl set-default graphical.target
+		;;
+
+	lxde)
+		do_chroot /usr/local/sbin/install_desktop.sh lxde
+		do_chroot systemctl set-default graphical.target
+		;;
+
+	openmediavault)
+		do_chroot /usr/local/sbin/install_openmediavault.sh
+		;;
+
+	containers)
+		do_chroot /usr/local/sbin/install_container_linux.sh
 		;;
 esac
+
+do_chroot systemctl enable ssh-keygen
+sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
+rm -f "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list"
+rm -f "$DEST/etc/resolv.conf"
+rm -f "$DEST"/etc/ssh/ssh_host_*
+do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
+do_chroot apt-get clean
 
 # Bring back folders
 mkdir -p "$DEST/lib"

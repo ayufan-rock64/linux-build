@@ -1,53 +1,42 @@
-.PHONY: stretch-minimal-$(BOARD_TARGET)
-stretch-minimal-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: stretch-minimal
+stretch-minimal: stretch-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: jessie-openmediavault-$(BOARD_TARGET)
-stretch-openmediavault-$(BOARD_TARGET): stretch-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
+.PHONY: jessie-openmediavault
+stretch-openmediavault: stretch-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
 	stretch-openmediavault-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: bionic-minimal-$(BOARD_TARGET)
-bionic-minimal-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
+.PHONY: bionic-minimal
+bionic-minimal: bionic-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-armhf.img.xz \
 	bionic-minimal-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: bionic-containers-$(BOARD_TARGET)
-bionic-containers-$(BOARD_TARGET): bionic-containers-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: bionic-containers
+bionic-containers: bionic-containers-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: bionic-mate-$(BOARD_TARGET)
-bionic-mate-$(BOARD_TARGET): bionic-mate-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: bionic-mate
+bionic-mate: bionic-mate-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: bionic-lxde-$(BOARD_TARGET)
-bionic-lxde-$(BOARD_TARGET): bionic-lxde-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
+.PHONY: bionic-lxde
+bionic-lxde: bionic-lxde-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm64.img.xz
 
-.PHONY: bionic-$(BOARD_TARGET)		# build all bionic variants
-bionic-$(BOARD_TARGET): bionic-minimal-$(BOARD_TARGET) \
-	bionic-containers-$(BOARD_TARGET) \
-	bionic-lxde-$(BOARD_TARGET)
+.PHONY: bionic		# build all bionic variants
+bionic: bionic-minimal \
+	bionic-containers \
+	bionic-lxde
 
-.PHONY: stretch-$(BOARD_TARGET)		# build all stretch variants
-stretch-$(BOARD_TARGET): stretch-minimal-$(BOARD_TARGET) \
-	stretch-openmediavault-$(BOARD_TARGET)
+.PHONY: stretch		# build all stretch variants
+stretch: stretch-minimal \
+	stretch-openmediavault
 
-.PHONY: linux-$(BOARD_TARGET)		# build all linux variants
-linux-$(BOARD_TARGET): \
-	bionic-$(BOARD_TARGET) \
-	stretch-$(BOARD_TARGET) \
-	linux-virtual \
-	u-boot-flash-spi \
-	u-boot-erase-spi
+.PHONY: linux		# build all linux variants
+linux: \
+	bionic \
+	stretch \
+	linux-virtual
 
-.PHONY: linux-minimal-$(BOARD_TARGET)		# build all linux variants
-linux-minimal-$(BOARD_TARGET): \
-	bionic-minimal-$(BOARD_TARGET) \
-	bionic-containers-$(BOARD_TARGET) \
-	stretch-minimal-$(BOARD_TARGET) \
-	stretch-openmediavault-$(BOARD_TARGET) \
-	linux-virtual \
-	u-boot-flash-spi \
-	u-boot-erase-spi
-
-.PHONY: linux-packages-$(BOARD_TARGET)		# build all packages only
-linux-packages-$(BOARD_TARGET): \
-	linux-virtual \
-	linux-package \
-	u-boot-flash-spi \
-	u-boot-erase-spi
+.PHONY: linux-minimal		# build all linux variants
+linux-minimal: \
+	bionic-minimal \
+	bionic-containers \
+	stretch-minimal \
+	stretch-openmediavault \
+	linux-virtual

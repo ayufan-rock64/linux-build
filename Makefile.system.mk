@@ -1,7 +1,5 @@
 PACKAGES := linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb \
-	$(UBOOT_PACKAGE) \
-	$(KERNEL_PACKAGE) \
-	$(KERNEL_HEADERS_PACKAGES)
+	linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb
 
 %.tar.xz: %.tar
 	pxz -f -3 $<
@@ -9,16 +7,11 @@ PACKAGES := linux-$(BOARD_TARGET)-package-$(RELEASE_NAME)_all.deb \
 %.img.xz: %.img
 	pxz -f -3 $<
 
-%-system.img: $(PACKAGES) linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb
+%.img: $(PACKAGES)
 	sudo bash rootfs/build-system-image.sh \
 		"$$(readlink -f $@)" \
-		"$$(readlink -f $(subst -system.img,-boot.img,$@))" \
-		"$(filter $(BUILD_SYSTEMS), $(subst -, ,$@))" \
-		"$(filter $(BUILD_VARIANTS), $(subst -, ,$@))" \
-		"$(filter $(BUILD_ARCHS), $(subst -, ,$@))" \
-		"$(filter $(BUILD_MODELS), $(subst -, ,$@))" \
+		"$(filter $(BUILD_SYSTEMS), $(subst -, ,$(*F)))" \
+		"$(filter $(BUILD_VARIANTS), $(subst -, ,$(*F)))" \
+		"$(filter $(BUILD_ARCHS), $(subst -, ,$(*F)))" \
+		"$(filter $(BUILD_MODELS), $(subst -, ,$(*F)))" \
 		$^
-
-%.img: %-system.img out/u-boot-$(BOARD_TARGET)/idbloader.img
-	build/mk-image.sh -c $(BOARD_CHIP) -d out/u-boot-$(BOARD_TARGET) -t system -r "$<" -b "$(subst -system.img,-boot.img,$<)" -o "$@.tmp"
-	mv "$@.tmp" "$@"
