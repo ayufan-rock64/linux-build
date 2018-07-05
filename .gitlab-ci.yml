@@ -1,0 +1,79 @@
+image: ayufan/rock64-dockerfiles:x86_64
+
+stages:
+  - build
+
+variables:
+  GITHUB_USER: ayufan-rock64
+  GITHUB_REPO: linux-build
+
+  VERSION: "${CI_COMMIT_TAG}"
+  RELEASE_NAME: "${CI_COMMIT_TAG}"
+  RELEASE_TITLE: "${CI_COMMIT_TAG}: gitlab-ci-linux-build-${CI_PIPELINE_IID}"
+  RELEASE: "$CI_JOB_ID"
+  PIPELINE_URL: $CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID
+
+stages: [draft, build, package, images, pre-release]
+
+before_script:
+  - 'export CHANGES=$(cat RELEASE.md)'
+  - 'export DESCRIPTION=$(echo -e "${CHANGES}\n\n${PIPELINE_URL}")'
+  - 'upload() { github-release upload --tag "${VERSION}" --name "$(basename "$1")" --file "$1"; }'
+  - 'upload_all() { for i in $*; do upload "$i"; done; }'
+
+draft:
+  stage: draft
+  only: [tags]
+  script:
+    - github-release release --tag "${VERSION}" --name "$RELEASE_TITLE" --description "$DESCRIPTION" --target "$CI_COMMIT_SHA" --draft
+
+package:
+  stage: package
+  only: [tags]
+  script:
+    - make linux-virtual BOARD_TARGET=rock64
+    - make linux-virtual BOARD_TARGET=rockpro64
+    - upload_all *.deb
+  artifacts:
+    paths:
+      - "*.deb"
+
+pre-release:
+  stage: pre-release
+  only: [tags]
+  environment:
+    name: pre-release
+    url: https://github.com/$GITHUB_USER/$GITHUB_REPO/releases/tag/$CI_COMMIT_TAG
+  script:
+    - github-release edit --tag "${VERSION}" --name "$RELEASE_TITLE" --description "$DESCRIPTION" --pre-release
+
+.build: &build
+  stage: images
+  only: [tags]
+  script:
+    - set -- $CI_JOB_NAME
+    - make "$1" BOARD_TARGET=$2
+    - upload_all *.xz
+
+.build_manual: &build_manual
+  <<: *build
+  when: manual
+  allow_failure: true
+
+bionic-lxde rock64: *build
+bionic-lxde rockpro64: *build
+
+bionic-containers rock64: *build
+bionic-containers rockpro64: *build
+
+stretch-openmediavault rock64: *build
+stretch-openmediavault rockpro64: *build
+
+stretch-minimal rock64: *build
+stretch-minimal rockpro64: *build
+
+bionic-minimal rock64: *build
+bionic-minimal rockpro64: *build
+
+bionic-mate rock64: *build_manual
+bionic-mate rockpro64: *build_manual
