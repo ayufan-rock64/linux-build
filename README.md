@@ -28,12 +28,14 @@ It uses a bunch of different repositories:
 - [kernel-rockchip](https://github.com/ayufan-rock64/linux-kernel) - patched Rockchip's kernel (4.4),
 - [kernel-mainline](https://github.com/ayufan-rock64/linux-mainline-kernel) - patched mainline kernel (>= 4.13),
 - [u-boot](https://github.com/ayufan-rock64/linux-u-boot) - patched mainline u-boot,
+- [package](https://github.com/ayufan-rock64/linux-package) - scripts and configurations that improve Rock64 and RockPro64 experience,
 - [rkbin](https://github.com/ayufan-rock64/rkbin) - precompiled bootloader binary blobs.
 
 You can find latest pre-releases and releases of these components here:
 - [kernel-rockchip](https://github.com/ayufan-rock64/linux-kernel/releases/latest) - patched Rockchip's kernel (4.4),
 - [kernel-mainline](https://github.com/ayufan-rock64/linux-mainline-kernel/releases/latest) - patched mainline kernel (>= 4.13),
 - [u-boot](https://github.com/ayufan-rock64/linux-u-boot/releases/latest) - patched mainline u-boot,
+- [package](https://github.com/ayufan-rock64/linux-package/releases/latest) - scripts and configurations that improve Rock64 and RockPro64 experience,
 
 Some of the packages are distributed via [PPA](https://launchpad.net/~ayufan/+archive/ubuntu/rock64-ppa/).
 The sources of these packages are hosted in [this GitHub organization](https://github.com/ayufan-rock64).

@@ -1,9 +1,0 @@
-Machine: Rockchip RK3328 Rock64
-Machine: Pine64 Rock64
-Machine: PINE64 ROCK64
-Method: generic
-DTB-Id: rockchip/rk3328-rock64.dtb
-Boot-Kernel-Path: /boot/efi/Image
-Boot-Initrd-Path: /boot/efi/initrd.img
-Boot-DTB-Path: /boot/efi/dtb
-

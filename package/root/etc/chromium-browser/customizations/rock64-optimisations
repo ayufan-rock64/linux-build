@@ -1,9 +1,0 @@
-# Options to pass to chromium-browser
-CHROMIUM_FLAGS="$CHROMIUM_FLAGS \
---disable-smooth-scrolling \
---disable-low-res-tiling \
---enable-low-end-device-mode \
---num-raster-threads=4 \
---profiler-timing=0 \
---disable-composited-antialiasing \
-"

@@ -1,2 +1,0 @@
-@reboot root /usr/local/sbin/rock64_fix_performance.sh
-

@@ -19,7 +19,6 @@ IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)
 
 all: linux-$(BOARD_TARGET)
 
-include Makefile.package.mk
 include Makefile.system.mk
 include Makefile.variants.mk
 include Makefile.dev.mk

@@ -1,1 +1,0 @@
-* * * * * root for i in `pgrep "ftpd|nfsiod|smbd|afpd|cnid"` ; do ionice -c1 -p $i ${XU4_HMP_Fix}; done &>/dev/null

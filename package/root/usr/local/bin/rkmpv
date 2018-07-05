@@ -1,5 +1,0 @@
-#!/bin/bash
-
-export LD_LIBRARY_PATH=/usr/lib/aarch64-linux-gnu/gbm:/usr/lib/arm-linux-gnueabihf/gbm
-
-exec mpv --vo=gpu --gpu-context=drm --hwdec=rkmpp "$@"

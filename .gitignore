@@ -12,3 +12,4 @@
 *.changes
 /arm-trusted-firmware
 /tmp
+/linux-package
