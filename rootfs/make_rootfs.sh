@@ -229,8 +229,6 @@ elif [[ "$DISTRIB" == "ubuntu" ]]; then
 	do_chroot apt-get -y install landscape-common linux-firmware
 fi
 
-do_chroot apt-get dist-upgrade -y
-
 do_chroot fake-hwclock save
 
 if [[ "$DEBUSER" != "root" ]]; then
@@ -278,6 +276,8 @@ case "$VARIANT" in
 		do_chroot /usr/local/sbin/install_container_linux.sh
 		;;
 esac
+
+do_chroot apt-get dist-upgrade -y
 
 do_chroot systemctl enable ssh-keygen
 sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"

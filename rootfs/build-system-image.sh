@@ -44,7 +44,7 @@ case "$VARIANT" in
         ;;
 
     containers)
-        SIZE=2048
+        SIZE=2560
         ;;
 
     *)
@@ -116,6 +116,10 @@ rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL"
 dd if="$TEMP/rootfs/usr/lib/u-boot-${MODEL}/rksd_loader.img" of="${LODEVMAPPER}p1"
 
 # Umount filesystem
-fstrim "$TEMP"
+fstrim "$TEMP/rootfs"
+cleanup
+trap - EXIT
 sync
+
+# Move image into final location
 mv "$TEMP_IMAGE" "$OUT_IMAGE"
