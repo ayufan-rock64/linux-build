@@ -103,7 +103,7 @@ tune2fs -o journal_data_writeback "${LODEVMAPPER}p7"
 
 # Mount filesystem
 mkdir -p "$TEMP/rootfs"
-mount "${LODEVMAPPER}p7" "$TEMP/rootfs"
+mount -o data=writeback,commit=3600 "${LODEVMAPPER}p7" "$TEMP/rootfs"
 mkdir -p "$TEMP/rootfs/boot/efi"
 mount "${LODEVMAPPER}p6" "$TEMP/rootfs/boot/efi"
 
@@ -114,8 +114,9 @@ rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL"
 dd if="$TEMP/rootfs/usr/lib/u-boot-${MODEL}/rksd_loader.img" of="${LODEVMAPPER}p1"
 
 # Umount filesystem
+sync -f "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
 fstrim "$TEMP/rootfs"
-sync
+du -sh "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
 
 # Move image into final location
 mv "$TEMP_IMAGE" "$OUT_IMAGE"
