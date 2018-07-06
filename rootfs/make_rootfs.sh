@@ -210,6 +210,12 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
 
+mkdir -p "$DEST/etc/flash-kernel"
+
+cat > "$DEST/etc/flash-kernel/machine" <<EOF
+$MODEL
+EOF
+
 # Update packages
 do_chroot apt-get -y update
 
@@ -280,6 +286,7 @@ esac
 do_chroot apt-get dist-upgrade -y
 
 do_chroot systemctl enable ssh-keygen
+
 sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 rm -f "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list"
 rm -f "$DEST/etc/resolv.conf"
@@ -297,6 +304,7 @@ rm -f "$DEST/usr/bin/qemu-aarch64-static"
 rm -f "$DEST/usr/sbin/policy-rc.d"
 rm -f "$DEST/usr/local/bin/mdadm"
 rm -f "$DEST/var/lib/dbus/machine-id"
+rm -f "$DEST/etc/flash-kernel/machine"
 rm -f "$DEST/SHA256SUMS"
 
 echo "Done - installed rootfs to $DEST"

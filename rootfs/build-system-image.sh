@@ -58,15 +58,13 @@ TEMP=$(mktemp -p $PWD -d -t "$MODEL-build-XXXXXXXXXX")
 echo "> Building in $TEMP ..."
 
 cleanup() {
-    local arg=$?
     echo "> Cleaning up ..."
     umount "$TEMP/rootfs/boot/efi" || true
     umount "$TEMP/rootfs/"* || true
     umount "$TEMP/rootfs" || true
     kpartx -d "${LODEV}" || true
     losetup -d "${LODEV}" || true
-    rm -r "$TEMP"
-    exit $arg
+    rm -rf "$TEMP"
 }
 trap cleanup EXIT
 
