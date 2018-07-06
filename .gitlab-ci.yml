@@ -16,7 +16,7 @@ variables:
 stages: [draft, build, package, images, pre-release]
 
 before_script:
-  - 'export CHANGES=$(cat RELEASE.md)'
+  - 'export CHANGES=$(head -n 40 RELEASE.md)'
   - 'export DESCRIPTION=$(echo -e "${CHANGES}\n\n${PIPELINE_URL}")'
   - 'upload() { github-release upload --tag "${VERSION}" --name "$(basename "$1")" --file "$1"; }'
   - 'upload_all() { for i in $*; do upload "$i"; done; }'

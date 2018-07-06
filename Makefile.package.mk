@@ -4,6 +4,11 @@ LATEST_PACKAGE_VERSION ?= $(shell curl --fail -s https://api.github.com/repos/ay
 
 PACKAGES += linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb
 
+generate-versions:
+	@echo LATEST_UBOOT_VERSION=$(LATEST_UBOOT_VERSION)
+	@echo LATEST_KERNEL_VERSION=$(LATEST_KERNEL_VERSION)
+	@echo LATEST_PACKAGE_VERSION=$(LATEST_PACKAGE_VERSION)
+
 linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb:
 	fpm -s empty -t deb -n linux-$(BOARD_TARGET) -v $(RELEASE_NAME) \
 		-p $@ \
