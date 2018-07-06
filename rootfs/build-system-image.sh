@@ -115,8 +115,6 @@ dd if="$TEMP/rootfs/usr/lib/u-boot-${MODEL}/rksd_loader.img" of="${LODEVMAPPER}p
 
 # Umount filesystem
 fstrim "$TEMP/rootfs"
-cleanup
-trap - EXIT
 sync
 
 # Move image into final location
