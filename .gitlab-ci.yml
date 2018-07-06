@@ -10,7 +10,7 @@ variables:
   VERSION: "${CI_COMMIT_TAG}"
   RELEASE_NAME: "${CI_COMMIT_TAG}"
   RELEASE_TITLE: "${CI_COMMIT_TAG}: gitlab-ci-linux-build-${CI_PIPELINE_IID}"
-  RELEASE: "$CI_JOB_ID"
+  RELEASE: "$CI_PIPELINE_IID"
   PIPELINE_URL: $CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID
 
   CACHE_ROOT: /data/shared/rock64-linux-cache
