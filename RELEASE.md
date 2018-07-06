@@ -24,6 +24,7 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.3: Fix generation of extlinux.conf (linux booting),
 - 0.7.2: Pin packages,
 - 0.7.2: Improve performance of build process,
 - 0.7.1: Use GitLab CI for releasing all images,
