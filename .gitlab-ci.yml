@@ -10,7 +10,6 @@ variables:
   VERSION: "${CI_COMMIT_TAG}"
   RELEASE_NAME: "${CI_COMMIT_TAG}"
   RELEASE_TITLE: "${CI_COMMIT_TAG}: gitlab-ci-linux-build-${CI_PIPELINE_IID}"
-  RELEASE: "$CI_PIPELINE_IID"
   PIPELINE_URL: $CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID
 
   CACHE_ROOT: /data/shared/rock64-linux-cache
@@ -18,6 +17,7 @@ variables:
 stages: [draft, build, package, images, pre-release]
 
 before_script:
+  - 'export RELEASE=$((1000+$CI_PIPELINE_IID))'
   - 'export CHANGES=$(head -n 40 RELEASE.md)'
   - 'export DESCRIPTION=$(echo -e "${CHANGES}\n\n${PIPELINE_URL}")'
   - 'upload() { github-release upload --tag "${VERSION}" --name "$(basename "$1")" --file "$1"; }'
