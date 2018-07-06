@@ -152,7 +152,7 @@ EOF
 chmod a+x "$DEST/usr/sbin/policy-rc.d"
 
 do_chroot() {
-	chroot "$DEST" "$@"
+	chroot "$DEST" $CHROOT_PREFIX "$@"
 }
 
 do_install() {
@@ -219,10 +219,12 @@ cat > "$DEST/etc/flash-kernel/machine" <<EOF
 $MODEL
 EOF
 
-# Update packages
+# Disable fsyncs to speed-up build process
 do_chroot apt-get -y update
+do_chroot apt-get -y install eatmydata
 
 export DEBIAN_FRONTEND=noninteractive
+export CHROOT_PREFIX="eatmydata --"
 
 do_chroot locale-gen en_US.UTF-8
 
