@@ -24,6 +24,8 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.2: Pin packages,
+- 0.7.2: Improve performance of build process,
 - 0.7.1: Use GitLab CI for releasing all images,
 - 0.7.0: Introduces heavy refactor splitting all components into separate repos, and separate independent releases (u-boot, kernel, kernel-mainline, compatibility package),
 - 0.7.0: Dry run everything,
