@@ -59,7 +59,7 @@ cleanup() {
 		bash
 		popd
 	fi
-	umount "$DEST/var/cache/apt/archives" || true
+	umount "$DEST/var/cache/apt" || true
 	umount "$DEST/proc/mdstat" || true
 	umount "$DEST/proc" || true
 	umount "$DEST/sys" || true
@@ -137,8 +137,8 @@ chroot "$DEST" mount -t sysfs sys /sys
 chroot "$DEST" mount --bind /dev/null /proc/mdstat
 
 # Mount var/apt/cache
-mkdir -p "$CACHE_ROOT/apt-archives" "$DEST/var/cache/apt/archives"
-mount -o bind "$CACHE_ROOT/apt-archives" "$DEST/var/cache/apt/archives"
+# mkdir -p "$CACHE_ROOT/apt" "$DEST/var/cache/apt"
+# mount -o bind "$CACHE_ROOT/apt" "$DEST/var/cache/apt"
 
 # Add qemu emulation.
 cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"

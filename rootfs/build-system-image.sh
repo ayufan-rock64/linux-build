@@ -116,7 +116,7 @@ dd if="$TEMP/rootfs/usr/lib/u-boot-${MODEL}/rksd_loader.img" of="${LODEVMAPPER}p
 # Umount filesystem
 sync -f "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
 fstrim "$TEMP/rootfs"
-du -sh "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
+df -h "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
 
 # Move image into final location
 mv "$TEMP_IMAGE" "$OUT_IMAGE"
