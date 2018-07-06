@@ -36,6 +36,7 @@ package:
     - make linux-virtual BOARD_TARGET=rock64
     - make linux-virtual BOARD_TARGET=rockpro64
     - upload_all *.deb
+    - rm *.deb
   artifacts:
     paths:
       - "*.deb"
@@ -56,6 +57,7 @@ pre-release:
     - set -- $CI_JOB_NAME
     - make "$1" BOARD_TARGET=$2
     - upload_all *.xz
+    - rm *.xz
 
 .build_manual: &build_manual
   <<: *build
