@@ -10,7 +10,6 @@
 
 set -e
 
-BUILD="../build"
 DEST="$1"
 DISTRO="$2"
 VARIANT="$3"
@@ -60,6 +59,7 @@ cleanup() {
 		bash
 		popd
 	fi
+	umount "$DEST/var/cache/apt/archives" || true
 	umount "$DEST/proc/mdstat" || true
 	umount "$DEST/proc" || true
 	umount "$DEST/sys" || true
@@ -109,16 +109,15 @@ case "$VARIANT" in
 		;;
 esac
 
-mkdir -p $BUILD
-mkdir -p tmp
-TARBALL="tmp/$(basename $ROOTFS)"
+CACHE_ROOT="${CACHE_ROOT:-tmp}"
+mkdir -p "$CACHE_ROOT"
+TARBALL="${CACHE_ROOT}/$(basename $ROOTFS)"
 
-mkdir -p "$BUILD"
 if [ ! -e "$TARBALL" ]; then
 	echo "Downloading $DISTRO rootfs tarball ..."
-	pushd tmp
+	pushd "$CACHE_ROOT"
 	if ! flock "$(basename "$ROOTFS").lock" wget -c "$ROOTFS"; then
-		TARBALL="tmp/$(basename "$FALLBACK_ROOTFS")"
+		TARBALL="${CACHE_ROOT}/$(basename "$FALLBACK_ROOTFS")"
 		echo "Downloading fallback $DISTRO rootfs tarball ..."
 		flock "$(basename "$FALLBACK_ROOTFS").lock" wget -c "$FALLBACK_ROOTFS"
 	fi
@@ -136,6 +135,10 @@ mount -o bind /tmp "$DEST/tmp"
 chroot "$DEST" mount -t proc proc /proc
 chroot "$DEST" mount -t sysfs sys /sys
 chroot "$DEST" mount --bind /dev/null /proc/mdstat
+
+# Mount var/apt/cache
+mkdir -p "$CACHE_ROOT/apt-archives" "$DEST/var/cache/apt/archives"
+mount -o bind "$CACHE_ROOT/apt-archives" "$DEST/var/cache/apt/archives"
 
 # Add qemu emulation.
 cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"

@@ -13,6 +13,8 @@ variables:
   RELEASE: "$CI_JOB_ID"
   PIPELINE_URL: $CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID
 
+  CACHE_ROOT: /data/shared/rock64-linux-cache
+
 stages: [draft, build, package, images, pre-release]
 
 before_script:
