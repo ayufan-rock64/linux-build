@@ -60,23 +60,17 @@ make generate-versions > Makefile.versions.mk
 cat Makefile.versions.mk
 
 echo "Adding changes..."
-git add RELEASE.md
-git commit -m "Update RELEASE.md for $RELEASE"
+git add RELEASE.md Makefile.versions.mk
 
 echo "Creating tag..."
 git add Makefile.versions.mk
-
-echo "Committing $RELEASE..."
-cat <<EOF | git tag -a $TAG_FLAGS -F -
+cat <<EOF | git commit $COMMIT_FLAGS -F -
 v$RELEASE
 
 $(cat Makefile.versions.mk)
 EOF
 
 git tag "$RELEASE" $TAG_FLAGS
-
-echo "Checking master again..."
-git checkout "master"
 
 echo "Pushing..."
 git push origin "$RELEASE" $PUSH_FLAGS
