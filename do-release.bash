@@ -73,7 +73,11 @@ make generate-versions > Makefile.versions.mk
 cat Makefile.versions.mk
 
 echo "Adding changes..."
-git add RELEASE.md Makefile.versions.mk
+git add RELEASE.md
+git commit -m "Update RELEASE.md for $RELEASE"
+
+echo "Creating tag..."
+git add Makefile.versions.mk
 
 echo "Creating temporary branch..."
 git checkout $(git rev-parse HEAD) >/dev/null
@@ -92,5 +96,6 @@ git checkout "master"
 
 echo "Pushing..."
 git push origin "$RELEASE" $PUSH_FLAGS
+git push origin master
 
 echo "Done."
