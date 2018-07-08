@@ -63,7 +63,7 @@ If, for any reason, your SPI flashing gets interrupted during its process, you m
 To solve this, on the Rock64 follow these instructions:
 
 1. Go to [this](http://wiki.pine64.org/index.php/NOOB#Step-by-Step_Instructions_to_Flashing_MicroSD_Cards) guide to create a new ayufan bootable Linux SD card
-    Or, in short, download the latest ayufan Linux distribution from [here](https://github.com/ayufan-rock64/linux-build/releases/tag/0.6.44), and use [etcher](https://etcher.io/) to flash you SD card
+    Or, in short, download the latest ayufan Linux distribution from [here](https://github.com/ayufan-rock64/linux-build/releases/latest), and use [etcher](https://etcher.io/) to flash you SD card
 
 2. Insert the SD card to the Rock64.
 
