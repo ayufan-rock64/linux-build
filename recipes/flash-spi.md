@@ -55,3 +55,37 @@ Make sure you remove the microSD card containing the `u-boot-flash-spi` image, o
 5. PXE
 
 If you're currently running the OS from microSD, and want to switch to a USB/SSD drive, follow the [instructions on this page](https://forum.pine64.org/showthread.php?tid=4971).
+
+### 4. Fix for SPI Flashing failures
+
+If, for any reason, your SPI flashing gets interrupted during its process, you may experience a "frozen" device.
+
+To solve this, on the Rock64 follow these instructions:
+
+1. Go to [this](http://wiki.pine64.org/index.php/NOOB#Step-by-Step_Instructions_to_Flashing_MicroSD_Cards) guide to create a new ayufan bootable Linux SD card
+    Or, in short, download the latest ayufan Linux distribution from [here](https://github.com/ayufan-rock64/linux-build/releases/tag/0.6.44), and use [etcher](https://etcher.io/) to flash you SD card
+
+2. Insert the SD card to the Rock64.
+
+3. Connect other peripherals such as network to later control your device, such as via ssh.
+    * ayufan’s Linux distro will connect to the network and you will be able to ssh to the device.
+
+4. Ground the SPI Clock (SPI_CLK_M2) on the Pi-2 Bus GPIO pins on the rock64
+    * Pin 23 is SPI_CLK_M2
+    * Pin 25 is GND
+    * Pin layout of the rock64 can be found [here](http://files.pine64.org/doc/rock64/ROCK64_Pi-2%20_and_Pi_P5+_Bus.pdf)
+    * Other Rock64 documents can be found [here](https://www.pine64.org/?page_id=7175)
+
+5. Turn on the device and release the grounding of the SPI Clock 2-3 seconds after the device was turned on.
+    * **NOTE**: This is a critical step
+            If not done correctly you will not be able to flash the device
+    * If unsuccessful turn of the device and try again.
+
+6. login and go to the folder with the flashing scripts
+    * `cd /usr/local/sbin`
+    * `sudo ./rock64_erase_spi_flash.sh` or `sudo ./rock64_write_spi_flash.sh`
+    * Type "YES" to flash the device
+
+7. If the flashing failes with an error `loader partition on MTD is not found` repeat step 5.
+
+Your device should now be able to boot without holding the SPI Clock.
