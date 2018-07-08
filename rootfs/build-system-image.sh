@@ -68,11 +68,12 @@ cleanup() {
 }
 trap cleanup EXIT
 
-TEMP_IMAGE="${TEMP}/disk.img"
+TEMP_IMAGE="${OUT_IMAGE}.tmp"
 
 set -ex
 
 # Create
+rm -f "$TEMP_IMAGE"
 dd if=/dev/zero of="$TEMP_IMAGE" bs=1M seek=$((SIZE-1)) count=0
 
 # Create partitions
@@ -117,6 +118,13 @@ dd if="$TEMP/rootfs/usr/lib/u-boot-${MODEL}/rksd_loader.img" of="${LODEVMAPPER}p
 sync -f "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
 fstrim "$TEMP/rootfs"
 df -h "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
+
+# Cleanup build
+cleanup
+trap - EXIT
+
+# Verify partitions
+parted -s "${TEMP_IMAGE}" print
 
 # Move image into final location
 mv "$TEMP_IMAGE" "$OUT_IMAGE"
