@@ -13,7 +13,11 @@ fi
 set -e
 
 echo "Edit changeset:"
-editor RELEASE.md
+if which editor &>/dev/null; then
+  editor RELEASE.md
+else
+  vi RELEASE.md
+fi
 
 echo "OK?"
 read PROMPT
