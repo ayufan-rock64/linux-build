@@ -64,20 +64,24 @@ pre-release:
   when: manual
   allow_failure: true
 
-bionic-lxde rock64: *build
-bionic-lxde rockpro64: *build
+bionic-lxde-arm64 rock64: *build
+bionic-lxde-arm64 rockpro64: *build
 
-bionic-containers rock64: *build
-bionic-containers rockpro64: *build
+bionic-containers-arm64 rock64: *build
+bionic-containers-arm64 rockpro64: *build
 
-stretch-openmediavault rock64: *build
-stretch-openmediavault rockpro64: *build
+stretch-openmediavault-arm64 rock64: *build
+stretch-openmediavault-armhf rock64: *build
+stretch-openmediavault-arm64 rockpro64: *build
+stretch-openmediavault-armhf rockpro64: *build
 
-stretch-minimal rock64: *build
-stretch-minimal rockpro64: *build
+stretch-minimal-arm64 rock64: *build
+stretch-minimal-arm64 rockpro64: *build
 
-bionic-minimal rock64: *build
-bionic-minimal rockpro64: *build
+bionic-minimal-arm64 rock64: *build
+bionic-minimal-armhf rock64: *build
+bionic-minimal-arm64 rockpro64: *build
+bionic-minimal-armhf rockpro64: *build
 
-bionic-mate rock64: *build_manual
-bionic-mate rockpro64: *build_manual
+bionic-mate-arm64 rock64: *build_manual
+bionic-mate-arm64 rockpro64: *build_manual
