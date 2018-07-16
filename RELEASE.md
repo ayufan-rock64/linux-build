@@ -24,6 +24,9 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.5: Various stability fixes for kernel and u-boot,
+- 0.7.5: Added memtest to kernels and extlinux,
+- 0.7.5: Show early boot log when booting kernels,
 - 0.7.4: Fix `resize_rootfs.sh` script to respect boot flags (fixes second boot problem introduced by 0.7.0),
 - 0.7.4: Add rock(pro)64_erase_spi_flash.sh,
 - 0.7.4: Fix cursor on desktop for rockpro64,
