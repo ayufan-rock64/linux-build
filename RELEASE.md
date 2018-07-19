@@ -24,6 +24,8 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.7: Fix memory corruptions caused by Mali/Display subsystem (4.4),
+- 0.7.7: Enable SDR104 mode for SD cards (this requires u-boot upgrade if booting from SD),
 - 0.7.6: Change OPP's for Rock64 and RockPro64: https://github.com/ayufan-rock64/linux-kernel/compare/4.4.132-1059-rockchip-ayufan...ayufan-rock64:4.4.132-1062-rockchip-ayufan,
 - 0.7.5: Various stability fixes for kernel and u-boot,
 - 0.7.5: Added memtest to kernels and extlinux,
