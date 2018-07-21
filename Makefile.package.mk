@@ -17,6 +17,9 @@ linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb:
 		--depends "u-boot-rockchip-$(BOARD_TARGET) (= $(LATEST_UBOOT_VERSION))" \
 		--depends "linux-image-$(LATEST_KERNEL_VERSION)" \
 		--depends "linux-headers-$(LATEST_KERNEL_VERSION)" \
+		--deb-field "Provides: linux-board-virtual" \
+		--deb-field "Replaces: linux-board-virtual" \
+		--deb-field "Conflicts: linux-board-virtual" \
 		--force \
 		--url https://gitlab.com/ayufan-rock64/linux-build \
 		--description "Rock64 Linux virtual package: depends on kernel and compatibility package" \
