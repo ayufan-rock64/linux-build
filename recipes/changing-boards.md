@@ -10,9 +10,18 @@ first you have to prepare system to support new booting scheme.
 Run this command as root:
 
 ```bash
+# upgrade currently running system
 apt-get update
 apt-get dist-upgrade
+
+# use new booting mechanism
 new_extlinux_boot.sh rootfs
+
+# remove old device configurations
+rm /boot/dtb-*
+
+# update boot script
+update_extlinux.sh
 ```
 
 Reboot to ensure that everything still works.
