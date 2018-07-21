@@ -58,6 +58,7 @@ For technical information, see the following documents:
 - [additional-devices.md](recipes/additional-devices.md): Use additional devices, like 100Mbit Ethernet
 - [overclocking.md](recipes/overclocking.md): Bump some specs :)
 - [extlinux.md](recipes/extlinux.md): Make it easy to switch kernel versions
+- [changing-boards.md](recipes/changing-boards.md): Switch existing installation between Rock64 and RockPro64 (highly experimental)
 
 ## License
 
