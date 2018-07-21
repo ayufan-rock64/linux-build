@@ -24,6 +24,10 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.8: Improve eMMC compatibility on RockPro64,
+- 0.7.8: Disable sdio (no wifi/bt) to fix pcie/nvme support on 4.4 for RockPro64,
+- 0.7.8: Fix OMV builds (missing initrd.img),
+- 0.7.8: Make all packages virtual, conflicting and replacing making possible to do `linux-rock64/rockpro64` to replace basesystem,
 - 0.7.7: Fix memory corruptions caused by Mali/Display subsystem (4.4),
 - 0.7.7: Enable SDR104 mode for SD cards (this requires u-boot upgrade if booting from SD),
 - 0.7.6: Change OPP's for Rock64 and RockPro64: https://github.com/ayufan-rock64/linux-kernel/compare/4.4.132-1059-rockchip-ayufan...ayufan-rock64:4.4.132-1062-rockchip-ayufan,
