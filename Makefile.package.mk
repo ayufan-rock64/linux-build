@@ -13,8 +13,8 @@ linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb:
 	fpm -s empty -t deb -n linux-$(BOARD_TARGET) -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
-		--depends "linux-$(BOARD_TARGET)-package (= $(LATEST_PACKAGE_VERSION))" \
-		--depends "u-boot-rockchip-$(BOARD_TARGET) (= $(LATEST_UBOOT_VERSION))" \
+		--depends "linux-board-package-$(BOARD_TARGET)-$(LATEST_PACKAGE_VERSION)" \
+		--depends "u-boot-rockchip-$(BOARD_TARGET)-$(LATEST_UBOOT_VERSION)" \
 		--depends "linux-image-$(LATEST_KERNEL_VERSION)" \
 		--depends "linux-headers-$(LATEST_KERNEL_VERSION)" \
 		--deb-field "Provides: linux-board-virtual" \
