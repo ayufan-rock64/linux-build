@@ -24,6 +24,7 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.9: Fix upgrade problem (u-boot-* packages),
 - 0.7.8: Improve eMMC compatibility on RockPro64,
 - 0.7.8: Disable sdio (no wifi/bt) to fix pcie/nvme support on 4.4 for RockPro64,
 - 0.7.8: Fix OMV builds (missing initrd.img),
