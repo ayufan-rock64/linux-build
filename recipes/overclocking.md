@@ -1,5 +1,7 @@
 # Overclocking
 
+**This guide can be used only on Rock64 and 4.4 kernel currently.**
+
 It is possible to slightly bump Rock64 specs.
 
 **Keep in mind that this can break your board.**
@@ -32,6 +34,18 @@ enable_dtoverlay 1398mhz cpu0-opp-table okay "opp-1392000000 {
             opp-microvolt = <1350000>;
             opp-microvolt-L0 = <1350000>;
             opp-microvolt-L1 = <1325000>;
+            clock-latency-ns = <40000>;
+}"
+```
+
+You can also add 1.512GHz operating point (ensure that you have good heatsink):
+
+```bash
+enable_dtoverlay 1512mhz cpu0-opp-table okay "opp-1512000000 {
+            opp-hz = /bits/ 64 <1512000000>;
+            opp-microvolt = <1450000 1450000 1450000>;
+            opp-microvolt-L0 = <1450000 1450000 1450000>;
+            opp-microvolt-L1 = <1425000 1425000 1450000>;
             clock-latency-ns = <40000>;
 }"
 ```
