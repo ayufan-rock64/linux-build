@@ -40,7 +40,7 @@ You can find latest pre-releases and releases of these components here:
 Some of the packages are distributed via [PPA](https://launchpad.net/~ayufan/+archive/ubuntu/rock64-ppa/).
 The sources of these packages are hosted in [this GitHub organization](https://github.com/ayufan-rock64).
 
-This repository is regularly built by [Jenkins](https://jenkins.ayufan.eu/job/linux-build-rock-64/) and released in [Releases sections](https://github.com/ayufan-rock64/linux-build/releases).
+This repository is regularly built by [Gitlab](https://gitlab.com/ayufan-repos/rock64/linux-build/pipelines) and released in [Releases sections](https://github.com/ayufan-rock64/linux-build/releases).
 
 ## Documentation
 
