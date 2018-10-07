@@ -24,6 +24,14 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.10: Rebased rockchip and mainline kernels,
+- 0.7.10: Support USB gadgets for rock/pro64,
+- 0.7.10: Disable TX checksumming for RockPro64,
+- 0.7.10: Improve FAN for RockPro64,
+- 0.7.10: Improve sdmmc0 stability for Rock64,
+- 0.7.10: Enable binfmt-misc,
+- 0.7.10: Improve stability of PCIE for RockPro64,
+- 0.7.10: Fix eMMC stability on RockPro64 mainline kernel,
 - 0.7.9: Fix upgrade problem (u-boot-* packages),
 - 0.7.8: Improve eMMC compatibility on RockPro64,
 - 0.7.8: Disable sdio (no wifi/bt) to fix pcie/nvme support on 4.4 for RockPro64,
