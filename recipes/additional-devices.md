@@ -20,6 +20,14 @@ enable_dtoverlay eth1 ethernet@ff550000 okay
 
 This will enable `eth1` till next reboot. If you want to make it permamently consider adding this line to `/etc/rc.local` or other file that is executed on boot.
 
+## Enable an onboard IR Receiver
+
+In the same way like with an additional Ethernet interface, it's possible to enable the onboard IR receiver. To do that, we need to create an overlay for `/ir-receiver` path and add a new `gpios` property with the number of pin used for IR receiver connection. For Rock64, the onboard IR receiver is connected to pin A2 in GPIO bank 2. Bank 2 for my system has a phandle of `0x47`, you can also try to use the `&gpio2` syntax. So, to enable IR receiver on pin GPIO2_A2 we need to compose the following command:
+
+```bash
+enable_dtoverlay ir-receiver ir-receiver okay "gpios = <0x47 2 1>"
+```
+
 ## Help wanted
 
 Contribute here to add information about different devices that might be interesting for the users: SPI, I2C, UART, GPIOs.
