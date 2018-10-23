@@ -56,6 +56,7 @@ For technical information, see the following documents:
 - [flash-spi.md](recipes/flash-spi.md): Flash the SPI memory to enable booting from USB or PXE
 - [kernel-upgrade.md](recipes/kernel-upgrade.md): Upgrade your linux kernel to a newer version
 - [additional-devices.md](recipes/additional-devices.md): Use additional devices, like 100Mbit Ethernet
+- [sound.md](recipes/sound.md): Deal with sound support
 - [overclocking.md](recipes/overclocking.md): Bump some specs :)
 - [extlinux.md](recipes/extlinux.md): Make it easy to switch kernel versions
 - [changing-boards.md](recipes/changing-boards.md): Switch existing installation between Rock64 and RockPro64 (highly experimental)
