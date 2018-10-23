@@ -24,6 +24,10 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.11: Rebased mainline kernel,
+- 0.7.11: Run rockchip kernel at 250Hz to increase performance,
+- 0.7.11: Add support for usb gadgets for rockchip,
+- 0.7.11: Introduce `change-default-kernel.sh` script to easily switch between kernels,
 - 0.7.10: Rebased rockchip and mainline kernels,
 - 0.7.10: Support USB gadgets for rock/pro64,
 - 0.7.10: Disable TX checksumming for RockPro64,
