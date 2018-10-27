@@ -70,7 +70,7 @@ mpv:
 ### Run
 
 ```bash
-mpv --vo=gpu --gpu-context=drm --hwdec=rkmpp video.mkv
+mpv --vo=gpu --gpu-context=drm --hwdec=rkmpp --drm-mode=21 video.mkv
 ```
 
 It will start fullscreen video playback. You should see something like this:
@@ -89,6 +89,22 @@ Using hardware decoding (rkmpp).
 VO: [gpu] 1280x640 drm_prime[nv12]
 ...
 ```
+
+### Useful mpv options
+
+If you get large horizontal black bars during video playback ('letterboxing'), you may be able to achieve full screen playback by adjusting the aspect ratio.
+
+Tap 'A' during playback of a video to cycle through aspect modes or use a switch to make it permanent by adding something like:
+
+ --video-aspect=1.3333
+
+To the example mpv command above. 
+
+mpv defaults to rotating videos that have been shot in potrait mode. To get it to ignore videos rotation metadata and always play videos in landscape mode add:
+
+ --video-rotate=no
+
+To the example mpv command.
 
 ### Alternative way
 
