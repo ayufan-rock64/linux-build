@@ -6,7 +6,7 @@ In this example, we'll compile the `ds1307 RTC` kernel module for version `4.4.1
 
 1. Obtain your kernel version: `uname -r`
     (ex: `4.4.154-1124-rockchip-ayufan-ged3ce4d15ec1`)
-2. Download the kernel source code which matches your kernel version from [https://github.com/ayufan-rock64/linux-kernel/releases](github.com/ayufan-rock64/linux-kernel/releases)
+2. Download the kernel source code which matches your kernel version from [github.com/ayufan-rock64/linux-kernel/releases](https://github.com/ayufan-rock64/linux-kernel/releases)
 3. Extract the kernel: `tar -zxvf 4.4.154-1124-rockchip-ayufan.tar.gz`
 4. Copy the old kernel config:
     ```bash
