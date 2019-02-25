@@ -24,6 +24,9 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.12: Rebased mainline kernel,
+- 0.7.12: Rockchip kernel has patches for enabling sdio0 and pcie concurrently,
+- 0.7.12: A bunch of dependencies updates,
 - 0.7.11: Rebased mainline kernel,
 - 0.7.11: Run rockchip kernel at 250Hz to increase performance,
 - 0.7.11: Add support for usb gadgets for rockchip,
