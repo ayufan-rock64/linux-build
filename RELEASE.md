@@ -24,6 +24,8 @@ sudo apt-get install linux-rockpro64 -y
 
 # 0.7.x
 
+- 0.7.14: Update rockchip kernel to 4.4.167,
+- 0.7.14: Update mainline kernel to 5.0,
 - 0.7.13: Enable support for RockPro64 WiFi/BT module,
 - 0.7.13: Fix LXDE build: updated libdrm,
 - 0.7.12: Rebased mainline kernel,
