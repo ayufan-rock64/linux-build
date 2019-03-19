@@ -83,5 +83,5 @@ bionic-minimal-armhf rock64: *build
 bionic-minimal-arm64 rockpro64: *build
 bionic-minimal-armhf rockpro64: *build
 
-bionic-mate-arm64 rock64: *build_manual
-bionic-mate-arm64 rockpro64: *build_manual
+bionic-mate-armhf rock64: *build
+bionic-mate-armhf rockpro64: *build
