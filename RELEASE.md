@@ -22,6 +22,15 @@ sudo apt-get install linux-rock64 -y
 sudo apt-get install linux-rockpro64 -y
 ```
 
+# 0.8.x
+
+- 0.8.0: First release with complete rebase of all patches,
+- 0.8.0: Fixed mali, wifi, bt, sound, hdmi on rockpro64,
+- 0.8.0: Use `xserver` for `rockpro64` with gles2,
+- 0.8.0: Fixed `libmali-*` to not conflict with development libraries,
+- 0.8.0: Initial work on support for `pinebook-pro`,
+- 0.8.0: Provide `armhf` desktop on `mate` as it is quite fast and stable,
+
 # 0.7.x
 
 - 0.7.14: Update rockchip kernel to 4.4.167,
