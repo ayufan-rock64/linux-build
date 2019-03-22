@@ -1,4 +1,5 @@
-export RELEASE_NAME ?= $(shell cat VERSION)~dev
+export VERSION ?= $(shell cat VERSION)
+export RELEASE_NAME ?= $(VERSION)~dev
 export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master
 export KERNEL_DIR ?= kernel
