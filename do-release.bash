@@ -59,6 +59,9 @@ echo "Reading package versions..."
 make generate-versions > Makefile.versions.mk
 cat Makefile.versions.mk
 
+echo "OK?"
+read PROMPT
+
 echo "Adding changes..."
 git add RELEASE.md Makefile.versions.mk
 
