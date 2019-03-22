@@ -1,37 +1,57 @@
-**Notes**:
+## Notes
+
 - **The RELEASES is the latest stable version**. The pre-release is the latest development version.
 - Use u-boot recovery mode selection: https://github.com/ayufan-rock64/linux-u-boot/commit/ea6efecdfecc57c853a6f32f78469d1b2417329b
 - To enable upgrading to pre-releases edit `nano /etc/apt/sources.list.d/ayufan-rock64.list`,
 - If you look for kernels, u-boots, or packages (.deb), consider reading the: https://github.com/ayufan-rock64/linux-build#components,
 - [Buy me a Beer](https://www.paypal.me/ayufanpl)
 
-**OpenMediaVault**:
-- Use armhf variant as one that offers the best compatibility,
+## Variants
 
-**Bionic / Container Linux**:
-- It has Docker Community Edition / Docker Compose / Kubernetes-admin installed for easy Containers use,
+### 1. Desktop
 
-**Credentials**:
-- All variants except OMV: rock64/rock64
-- OMV: admin/openmediavault (for Web), root/openmediavault (for Console). To enable SSH for OMV go to Web > SSH > Permit Root Login > Save > Apply
+Use **armhf** variant with Ubuntu Mate as one that offers the best compatibility and performance.
 
-**Upgrade**:
-```
+Credentials: rock64/rock64
+
+### 2. Bionic / Container Linux
+
+It has Docker Community Edition / Docker Compose / Kubernetes-admin installed for easy Containers use.
+
+Credentials: rock64/rock64
+
+### 3. OpenMediaVault
+
+Use **armhf** variant as one that offers the best compatibility.
+
+Credentials: admin/openmediavault (for Web), root/openmediavault (for Console).
+To enable SSH for OMV go to Web > SSH > Permit Root Login > Save > Apply
+
+### Upgrade
+
+```bash
 sudo apt-get update -y
 sudo apt-get install linux-rock64 -y
 sudo apt-get install linux-rockpro64 -y
+sudo apt-get install linux-pinebookpro -y
 ```
 
-# 0.8.x
+## Changelog
+
+### 0.8.x
 
 - 0.8.0: First release with complete rebase of all patches,
-- 0.8.0: Fixed mali, wifi, bt, sound, hdmi on rockpro64,
-- 0.8.0: Use `xserver` for `rockpro64` with gles2,
+- 0.8.0: Fixed Mali, WiFi, BT, Sound, HDMI, Suspend on RockPro64,
+- 0.8.0: Use `xserver` for `rockpro64` and `pinebook-pro` with gles2,
 - 0.8.0: Fixed `libmali-*` to not conflict with development libraries,
-- 0.8.0: Initial work on support for `pinebook-pro`,
+- 0.8.0: Add full support for `pinebook-pro v1`,
 - 0.8.0: Provide `armhf` desktop on `mate` as it is quite fast and stable,
+- 0.8.0: Provide `gl4es` to run OpenGL1/2 applications with GLES2 acceleration,
+- 0.8.0: Provide `install_widevine_drm.sh` to install Widevine DRM,
+- 0.8.0: Style `Ubuntu Mate` with nice wallpapers and pre-configured panels,
+- 0.8.0: Configure `Bluetooth` on system start on RockPro64 and PinebookPro,
 
-# 0.7.x
+### 0.7.x
 
 - 0.7.14: Update rockchip kernel to 4.4.167,
 - 0.7.14: Update mainline kernel to 5.0,
@@ -73,7 +93,7 @@ sudo apt-get install linux-rockpro64 -y
 - 0.7.0: Introduces heavy refactor splitting all components into separate repos, and separate independent releases (u-boot, kernel, kernel-mainline, compatibility package),
 - 0.7.0: Dry run everything,
 
-# 0.6.x
+### 0.6.x
 
 - 0.6.60: Fix pcie/nvme/sata support for 4.4,
 - 0.6.60: Fix spi-flash access for 4.4/mainline,
@@ -204,7 +224,7 @@ sudo apt-get install linux-rockpro64 -y
 - 0.6.0: **Highly experimental**,
 - 0.6.0: Use SPL/TPL instead of Rockchip's loaders (supports flashing and booting from SPI),
 
-# 0.5.x
+### 0.5.x
 
 - 0.5.15: Include additional USB3 patch to fix disconnection/reconnection problems (only 4.4 kernel),
 - 0.5.14: Include USB3 patches to fix disconnection/reconnection problems (only 4.4 kernel),
@@ -273,7 +293,7 @@ sudo apt-get install linux-rockpro64 -y
 - 0.4.0: Make resize_rootfs.sh to work with SD and eMMC,
 - 0.4.0: Merge https://github.com/Kwiboo/linux-rockchip that includes internal phy, vpu set to 600MHz, and other smaller fixes,
 
-# 0.3.x
+### 0.3.x
 
 - 0.3.7: Disable RK_PARTITION support (needed by Android) and enable additional kernel modules: https://github.com/ayufan-rock64/linux-kernel/commit/17cebdba56f7eded8b1a02ecc46d6a34950a566b,
 - 0.3.6: Use labels to choose boot and root device,
@@ -286,7 +306,7 @@ sudo apt-get install linux-rockpro64 -y
 - 0.3.0: Not compatible with 0.2.x due to change in partition layout:
 - 0.3.0: Use /boot/efi located at /dev/mmcblk0p6 and / located at /dev/mmcblk0p7
 
-# 0.2.x
+### 0.2.x
 
 - Enable SPI Flash for Linux,
 - Add linux-rock64 a virtual package that depends on linux-rock64-package and linux-image-*-ayufan-*,
@@ -303,7 +323,7 @@ sudo apt-get install linux-rockpro64 -y
 - Use single partition for boot and root,
 - Use linux image deb with flash-kernel,
 
-# 0.1.x
+### 0.1.x
 
 - Make u-boot less noisy,
 - Dist-upgrade system to fix Mali,
@@ -311,7 +331,7 @@ sudo apt-get install linux-rockpro64 -y
 - Include ppa:ayufan/rock64-ppa with Mali drivers,
 - Update u-boot and kernel,
 
-# 0.0.x
+### 0.0.x
 
 - Initial release,
 - Build armhf release,
