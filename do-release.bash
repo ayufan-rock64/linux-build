@@ -67,7 +67,7 @@ git add RELEASE.md Makefile.versions.mk
 
 echo "Creating tag..."
 git add Makefile.versions.mk
-cat <<EOF | git commit $COMMIT_FLAGS -F -
+cat <<EOF | git commit $COMMIT_FLAGS --allow-empty -F -
 v$RELEASE
 
 $(cat Makefile.versions.mk)
