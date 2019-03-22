@@ -32,6 +32,7 @@ It uses a bunch of different repositories:
 - [rkbin](https://github.com/ayufan-rock64/rkbin) - precompiled bootloader binary blobs.
 
 You can find latest pre-releases and releases of these components here:
+
 - [kernel-rockchip](https://github.com/ayufan-rock64/linux-kernel/releases/latest) - patched Rockchip's kernel (4.4),
 - [kernel-mainline](https://github.com/ayufan-rock64/linux-mainline-kernel/releases/latest) - patched mainline kernel (>= 4.13),
 - [u-boot](https://github.com/ayufan-rock64/linux-u-boot/releases/latest) - patched mainline u-boot,
