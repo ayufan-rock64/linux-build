@@ -66,9 +66,11 @@ pre-release:
 
 bionic-mate-armhf rock64: *build
 bionic-mate-armhf rockpro64: *build
+bionic-mate-armhf pinebookpro: *build
 
 bionic-lxde-arm64 rock64: *build
 bionic-lxde-arm64 rockpro64: *build
+bionic-lxde-arm64 pinebookpro: *build
 
 bionic-containers-arm64 rock64: *build
 bionic-containers-arm64 rockpro64: *build
@@ -85,4 +87,6 @@ bionic-minimal-arm64 rock64: *build
 bionic-minimal-armhf rock64: *build
 bionic-minimal-arm64 rockpro64: *build
 bionic-minimal-armhf rockpro64: *build
+bionic-minimal-arm64 pinebookpro: *build
+bionic-minimal-armhf pinebookpro: *build
 
