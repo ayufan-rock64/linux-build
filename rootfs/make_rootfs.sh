@@ -311,6 +311,7 @@ rm -f "$DEST/usr/sbin/policy-rc.d"
 rm -f "$DEST/usr/local/bin/mdadm"
 rm -f "$DEST/var/lib/dbus/machine-id"
 rm -f "$DEST/etc/flash-kernel/machine"
+rm -f "$DEST/etc/machine-id"
 rm -f "$DEST/SHA256SUMS"
 
 echo "Done - installed rootfs to $DEST"
