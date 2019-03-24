@@ -1,9 +1,10 @@
 ## Notes
 
-- **The RELEASES is the latest stable version**. The pre-release is the latest development version.
+- **The RELEASES is the latest stable version**. The pre-release is the latest development version
+- **Fully reproducible, upgradable and trustable builds, build by CI system**
 - Use u-boot recovery mode selection: https://github.com/ayufan-rock64/linux-u-boot/commit/ea6efecdfecc57c853a6f32f78469d1b2417329b
-- To enable upgrading to pre-releases edit `nano /etc/apt/sources.list.d/ayufan-rock64.list`,
-- If you look for kernels, u-boots, or packages (.deb), consider reading the: https://github.com/ayufan-rock64/linux-build#components,
+- To enable upgrading to pre-releases edit `nano /etc/apt/sources.list.d/ayufan-rock64.list`
+- If you look for kernels, u-boots, or packages (.deb), consider reading the: https://github.com/ayufan-rock64/linux-build#components
 - [Buy me a Beer](https://www.paypal.me/ayufanpl)
 
 ## Variants
