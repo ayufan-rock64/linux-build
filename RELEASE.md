@@ -45,7 +45,6 @@ sudo apt-get install linux-pinebookpro -y
 - 0.8.0rc6: Enable `rga` device for rock/pinebook/pro64
 - 0.8.0rc6: Enable `compositing-manager` marco for Mate,
 - 0.8.0rc6: Fix display of desktop icons for Mate,
-- 0.8.0rc6: Install bionic docker for Bionic Containers,
 - 0.8.0rc6: Prefer `PageFlip=true`,
 - 0.8.0rc5: Fix `Bluetooth` failure on desktop load
 - 0.8.0rc4: Provide `install_widevine_drm.sh` to install Widevine DRM,
