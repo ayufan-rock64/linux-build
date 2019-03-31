@@ -41,17 +41,23 @@ sudo apt-get install linux-pinebookpro -y
 
 ### 0.8.x
 
-- 0.8.0rc1: First release with complete rebase of all patches,
-- 0.8.0rc1: Fixed Mali, WiFi, BT, Sound, HDMI, Suspend on RockPro64,
+- 0.8.0rc6: Disable `swrast` to improve compositing performance,
+- 0.8.0rc6: Enable `rga` device for rock/pinebook/pro64
+- 0.8.0rc6: Enable `compositing-manager` marco for Mate,
+- 0.8.0rc6: Fix display of desktop icons for Mate,
+- 0.8.0rc6: Install bionic docker for Bionic Containers,
+- 0.8.0rc6: Prefer `PageFlip=true`,
+- 0.8.0rc5: Fix `Bluetooth` failure on desktop load
+- 0.8.0rc4: Provide `install_widevine_drm.sh` to install Widevine DRM,
 - 0.8.0rc3: Use `xserver` for `rockpro64` and `pinebook-pro` with gles2,
-- 0.8.0rc1: Fixed `libmali-*` to not conflict with development libraries,
 - 0.8.0rc3: Add full support for `pinebook-pro v1`,
 - 0.8.0rc3: Provide `armhf` desktop on `mate` as it is quite fast and stable,
 - 0.8.0rc3: Provide `gl4es` to run OpenGL1/2 applications with GLES2 acceleration,
-- 0.8.0rc4: Provide `install_widevine_drm.sh` to install Widevine DRM,
 - 0.8.0rc3: Style `Ubuntu Mate` with nice wallpapers and pre-configured panels,
 - 0.8.0rc3: Configure `Bluetooth` on system start on RockPro64 and PinebookPro,
-- 0.8.0rc5: Fix `Bluetooth` failure on desktop load
+- 0.8.0rc1: First release with complete rebase of all patches,
+- 0.8.0rc1: Fixed Mali, WiFi, BT, Sound, HDMI, Suspend on RockPro64,
+- 0.8.0rc1: Fixed `libmali-*` to not conflict with development libraries,
 
 ### 0.7.x
 
