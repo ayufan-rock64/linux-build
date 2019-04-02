@@ -41,8 +41,9 @@ sudo apt-get install linux-pinebookpro -y
 
 ### 0.8.x
 
+- 0.8.0rc7: Fix performance regression of xserver,
+- 0.8.0rc7: Enable `rga` device for rock/pinebook/pro64
 - 0.8.0rc6: Disable `swrast` to improve compositing performance,
-- 0.8.0rc6: Enable `rga` device for rock/pinebook/pro64
 - 0.8.0rc6: Enable `compositing-manager` marco for Mate,
 - 0.8.0rc6: Fix display of desktop icons for Mate,
 - 0.8.0rc6: Prefer `PageFlip=true`,
