@@ -35,6 +35,7 @@ package:
   script:
     - make linux-virtual BOARD_TARGET=rock64
     - make linux-virtual BOARD_TARGET=rockpro64
+    - make linux-virtual BOARD_TARGET=pinebookpro
     - upload_all *.deb
     - rm *.deb
   artifacts:
