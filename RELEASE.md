@@ -41,6 +41,8 @@ sudo apt-get install linux-pinebookpro -y
 
 ### 0.8.x
 
+- 0.8.0rc9: Test if long start is fixed,
+- 0.8.0rc9: Prefer `PageFlip=false` as it removes flickering,
 - 0.8.0rc8: Fix display on Pinebook Pro
 - 0.8.0rc7: Fix performance regression of xserver,
 - 0.8.0rc7: Enable `rga` device for rock/pinebook/pro64
