@@ -1,0 +1,7 @@
+version: "2.0"
+services:
+  distcc:
+    build: .
+    ports:
+      - 3632:3632
+
