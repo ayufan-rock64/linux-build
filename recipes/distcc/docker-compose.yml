@@ -4,4 +4,5 @@ services:
     build: .
     ports:
       - 3632:3632
+      - 3633:3633
 

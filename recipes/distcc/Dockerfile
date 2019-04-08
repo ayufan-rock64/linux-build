@@ -8,4 +8,6 @@ RUN apt-get install -y \
   gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
 
 ENTRYPOINT ["distccd"]
-CMD ["--daemon", "--no-detach", "-j", "4", "--allow", "0/0"]
+CMD ["--daemon", "--log-stderr", "--stats", "--no-detach", "--jobs", "6", "--allow", "0.0.0.0/0"]
+EXPOSE 3632
+EXPOSE 3633
