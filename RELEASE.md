@@ -41,6 +41,7 @@ sudo apt-get install linux-pinebookpro -y
 
 ### 0.8.x
 
+- 0.8.0rc10: Fix booting mate on Rock64, but without 3D acceleration for now,
 - 0.8.0rc9: Fix long start issue due to removed `/etc/machine-id`,
 - 0.8.0rc9: Prefer `PageFlip=false` as it removes flickering,
 - 0.8.0rc8: Fix display on Pinebook Pro
