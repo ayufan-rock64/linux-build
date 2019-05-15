@@ -20,10 +20,17 @@ enable_dtoverlay eth1 ethernet@ff550000 okay
 
 This will enable `eth1` till next reboot. If you want to make it permamently execute this commands as `root`:
 
+### on SD card
 ```
 fdtoverlay -i `ls /boot/dtb-*` -o /root/dtb-eth1 /sys/kernel/config/device-tree/overlays/eth1/dtbo
 mv /root/dtb `ls /boot/dtb-*`
 dtc -I dtb -O dts `ls /boot/dtb-*` > `ls /boot/dts-*`
+```
+
+### on eMMC
+```
+fdtoverlay -i /boot/dtbs/4.4.132-1075-rockchip-ayufan-ga83beded8524/rockchip/rk3328-rock64.dtb -o /root/dtb-eth1 /sys/kernel/config/device-tree/overlays/eth1/dtbo
+mv /root/dtb-eth1 /boot/dtbs/4.4.132-1075-rockchip-ayufan-ga83beded8524/rockchip/rk3328-rock64.dtb
 ```
 
 ## Help wanted
