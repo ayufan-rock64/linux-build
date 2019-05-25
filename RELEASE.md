@@ -37,10 +37,17 @@ sudo apt-get install linux-rockpro64 -y
 sudo apt-get install linux-pinebookpro -y
 ```
 
+## Known bugs
+
+1. `rock64`: `mpv` does not start due to missing `libGL.so.1`,
+2. `rock64`: `mate` renders graphic glitches,
+
 ## Changelog
 
 ### 0.8.x
 
+- 0.8.0rc11: Lock DDR freq to 1600MHz on Rock64,
+- 0.8.0rc11: Enable 3D acceleration for Rock64,
 - 0.8.0rc10: Fix booting mate on Rock64, but without 3D acceleration for now,
 - 0.8.0rc9: Fix long start issue due to removed `/etc/machine-id`,
 - 0.8.0rc9: Prefer `PageFlip=false` as it removes flickering,
