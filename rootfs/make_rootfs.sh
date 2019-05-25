@@ -219,12 +219,16 @@ cat > "$DEST/etc/flash-kernel/machine" <<EOF
 $MODEL
 EOF
 
-# Disable fsyncs to speed-up build process
-do_chroot apt-get -y update
-do_chroot apt-get -y install eatmydata
-
 export DEBIAN_FRONTEND=noninteractive
-export CHROOT_PREFIX="eatmydata --"
+
+do_chroot apt-get -y update
+
+if [[ -n "$USE_EATMYDATA" ]]; then
+	# Disable fsyncs to speed-up build process
+	do_chroot apt-get -y install eatmydata
+
+	export CHROOT_PREFIX="eatmydata --"
+fi
 
 do_chroot locale-gen en_US.UTF-8
 
