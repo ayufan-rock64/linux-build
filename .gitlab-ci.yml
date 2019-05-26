@@ -35,6 +35,7 @@ package:
   script:
     - make linux-virtual BOARD_TARGET=rock64
     - make linux-virtual BOARD_TARGET=rockpro64
+    - make linux-virtual BOARD_TARGET=rockpi4b
     - make linux-virtual BOARD_TARGET=pinebookpro
     - upload_all *.deb
     - rm *.deb
@@ -83,6 +84,7 @@ stretch-openmediavault-armhf rockpro64: *build
 
 stretch-minimal-arm64 rock64: *build
 stretch-minimal-arm64 rockpro64: *build
+stretch-minimal-arm64 rockpi4b: *build
 
 bionic-minimal-arm64 rock64: *build
 bionic-minimal-armhf rock64: *build
@@ -90,4 +92,5 @@ bionic-minimal-arm64 rockpro64: *build
 bionic-minimal-armhf rockpro64: *build
 bionic-minimal-arm64 pinebookpro: *build
 bionic-minimal-armhf pinebookpro: *build
+bionic-minimal-arm64 rockpi4b: *build
 
