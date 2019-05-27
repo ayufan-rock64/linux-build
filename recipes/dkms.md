@@ -20,14 +20,25 @@ sudo apt-get install dkms git-core
 
 ## Install DKMS (armhf)
 
-**This currently does not work due to missing `gcc-aarch64-linux-gnu`.**
+
+You have to perform additional steps to prepare `aarch64` compilation environment:
+
+```bash
+sudo apt-get update -y
+sudo apt-get install -y dkms git-core
+sudo apt-get install -y debootstrap binutils-aarch64-linux-gnu
+sudo debootstrap --arch=arm64 --variant=minbase --include=gcc bionic /opt/gcc-arm64 http://ports.ubuntu.com/ubuntu-ports/
+echo "export CROSS_COMPILE=/opt/gcc-arm64/usr/bin/aarch64-linux-gnu-" | sudo tee -a /etc/dkms/framework.conf
+echo "export LD_LIBRARY_PATH=/opt/gcc-arm64/usr/lib/aarch64-linux-gnu/:/opt/gcc-arm64/lib/aarch64-linux-gnu/:\$LD_LIBRARY_PATH" | sudo tee  -a /etc/dkms/framework.conf
+```
 
 ## Wireguard
 
 Installing Wireguard is very simple with DKMS and makes Wireguard to be auto-updated
 after kernel change.
 
-Following the documentation from https://www.wireguard.com/install/:
+Following the documentation from https://www.wireguard.com/install/ Ubuntu,
+visit the wireguard webpage for Debian documentation:
 
 ```bash
 sudo add-apt-repository ppa:wireguard/wireguard
