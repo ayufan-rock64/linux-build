@@ -42,6 +42,7 @@ as well.
 ```bash
 sudo git clone https://github.com/greearb/rtl8812AU_8821AU_linux.git /usr/src/rtl8812au-4.3.14
 sudo dkms build rtl8812au/4.3.14
+sudo dkms autoinstall
 ```
 
 ## tn40xx driver (10Gbps PCIe adapter)
@@ -49,6 +50,7 @@ sudo dkms build rtl8812au/4.3.14
 ```bash
 sudo git clone https://github.com/ayufan-rock64/tn40xx-driver /usr/src/tn40xx-001
 sudo dkms build tn40xx/001
+sudo dkms autoinstall
 ```
 
 ## exfat-nofuse
@@ -59,4 +61,5 @@ There's a very good linux kernel driver available:
 ```bash
 sudo git clone https://github.com/barrybingo/exfat-nofuse /usr/src/exfat-1.2.8
 sudo dkms build exfat/1.2.8
+sudo dkms autoinstall
 ```
