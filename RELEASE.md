@@ -41,6 +41,8 @@ sudo apt-get install linux-pinebookpro -y
 
 ### 0.8.x
 
+- 0.8.0rc13: RockPro64: enable RTC, SPDIF, IR, fix GMAC from suspend,
+- 0.8.0rc13: Fix Chromium User Agent to make Netflix happy,
 - 0.8.0rc12: Make Rock64 v3 to work, Yay!
 - 0.8.0rc11: Fix pcie0 and sdio0 on RockPro64 (it should be always stable),
 - 0.8.0rc11: Compile-in CONFIG_PHY_ROCKCHIP_PCIE into kernel,
