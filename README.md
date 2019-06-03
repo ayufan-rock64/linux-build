@@ -11,6 +11,12 @@ You can always download [latest stable](https://github.com/ayufan-rock64/linux-b
 If you want to test bleeding edge features use one of the [pre-releases](https://github.com/ayufan-rock64/linux-build/releases).
 Use pre-releases only if you want to test bleeding edge features.
 
+## Compatibility
+
+Not all releases support all features, some features get borked with some releases.
+Follow this [document](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A)
+to check the working features with each release.
+
 ## Issues
 
 If you have any problems with this build or any of the features do not work, feel free to create a new issue in this repository.

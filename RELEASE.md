@@ -2,7 +2,8 @@
 
 - **The RELEASES is the latest stable version**. The pre-release is the latest development version
 - **Fully reproducible, upgradable and trustable builds, build by CI system**
-- Use u-boot recovery mode selection: https://github.com/ayufan-rock64/linux-u-boot/commit/ea6efecdfecc57c853a6f32f78469d1b2417329b
+- Check [Compatibility list](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A)
+to get know about working features of each release
 - To enable upgrading to pre-releases edit `nano /etc/apt/sources.list.d/ayufan-rock64.list`
 - If you look for kernels, u-boots, or packages (.deb), consider reading the: https://github.com/ayufan-rock64/linux-build#components
 - [Buy me a Beer](https://www.paypal.me/ayufanpl)
@@ -27,6 +28,11 @@ Use **armhf** variant as one that offers the best compatibility.
 
 Credentials: admin/openmediavault (for Web), root/openmediavault (for Console).
 To enable SSH for OMV go to Web > SSH > Permit Root Login > Save > Apply
+
+### Compatibility
+
+Follow this [document](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A)
+to check the working features of each release.
 
 ### Upgrade
 
