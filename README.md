@@ -62,6 +62,7 @@ For technical information, see the following documents:
 - [extlinux.md](recipes/extlinux.md): Make it easy to switch kernel versions
 - [changing-boards.md](recipes/changing-boards.md): Switch existing installation between Rock64 and RockPro64 (highly experimental)
 - [dkms.md](recipes/dkms.md): Additional drivers (WiFi, Wireguard) via DKMS
+- [netflix.md](recipes/netflix.md): Enable Netflix
 
 ## License
 
