@@ -47,6 +47,9 @@ sudo apt-get install linux-pinebookpro -y
 
 ### 0.8.x
 
+- 0.8.0rc14: Enable support for Pinebook Pro v2,
+- 0.8.0rc14: Enable i2c0 on Rock64,
+- 0.8.0rc14: Enable i2c8 on RockPro64,
 - 0.8.0rc13: RockPro64: enable RTC, SPDIF, IR, fix GMAC from suspend,
 - 0.8.0rc13: Fix Chromium User Agent to make Netflix happy,
 - 0.8.0rc12: Make Rock64 v3 to work, Yay!
