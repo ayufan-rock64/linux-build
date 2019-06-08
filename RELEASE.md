@@ -2,8 +2,7 @@
 
 - **The RELEASES is the latest stable version**. The pre-release is the latest development version
 - **Fully reproducible, upgradable and trustable builds, build by CI system**
-- Check [Compatibility list](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A)
-to get know about working features of each release
+- Check [Compatibility list](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A) to get know about working features of each release
 - To enable upgrading to pre-releases edit `nano /etc/apt/sources.list.d/ayufan-rock64.list`
 - If you look for kernels, u-boots, or packages (.deb), consider reading the: https://github.com/ayufan-rock64/linux-build#components
 - [Buy me a Beer](https://www.paypal.me/ayufanpl)
