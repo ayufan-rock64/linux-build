@@ -47,6 +47,12 @@ sudo apt-get install linux-pinebookpro -y
 
 ### 0.8.x
 
+- 0.8.0rc15: Support brightness controls for Pinebook Pro v2,
+- 0.8.0rc15: Support power/lid controls on Pinebook Pro v2,
+- 0.8.0rc15: Support charger detection on Pinebook Pro v2,
+- 0.8.0rc15: Disable DRAM 928MHz for RockPro64 and Pinebook Pro as it causes instabilities,
+- 0.8.0rc15: Fix spurious resume after suspend support for RockPro64 and Pinebook Pro,
+- 0.8.0rc15: Disable wake-on-lan support for Rock64 and RockPro64,
 - 0.8.0rc14: Enable support for Pinebook Pro v2,
 - 0.8.0rc14: Enable i2c0 on Rock64,
 - 0.8.0rc14: Enable i2c8 on RockPro64,
