@@ -45,19 +45,35 @@ fi
 
 set -e
 
+echo "Reading package versions..."
+show_diff() {
+  PREVIOUS="${!2/-g*/}"
+  source Makefile.versions.mk
+  NEW="${!2/-g*/}"
+
+  if [[ "${PREVIOUS}" != "${NEW}" ]]; then
+    echo "- https://github.com/ayufan-rock64/$1/compare/${PREVIOUS}..${NEW}"
+  fi
+}
+
+git checkout Makefile.versions.mk
+source Makefile.versions.mk
+make generate-versions > Makefile.versions.mk
+
+echo "Differences:"
+( show_diff linux-u-boot LATEST_UBOOT_VERSION )
+( show_diff linux-kernel LATEST_KERNEL_VERSION )
+( show_diff linux-package LATEST_PACKAGE_VERSION )
+
+echo "OK?"
+read PROMPT
+
 echo "Edit changeset:"
 if which editor &>/dev/null; then
   editor RELEASE.md
 else
   vi RELEASE.md
 fi
-
-echo "OK?"
-read PROMPT
-
-echo "Reading package versions..."
-make generate-versions > Makefile.versions.mk
-cat Makefile.versions.mk
 
 echo "OK?"
 read PROMPT
