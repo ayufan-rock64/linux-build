@@ -11,7 +11,8 @@
 
 ### 1. Desktop
 
-Use **armhf** variant with Ubuntu Mate / LXDE as one that offers the best compatibility and performance.
+Use **armhf** variant with Ubuntu Mate as one that offers the best compatibility and performance.
+Ubuntu Mate is not available for Rock64 as it is simply too slow.
 
 Credentials: rock64/rock64
 
