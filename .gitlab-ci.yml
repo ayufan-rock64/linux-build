@@ -66,13 +66,21 @@ pre-release:
   when: manual
   allow_failure: true
 
-# bionic-mate-armhf rock64: *build
+bionic-mate-armhf rock64: *build_manual
 bionic-mate-armhf rockpro64: *build
 bionic-mate-armhf pinebookpro: *build
+
+bionic-mate-arm64 rock64: *build_manual
+bionic-mate-arm64 rockpro64: *build_manual
+bionic-mate-arm64 pinebookpro: *build_manual
 
 bionic-lxde-armhf rock64: *build
 bionic-lxde-armhf rockpro64: *build
 bionic-lxde-armhf pinebookpro: *build
+
+bionic-lxde-arm64 rock64: *build_manual
+bionic-lxde-arm64 rockpro64: *build_manual
+bionic-lxde-arm64 pinebookpro: *build_manual
 
 bionic-containers-arm64 rock64: *build
 bionic-containers-arm64 rockpro64: *build
@@ -93,4 +101,3 @@ bionic-minimal-armhf rockpro64: *build
 bionic-minimal-arm64 pinebookpro: *build
 bionic-minimal-armhf pinebookpro: *build
 bionic-minimal-arm64 rockpi4b: *build
-
