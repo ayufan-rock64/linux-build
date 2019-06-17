@@ -46,6 +46,8 @@ sudo apt-get install linux-pinebookpro -y
 
 ### 0.8.x
 
+- 0.8.0rc16: Improve glamor support for Rock64,
+- 0.8.0rc16: Disable automatic updates,
 - 0.8.0rc15: Support brightness controls for Pinebook Pro v2,
 - 0.8.0rc15: Support power/lid controls on Pinebook Pro v2,
 - 0.8.0rc15: Support charger detection on Pinebook Pro v2,
