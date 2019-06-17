@@ -1,6 +1,6 @@
 ## Notes
 
-- **The RELEASES is the latest stable version**. The pre-release is the latest development version
+- **PRE-RELEASE**: unstable and should be only used for testing purposes
 - **Fully reproducible, upgradable and trustable builds, build by CI system**
 - Check [Compatibility list](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A) to get know about working features of each release
 - To enable upgrading to pre-releases edit `nano /etc/apt/sources.list.d/ayufan-rock64.list`
@@ -11,7 +11,7 @@
 
 ### 1. Desktop
 
-Use **armhf** variant with Ubuntu Mate as one that offers the best compatibility and performance.
+Use **armhf** variant with Ubuntu Mate / LXDE as one that offers the best compatibility and performance.
 
 Credentials: rock64/rock64
 
