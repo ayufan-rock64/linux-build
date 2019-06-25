@@ -47,7 +47,7 @@ sudo apt-get install linux-pinebookpro -y
 
 ### 0.8.x
 
-- 0.8.0: The stable release,
+- 0.8.1: The stable release,
 - 0.8.0rc16: Improve glamor support for Rock64,
 - 0.8.0rc16: Disable automatic updates,
 - 0.8.0rc15: Support brightness controls for Pinebook Pro v2,
