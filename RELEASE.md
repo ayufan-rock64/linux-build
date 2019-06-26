@@ -37,17 +37,20 @@ to check the working features of each release.
 ### Upgrade
 
 ```bash
-sudo apt-get update -y
-sudo apt-get install linux-rock64 -y
-sudo apt-get install linux-rockpro64 -y
-sudo apt-get install linux-pinebookpro -y
+# Pick one
+sudo apt-get update -y && sudo apt-get install linux-rock64-0.8 -y
+sudo apt-get update -y && sudo apt-get install linux-rockpro64-0.8 -y
+sudo apt-get update -y && sudo apt-get install linux-pinebookpro-0.8 -y
+
+# Upgrade all other packages
+sudo apt-get update -y && sudo apt-get dist-upgrade -y
 ```
 
 ## Changelog
 
 ### 0.8.x
 
-- 0.8.1: The stable release,
+- 0.8.2: The stable release,
 - 0.8.0rc16: Improve glamor support for Rock64,
 - 0.8.0rc16: Disable automatic updates,
 - 0.8.0rc15: Support brightness controls for Pinebook Pro v2,
