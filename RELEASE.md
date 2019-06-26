@@ -50,7 +50,8 @@ sudo apt-get update -y && sudo apt-get dist-upgrade -y
 
 ### 0.8.x
 
-- 0.8.2: The stable release,
+- 0.8.2: Be more strict what packages/kernels are being in use for 0.8.x branch,
+- 0.8.1: The final pre-release,
 - 0.8.0rc16: Improve glamor support for Rock64,
 - 0.8.0rc16: Disable automatic updates,
 - 0.8.0rc15: Support brightness controls for Pinebook Pro v2,
