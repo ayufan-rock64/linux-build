@@ -3,9 +3,6 @@ export KERNEL_VERSION ?= $(shell cat KERNEL_VERSION)
 export UBOOT_VERSION ?= $(shell cat UBOOT_VERSION)
 export RELEASE_NAME ?= $(VERSION)~dev
 export RELEASE ?= 1
-export BOOT_TOOLS_BRANCH ?= master
-export KERNEL_DIR ?= kernel
-export UBOOT_DIR ?= u-boot
 
 BUILD_SYSTEMS := bionic xenial jessie stretch
 BUILD_VARIANTS := minimal mate lxde i3 openmediavault containers
