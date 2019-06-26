@@ -165,7 +165,6 @@ do_install() {
 rm "$DEST/etc/resolv.conf"
 cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 
-do_chroot apt-key add - < rootfs/ayufan-ppa.gpg
 do_chroot apt-key add - < rootfs/ayufan-deb-ayufan-eu.gpg
 echo -n UTC > "$DEST/etc/timezone"
 
@@ -180,14 +179,6 @@ EOF
 cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list" <<EOF
 deb http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
 EOF
-
-if [[ "$DISTRO" == "stretch" ]]; then
-	do_chroot add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu xenial main"
-elif [[ "$DISTRIB" != "ubuntu" ]]; then
-	do_chroot add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu bionic main"
-else
-	do_chroot add-apt-repository "deb http://ppa.launchpad.net/ayufan/rock64-ppa/ubuntu $DISTRO main"
-fi
 
 # Add non-free packages
 sed -i 's/main contrib$/main contrib non-free/g' $DEST/etc/apt/sources.list
