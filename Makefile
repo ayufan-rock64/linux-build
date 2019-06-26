@@ -1,4 +1,6 @@
 export VERSION ?= $(shell cat VERSION)
+export KERNEL_VERSION ?= $(shell cat KERNEL_VERSION)
+export UBOOT_VERSION ?= $(shell cat UBOOT_VERSION)
 export RELEASE_NAME ?= $(VERSION)~dev
 export RELEASE ?= 1
 export BOOT_TOOLS_BRANCH ?= master

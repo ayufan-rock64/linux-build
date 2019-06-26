@@ -1,6 +1,6 @@
-LATEST_UBOOT_VERSION ?= $(shell curl --fail -s https://api.github.com/repos/ayufan-rock64/linux-u-boot/releases | jq -r ".[0].tag_name")
-LATEST_KERNEL_VERSION ?= $(shell curl --fail -s https://api.github.com/repos/ayufan-rock64/linux-kernel/releases | jq -r '.[0] | (.tag_name + "-g" + (.target_commitish | .[0:12]))')
-LATEST_PACKAGE_VERSION ?= $(shell curl --fail -s https://api.github.com/repos/ayufan-rock64/linux-package/releases | jq -r ".[].tag_name" | grep -m 1 "^$(VERSION)-")
+LATEST_UBOOT_VERSION ?= $(shell scripts/get-package-version linux-u-boot tag $(UBOOT_VERSION))
+LATEST_KERNEL_VERSION ?= $(shell scripts/get-package-version linux-kernel tag_with_sha $(KERNEL_VERSION))
+LATEST_PACKAGE_VERSION ?= $(shell scripts/get-package-version linux-package tag $(VERSION))
 
 PACKAGES += linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb
 
