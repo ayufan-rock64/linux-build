@@ -4,7 +4,7 @@ LATEST_PACKAGE_VERSION ?= $(shell scripts/get-package-version linux-package tag 
 
 PACKAGES += linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb
 
-generate-versions:
+generate-latest:
 	@echo LATEST_UBOOT_VERSION=$(LATEST_UBOOT_VERSION)
 	@echo LATEST_KERNEL_VERSION=$(LATEST_KERNEL_VERSION)
 	@echo LATEST_PACKAGE_VERSION=$(LATEST_PACKAGE_VERSION)

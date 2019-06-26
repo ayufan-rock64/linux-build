@@ -1,6 +1,5 @@
-export VERSION ?= $(shell cat VERSION)
-export KERNEL_VERSION ?= $(shell cat KERNEL_VERSION)
-export UBOOT_VERSION ?= $(shell cat UBOOT_VERSION)
+include Makefile.versions.mk
+
 export RELEASE_NAME ?= $(VERSION)~dev
 export RELEASE ?= 1
 
@@ -20,7 +19,7 @@ IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)
 all: linux-variants linux-virtual
 
 ifneq (,$(CI))
-include Makefile.versions.mk
+include Makefile.latest.mk
 endif
 
 include Makefile.package.mk

@@ -48,7 +48,7 @@ set -e
 echo "Reading package versions..."
 show_diff() {
   PREVIOUS="${!2/-g*/}"
-  source Makefile.versions.mk
+  source Makefile.latest.mk
   NEW="${!2/-g*/}"
 
   if [[ "${PREVIOUS}" != "${NEW}" ]]; then
@@ -56,9 +56,9 @@ show_diff() {
   fi
 }
 
-git checkout Makefile.versions.mk
-source Makefile.versions.mk
-make generate-versions > Makefile.versions.mk
+git checkout Makefile.latest.mk
+source Makefile.latest.mk
+make generate-latest > Makefile.latest.mk
 
 echo "Differences:"
 ( show_diff linux-u-boot LATEST_UBOOT_VERSION )
@@ -79,14 +79,14 @@ echo "OK?"
 read PROMPT
 
 echo "Adding changes..."
-git add RELEASE.md Makefile.versions.mk
+git add RELEASE.md Makefile.latest.mk
 
 echo "Creating tag..."
-git add Makefile.versions.mk
+git add Makefile.latest.mk
 cat <<EOF | git commit $COMMIT_FLAGS --allow-empty -F -
 v$RELEASE
 
-$(cat Makefile.versions.mk)
+$(cat Makefile.latest.mk)
 EOF
 
 git tag "$RELEASE" $TAG_FLAGS

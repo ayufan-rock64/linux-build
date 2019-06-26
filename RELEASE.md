@@ -2,7 +2,7 @@
 
 - **PRE-RELEASE**: unstable and should be only used for testing purposes
 - **Fully reproducible, upgradable and trustable builds, build by CI system**
-- Check [Compatibility list](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A) to get know about working features of each release
+- Check [Compatibility list](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A) to get know about the working features of each release
 - To enable upgrading to pre-releases edit `nano /etc/apt/sources.list.d/ayufan-rock64.list`
 - If you look for kernels, u-boots, or packages (.deb), consider reading the: https://github.com/ayufan-rock64/linux-build#components
 - [Buy me a Beer](https://www.paypal.me/ayufanpl)
@@ -29,11 +29,6 @@ Use **armhf** variant as one that offers the best compatibility.
 Credentials: admin/openmediavault (for Web), root/openmediavault (for Console).
 To enable SSH for OMV go to Web > SSH > Permit Root Login > Save > Apply
 
-### Compatibility
-
-Follow this [document](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A)
-to check the working features of each release.
-
 ### Upgrade
 
 ```bash
@@ -44,6 +39,11 @@ sudo apt-get update -y && sudo apt-get install linux-pinebookpro-0.8 -y
 
 # Upgrade all other packages
 sudo apt-get update -y && sudo apt-get dist-upgrade -y
+
+# Remove invalid X11 config, and fix bootloaders
+sudo rm /etc/X11/xorg.conf.d/20-armsoc.conf
+sudo new_extlinux_boot.sh rootfs
+sudo rock64_upgrade_bootloader.sh
 ```
 
 ## Changelog
