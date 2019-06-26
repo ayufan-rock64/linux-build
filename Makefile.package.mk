@@ -10,7 +10,7 @@ generate-versions:
 	@echo LATEST_PACKAGE_VERSION=$(LATEST_PACKAGE_VERSION)
 
 linux-$(BOARD_TARGET)-$(RELEASE_NAME)_arm64.deb:
-	fpm -s empty -t deb -n linux-$(BOARD_TARGET) -v $(RELEASE_NAME) \
+	fpm -s empty -t deb -n linux-$(BOARD_TARGET)-$(VERSION) -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
 		--depends "board-package-$(BOARD_TARGET)-$(LATEST_PACKAGE_VERSION)" \
