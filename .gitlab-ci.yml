@@ -19,14 +19,14 @@ before_script:
   - 'export RELEASE=$((1000+$CI_PIPELINE_IID))'
   - 'export CHANGES=$(head -n 60 RELEASE.md)'
   - 'export DESCRIPTION=$(echo -e "${CHANGES}\n\n${PIPELINE_URL}")'
-  - 'upload() { github-release upload --tag "${VERSION}" --name "$(basename "$1")" --file "$1"; }'
+  - 'upload() { github-release upload --tag "${CI_COMMIT_TAG}" --name "$(basename "$1")" --file "$1"; }'
   - 'upload_all() { for i in $*; do upload "$i"; done; }'
 
 draft:
   stage: draft
   only: [tags]
   script:
-    - github-release release --tag "${VERSION}" --name "$RELEASE_TITLE" --description "$DESCRIPTION" --target "$CI_COMMIT_SHA" --draft
+    - github-release release --tag "${CI_COMMIT_TAG}" --name "$RELEASE_TITLE" --description "$DESCRIPTION" --target "$CI_COMMIT_SHA" --draft
 
 package:
   stage: package
@@ -49,7 +49,7 @@ pre-release:
     name: pre-release
     url: https://github.com/$GITHUB_USER/$GITHUB_REPO/releases/tag/$CI_COMMIT_TAG
   script:
-    - github-release edit --tag "${VERSION}" --name "$RELEASE_TITLE" --description "$DESCRIPTION" --pre-release
+    - github-release edit --tag "${CI_COMMIT_TAG}" --name "$RELEASE_TITLE" --description "$DESCRIPTION" --pre-release
 
 .build: &build
   stage: images
