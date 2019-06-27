@@ -93,6 +93,6 @@ git tag "$RELEASE" $TAG_FLAGS
 
 echo "Pushing..."
 git push origin "$RELEASE" $PUSH_FLAGS
-git push origin master $PUSH_FLAGS
+git push origin $PUSH_FLAGS
 
 echo "Done."
