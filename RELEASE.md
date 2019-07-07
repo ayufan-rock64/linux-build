@@ -33,20 +33,25 @@ To enable SSH for OMV go to Web > SSH > Permit Root Login > Save > Apply
 
 ```bash
 # Pick one
-sudo apt-get update -y && sudo apt-get install linux-rock64-0.8 -y
-sudo apt-get update -y && sudo apt-get install linux-rockpro64-0.8 -y
-sudo apt-get update -y && sudo apt-get install linux-pinebookpro-0.8 -y
+sudo apt-get update -y && sudo apt-get install linux-rock64-0.9 -y
+sudo apt-get update -y && sudo apt-get install linux-rockpro64-0.9 -y
+sudo apt-get update -y && sudo apt-get install linux-pinebookpro-0.9 -y
 
 # Upgrade all other packages
 sudo apt-get update -y && sudo apt-get dist-upgrade -y
 
 # Remove invalid X11 config, and fix bootloaders
 sudo rm /etc/X11/xorg.conf.d/20-armsoc.conf
+sudo rm /etc/X11/xorg.conf.d/ayufan-rock64-0.8-*.list
 sudo new_extlinux_boot.sh rootfs
 sudo rock64_upgrade_bootloader.sh
 ```
 
 ## Changelog
+
+### 0.9.x
+
+- 0.9.0: Update kernel branch to 4.4.184,
 
 ### 0.8.x
 
