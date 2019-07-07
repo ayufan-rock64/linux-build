@@ -51,6 +51,7 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.0: Build Ubuntu/Disco (transitional release) and Debian/Buster (to replace Stretch),
 - 0.9.0: Update kernel branch to 4.4.184,
 
 ### 0.8.x
