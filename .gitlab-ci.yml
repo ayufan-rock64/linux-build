@@ -93,6 +93,9 @@ stretch-minimal-arm64 rock64: *build
 stretch-minimal-arm64 rockpro64: *build
 stretch-minimal-arm64 rockpi4b: *build
 
+buster-minimal-arm64 rock64: *build
+buster-minimal-arm64 rockpro64: *build
+
 bionic-minimal-arm64 rock64: *build
 bionic-minimal-armhf rock64: *build
 bionic-minimal-arm64 rockpro64: *build
@@ -100,3 +103,11 @@ bionic-minimal-armhf rockpro64: *build
 bionic-minimal-arm64 pinebookpro: *build
 bionic-minimal-armhf pinebookpro: *build
 bionic-minimal-arm64 rockpi4b: *build
+
+disco-minimal-arm64 rock64: *build
+disco-minimal-armhf rock64: *build
+disco-minimal-arm64 rockpro64: *build
+disco-minimal-armhf rockpro64: *build
+disco-minimal-arm64 pinebookpro: *build
+disco-minimal-armhf pinebookpro: *build
+disco-minimal-arm64 rockpi4b: *build

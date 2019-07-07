@@ -3,7 +3,7 @@ include Makefile.versions.mk
 export RELEASE_NAME ?= $(VERSION)~dev
 export RELEASE ?= 1
 
-BUILD_SYSTEMS := bionic xenial jessie stretch
+BUILD_SYSTEMS := bionic disco stretch buster
 BUILD_VARIANTS := minimal mate lxde i3 openmediavault containers
 BUILD_ARCHS := armhf arm64
 BUILD_MODELS := rock64 rockpro64 pinebookpro rockpi4b
