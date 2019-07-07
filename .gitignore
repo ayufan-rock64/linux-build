@@ -13,3 +13,5 @@
 /arm-trusted-firmware
 /tmp
 /linux-package
+/extras
+*.code-workspace
