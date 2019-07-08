@@ -51,6 +51,7 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.2: Fix linux-package release due to fpm being broken,
 - 0.9.1: Build OMV5 (Debian/Buster),
 - 0.9.1: Fix ppas for Debian/Buster and Ubuntu/Disco,
 - 0.9.0: Build Ubuntu/Disco (transitional release) and Debian/Buster (to replace Stretch),
