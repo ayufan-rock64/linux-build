@@ -84,14 +84,19 @@ bionic-lxde-arm64 pinebookpro: *build_manual
 bionic-containers-arm64 rock64: *build
 bionic-containers-arm64 rockpro64: *build
 
-stretch-openmediavault-arm64 rock64: *build
-stretch-openmediavault-armhf rock64: *build
-stretch-openmediavault-arm64 rockpro64: *build
-stretch-openmediavault-armhf rockpro64: *build
+buster-openmediavault-arm64 rock64: *build
+buster-openmediavault-armhf rock64: *build
+buster-openmediavault-arm64 rockpro64: *build
+buster-openmediavault-armhf rockpro64: *build
+
+stretch-openmediavault-arm64 rock64: *build_manual
+stretch-openmediavault-armhf rock64: *build_manual
+stretch-openmediavault-arm64 rockpro64: *build_manual
+stretch-openmediavault-armhf rockpro64: *build_manual
 
 stretch-minimal-arm64 rock64: *build
 stretch-minimal-arm64 rockpro64: *build
-stretch-minimal-arm64 rockpi4b: *build
+stretch-minimal-arm64 rockpi4b: *build_manual
 
 buster-minimal-arm64 rock64: *build
 buster-minimal-arm64 rockpro64: *build
@@ -100,14 +105,14 @@ bionic-minimal-arm64 rock64: *build
 bionic-minimal-armhf rock64: *build
 bionic-minimal-arm64 rockpro64: *build
 bionic-minimal-armhf rockpro64: *build
-bionic-minimal-arm64 pinebookpro: *build
-bionic-minimal-armhf pinebookpro: *build
-bionic-minimal-arm64 rockpi4b: *build
+bionic-minimal-arm64 pinebookpro: *build_manual
+bionic-minimal-armhf pinebookpro: *build_manual
+bionic-minimal-arm64 rockpi4b: *build_manual
 
 disco-minimal-arm64 rock64: *build
 disco-minimal-armhf rock64: *build
 disco-minimal-arm64 rockpro64: *build
 disco-minimal-armhf rockpro64: *build
-disco-minimal-arm64 pinebookpro: *build
-disco-minimal-armhf pinebookpro: *build
-disco-minimal-arm64 rockpi4b: *build
+disco-minimal-arm64 pinebookpro: *build_manual
+disco-minimal-armhf pinebookpro: *build_manual
+disco-minimal-arm64 rockpi4b: *build_manual
