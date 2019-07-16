@@ -84,10 +84,10 @@ bionic-lxde-arm64 pinebookpro: *build_manual
 bionic-containers-arm64 rock64: *build
 bionic-containers-arm64 rockpro64: *build
 
-buster-openmediavault-arm64 rock64: *build
-buster-openmediavault-armhf rock64: *build
-buster-openmediavault-arm64 rockpro64: *build
-buster-openmediavault-armhf rockpro64: *build
+buster-openmediavault-arm64 rock64: *build_manual
+buster-openmediavault-armhf rock64: *build_manual
+buster-openmediavault-arm64 rockpro64: *build_manual
+buster-openmediavault-armhf rockpro64: *build_manual
 
 stretch-openmediavault-arm64 rock64: *build_manual
 stretch-openmediavault-armhf rock64: *build_manual
