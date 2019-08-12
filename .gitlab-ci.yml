@@ -109,10 +109,10 @@ bionic-minimal-arm64 pinebookpro: *build_manual
 bionic-minimal-armhf pinebookpro: *build_manual
 bionic-minimal-arm64 rockpi4b: *build_manual
 
-disco-minimal-arm64 rock64: *build
-disco-minimal-armhf rock64: *build
-disco-minimal-arm64 rockpro64: *build
-disco-minimal-armhf rockpro64: *build
+disco-minimal-arm64 rock64: *build_manual
+disco-minimal-armhf rock64: *build_manual
+disco-minimal-arm64 rockpro64: *build_manual
+disco-minimal-armhf rockpro64: *build_manual
 disco-minimal-arm64 pinebookpro: *build_manual
 disco-minimal-armhf pinebookpro: *build_manual
 disco-minimal-arm64 rockpi4b: *build_manual
