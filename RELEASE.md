@@ -51,6 +51,7 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.4: Update kernel branch to 4.4.189,
 - 0.9.3: Update kernel branch to 4.4.185,
 - 0.9.3: Disable OMV5 for now,
 - 0.9.2: Fix linux-package release due to fpm being broken,
