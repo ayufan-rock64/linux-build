@@ -165,7 +165,10 @@ do_install() {
 rm "$DEST/etc/resolv.conf"
 cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 
-do_chroot apt-key add - < rootfs/ayufan-deb-ayufan-eu.gpg
+# Copy GPG-keys
+cp rootfs/ayufan-deb-ayufan-eu.gpg "$DEST/etc/apt/trusted.gpg.d/ayufan-deb-ayufan-eu.gpg"
+
+# Configure timezone
 echo -n UTC > "$DEST/etc/timezone"
 
 # Configure package sources
