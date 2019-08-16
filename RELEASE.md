@@ -51,6 +51,11 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.6: Support Pinebook Pro v2.1,
+- 0.9.6: Optimise suspend on Pinebook Pro,
+- 0.9.6: Optimise Mate styling,
+- 0.9.6: Optimise Touchpad settings for Pinebook Pro,
+- 0.9.6: Support 2/1.5GHz OPP on Pinebook Pro,
 - 0.9.5: Build `Debian/Stretch/OMV4`,
 - 0.9.5: Improve `install_container_linux.sh`,
 - 0.9.4: Update kernel branch to 4.4.189,
