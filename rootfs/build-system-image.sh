@@ -118,6 +118,7 @@ dd if="$TEMP/rootfs/usr/lib/u-boot-${MODEL}/rksd_loader.img" of="${LODEVMAPPER}p
 sync -f "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
 fstrim "$TEMP/rootfs"
 df -h "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
+mv "$TEMP/rootfs/all-packages.txt" "$(dirname "$OUT_IMAGE")/$(basename "$OUT_IMAGE" .img)-packages.txt"
 
 # Cleanup build
 cleanup

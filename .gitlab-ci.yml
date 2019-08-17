@@ -58,7 +58,8 @@ pre-release:
     - set -- $CI_JOB_NAME
     - make "$1" BOARD_TARGET=$2
     - upload_all *.xz
-    - rm *.xz
+    - upload_all *-packages.txt
+    - rm -f *.xz *-packages.txt
 
 .build_manual: &build_manual
   <<: *build

@@ -298,6 +298,9 @@ rm -f "$DEST"/etc/ssh/ssh_host_*
 do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 do_chroot apt-get clean
 
+# List all installed packages
+do_chroot apt list --installed > "$DEST/all-packages.txt"
+
 # Bring back folders
 mkdir -p "$DEST/lib"
 mkdir -p "$DEST/usr"
