@@ -51,6 +51,8 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.7: Fix regression on compositing performance,
+- 0.9.7: Force password to change on first login,
 - 0.9.6: Support Pinebook Pro v2.1,
 - 0.9.6: Optimise suspend on Pinebook Pro,
 - 0.9.6: Optimise Mate styling,
