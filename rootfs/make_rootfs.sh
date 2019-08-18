@@ -241,15 +241,6 @@ fi
 
 do_chroot fake-hwclock save
 
-if [[ "$DEBUSER" != "root" ]]; then
-	do_chroot adduser --gecos "$DEBUSER" --disabled-login "$DEBUSER" --uid 1000
-	do_chroot chown -R 1000:1000 "/home/$DEBUSER"
-	do_chroot usermod -a -G sudo,audio,adm,input,video,plugdev,ssh "$DEBUSER"
-	do_chroot chage -d 0 "$DEBUSER"
-fi
-
-echo "$DEBUSER:$DEBUSERPW" | do_chroot chpasswd
-
 for arch in $EXTRA_ARCHS; do
 	if [[ "$arch" != "$BUILD_ARCH" ]]; then
 		do_chroot dpkg --add-architecture "$arch"
@@ -261,6 +252,16 @@ done
 for package in "$@"; do
 	do_install "$package"
 done
+
+if [[ "$DEBUSER" != "root" ]]; then
+	do_chroot adduser --gecos "$DEBUSER" --disabled-login "$DEBUSER" --uid 1000
+	do_chroot chown -R 1000:1000 "/home/$DEBUSER"
+	do_chroot usermod -a -G sudo,audio,adm,input,video,plugdev,ssh "$DEBUSER"
+fi
+
+# Change and expire password
+echo "$DEBUSER:$DEBUSERPW" | do_chroot chpasswd
+do_chroot passwd -e "$DEBUSER"
 
 case "$VARIANT" in
 	mate)
