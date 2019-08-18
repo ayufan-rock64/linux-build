@@ -1,0 +1,30 @@
+{{- $image := or .image "debian.tgz" -}}
+{{- $distro := or .distro "bionic" -}}
+{{- $variant := or .variant "minimal" -}}
+{{- $architecture := or .architecture "arm64" -}}
+{{- $rootfs_version := or .rootfs_version "0.5.3" }}
+
+{{- $login_user := or .login_user "rock64" }}
+{{- $login_password := or .login_password "rock64" }}
+
+architecture: {{ $architecture }}
+
+actions:
+  - action: run
+    name: Prepare RootFS
+    script: scripts/download_and_unpack_rootfs.sh {{$distro}} {{$variant}} {{$architecture}} {{$rootfs_version}}
+
+  - description: Fix DNS inside container
+    action: run
+    chroot: true
+    script: |
+      rm -f /etc/resolv.conf
+      echo nameserver 1.1.1.1 > /etc/resolv.conf
+
+  - action: apt
+    packages: [ sudo, openssh-server, adduser, systemd-sysv, firmware-linux ]
+
+  - action: pack
+    file: {{ $image }}
+    compression: gz
+
