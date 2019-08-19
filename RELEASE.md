@@ -51,6 +51,12 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.8: Fix BT audio (run on 1.5M),
+- 0.9.8: Use DMA on UART/SPI,
+- 0.9.8: Lower temperature thresholds for Pinebook Pro,
+- 0.9.8: Set default audio device for all devices,
+- 0.9.8: Fix OMV4 build,
+- 0.9.8: Automatically enable h264ify,
 - 0.9.7: Include a list of used packages,
 - 0.9.7: Fix regression on compositing performance,
 - 0.9.7: Force password to change on first login,
