@@ -69,6 +69,7 @@ For technical information, see the following documents:
 - [changing-boards.md](recipes/changing-boards.md): Switch existing installation between Rock64 and RockPro64 (highly experimental)
 - [dkms.md](recipes/dkms.md): Additional drivers (WiFi, Wireguard) via DKMS
 - [netflix.md](recipes/netflix.md): Enable Netflix
+- [gpu-quake3.md](recipes/gpu-quake3.md): Running GPU accelerated games, like OpenArena, Quake 3
 
 ## License
 
