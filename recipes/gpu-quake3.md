@@ -10,7 +10,7 @@ You first have to install OpenArena and Quake 3:
 
 ```bash
 sudo apt install openarena
-sudo apt install quake3
+sudo apt install quake3 quake3-demo-data
 ```
 
 For running Quake 3 you might need either Demo files,
