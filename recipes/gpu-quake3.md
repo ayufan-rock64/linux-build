@@ -51,7 +51,7 @@ DBUS_FATAL_WARNINGS=0 gl4es openarena +set cl_renderer opengl1 +set r_mode -1 +s
 Running Quake 3 is exactly the same:
 
 ```bash
-DBUS_FATAL_WARNINGS=0 gl4es openarena +set cl_renderer opengl1 +set r_mode -1 +set r_customwidth 1920 +set r_customheight 1080 +set r_fullscreen 1 +set cg_drawFPS 1
+DBUS_FATAL_WARNINGS=0 gl4es quake3 +set cl_renderer opengl1 +set r_mode -1 +set r_customwidth 1920 +set r_customheight 1080 +set r_fullscreen 1 +set cg_drawFPS 1
 ```
 
 ## FAQ
