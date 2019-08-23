@@ -51,6 +51,12 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.9: Fix Firefox video playback,
+- 0.9.9: Remove `libmali-rk-dev` from default install,
+- 0.9.9: Align standby/work leds across all boards,
+- 0.9.9: Disable Debug UART on Pinebook Pro, as it causes stability issues,
+- 0.9.9: Fix Pinebook Pro SD card stability,
+- 0.9.9: Enable PCIE NVME support for Pinebook Pro,
 - 0.9.8: Fix BT audio (run on 1.5M),
 - 0.9.8: Use DMA on UART/SPI,
 - 0.9.8: Lower temperature thresholds for Pinebook Pro,
