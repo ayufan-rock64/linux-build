@@ -51,7 +51,7 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
-- 0.9.11: Install `unity-greeter`,
+- 0.9.12: Fix LXDE for Rock64,
 - 0.9.10: Fix support for power/standby LEDs for all boards,
 - 0.9.10: Fix rock64 gpu acceleration regression introduced in 0.9.9,
 - 0.9.10: Replace lxdm to use lightdm, as this allows password change on login,
