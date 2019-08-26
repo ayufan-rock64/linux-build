@@ -18,7 +18,12 @@ To enable it execute this command as `root`:
 enable_dtoverlay eth1 ethernet@ff550000 okay
 ```
 
-This will enable `eth1` till next reboot. If you want to make it permamently consider adding this line to `/etc/rc.local` or other file that is executed on boot.
+If you use `0.9.x >=` version there's an easy to use service:
+
+```bash
+systemctl start kernel-overlay@fast-ethernet
+systemctl enable kernel-overlay@fast-ethernet
+```
 
 ## Help wanted
 

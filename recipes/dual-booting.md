@@ -1,5 +1,7 @@
 # Dual booting
 
+**This is only supported on images up to 0.5.x.**
+
 _U-Boot_ provides the ability to select which OS image/kernel to use when booting.
 
 The following instructions were borrowed from user **maal** on the [PINE64 forum](https://forum.pine64.org/showthread.php?tid=5363&pid=34795#pid34795).
