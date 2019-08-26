@@ -70,6 +70,7 @@ For technical information, see the following documents:
 - [dkms.md](recipes/dkms.md): Additional drivers (WiFi, Wireguard) via DKMS
 - [netflix.md](recipes/netflix.md): Enable Netflix
 - [gpu-quake3.md](recipes/gpu-quake3.md): Running GPU accelerated games, like OpenArena, Quake 3
+- [nordvpn.md](recipes/nordvpn.md): Use NordVPN with Rock/Pro64/Pinebook Pro
 
 ## License
 
