@@ -51,6 +51,9 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.10: Fix rock64 gpu acceleration regression introduced in 0.9.9,
+- 0.9.10: Replace lxdm to use lightdm, as this allows password change on login,
+- 0.9.10: Remove `gnome-screensaver` to fix double lock screen,
 - 0.9.9: Fix Firefox video playback,
 - 0.9.9: Remove `libmali-rk-dev` from default install,
 - 0.9.9: Align standby/work leds across all boards,
