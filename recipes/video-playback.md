@@ -2,6 +2,8 @@
 
 **This only works on Ubuntu Bionic image.**
 
+**This is only needed for images up to 0.7.x. It is by default available from 0.8.x on.**
+
 The [ayufan's ppa](https://launchpad.net/~ayufan/+archive/ubuntu/rock64-ppa) contains the latest compiled FFmpeg and mpv which allows to use HW video acceleration when properly configured.
 
 The modified FFmpeg includes an `h264_rkmpp`, `hevc_rkmpp`, `vp8_rkmpp` and `vp9_rkmpp` video decoders.
