@@ -43,30 +43,38 @@ if [[ "$NO_DIRTY" == "1" ]] && ! git diff-files --quiet; then
   exit 1
 fi
 
-set -e
+set -eo pipefail
 
 echo "Reading package versions..."
 show_diff() {
-  PREVIOUS="${!2/-g*/}"
-  source Makefile.latest.mk
-  NEW="${!2/-g*/}"
+  PREVIOUS="PREVIOUS_${2}"
+  LATEST="LATEST_${2}"
+  PREVIOUS="${!PREVIOUS}"
+  PREVIOUS="${PREVIOUS/$3/}"
+  LATEST="${!LATEST}"
+  LATEST="${LATEST/$3/}"
 
-  if [[ "${PREVIOUS}" != "${NEW}" ]]; then
-    echo "- https://github.com/ayufan-rock64/$1/compare/${PREVIOUS}..${NEW}"
+  if [[ "${PREVIOUS}" != "${LATEST}" ]]; then
+    echo "- https://github.com/ayufan-rock64/$1/compare/${PREVIOUS}..${LATEST}"
   fi
 }
 
+eval $(git show "HEAD:Makefile.latest.mk" | sed "s/^LATEST_/PREVIOUS_/g")
+
 git checkout Makefile.latest.mk
-source Makefile.latest.mk
 make generate-latest > Makefile.latest.mk
+source Makefile.latest.mk
+echo
 
 echo "Differences:"
-( show_diff linux-u-boot LATEST_UBOOT_VERSION )
-( show_diff linux-kernel LATEST_KERNEL_VERSION )
-( show_diff linux-package LATEST_PACKAGE_VERSION )
+show_diff linux-u-boot UBOOT_VERSION
+show_diff linux-kernel KERNEL_VERSION "-g*"
+show_diff linux-package PACKAGE_VERSION
+echo
 
 echo "OK?"
 read PROMPT
+echo
 
 echo "Edit changeset:"
 if which editor &>/dev/null; then
@@ -77,9 +85,11 @@ fi
 
 echo "OK?"
 read PROMPT
+echo
 
 echo "Adding changes..."
 git add RELEASE.md Makefile.latest.mk
+echo
 
 echo "Creating tag..."
 git add Makefile.latest.mk
@@ -90,9 +100,11 @@ $(cat Makefile.latest.mk)
 EOF
 
 git tag "$RELEASE" $TAG_FLAGS
+echo
 
 echo "Pushing..."
 git push origin "$RELEASE" $PUSH_FLAGS
 git push origin $PUSH_FLAGS
+echo
 
 echo "Done."
