@@ -51,6 +51,7 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.14: Bump kernel to 4.4.190,
 - 0.9.14: Fix Firefox video playback,
 - 0.9.13: Bump sound volume for Pinebook Pro,
 - 0.9.12: Fix LXDE for Rock64,
