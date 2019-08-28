@@ -51,8 +51,8 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.14: Fix Firefox video playback,
 - 0.9.13: Bump sound volume for Pinebook Pro,
-- 0.9.13: Fix Firefox video playback,
 - 0.9.12: Fix LXDE for Rock64,
 - 0.9.10: Fix support for power/standby LEDs for all boards,
 - 0.9.10: Fix rock64 gpu acceleration regression introduced in 0.9.9,
