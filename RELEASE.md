@@ -42,7 +42,7 @@ sudo apt-get update -y && sudo apt-get dist-upgrade -y
 
 # Remove invalid X11 config, and fix bootloaders
 sudo rm /etc/X11/xorg.conf.d/20-armsoc.conf
-sudo rm /etc/X11/xorg.conf.d/ayufan-rock64-0.8-*.list
+sudo rm /etc/apt/sources.list.d/ayufan-rock64-0.8-*.list
 sudo new_extlinux_boot.sh rootfs
 sudo rock64_upgrade_bootloader.sh
 ```
