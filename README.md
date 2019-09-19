@@ -62,7 +62,7 @@ For technical information, see the following documents:
 - [dual-booting.md](recipes/dual-booting.md): Provides a menu to choose your OS/kernel at boot time
 - [flash-spi.md](recipes/flash-spi.md): Flash the SPI memory to enable booting from USB or PXE
 - [kernel-upgrade.md](recipes/kernel-upgrade.md): Upgrade your linux kernel to a newer version
-- [additional-devices.md](recipes/additional-devices.md): Use additional devices, like 100Mbit Ethernet
+- [additional-devices.md](recipes/additional-devices.md): Use additional devices, like 100Mbit Ethernet, Pine64 Display or Touchpad, or e-DP Display with Rock64 and RockPro64,
 - [sound.md](recipes/sound.md): Deal with sound support
 - [overclocking.md](recipes/overclocking.md): Bump some specs :)
 - [extlinux.md](recipes/extlinux.md): Make it easy to switch kernel versions
