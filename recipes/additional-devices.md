@@ -26,25 +26,29 @@ with `dtedit` command.
     sudo dtedit
     ```
 
-    You have to find the nodes and change their status from `disabled` to `okay`:
+    Add the following text at the end of file:
 
     ```text
-    pwm@ff420000 {
-      compatible = "rockchip,rk3399-pwm", "rockchip,rk3288-pwm";
-      ...
-      status = "okay"; # changed from `disabled`
-      phandle = <0xe1>;
+    / {
+      pwm@ff420000 {
+        status = "okay";
+      };
+
+      lcd-backlight {
+        status = "okay";
+      };
+
+      edp-panel {
+        status = "okay";
+      };
+
+      edp@ff970000 {
+        status = "okay";
+      };
     };
     ```
 
-    The nodes that has to be `status = "okay"` are:
-
-    - `pwm@ff420000 {` (pwm backlight)
-    - `lcd-backlight {` (backlight control)
-    - `edp-panel {` (edp control)
-    - `edp@ff970000 {` (edp interface)
-
-    Exit editor, and confirm that with `YES`:
+    Exit editor, and confirm that with `YES` and reboot:
 
     ```bash
     Use overlay or not?
@@ -62,33 +66,39 @@ with `dtedit` command.
     # and select DROP
     ```
 
-### Pine64 display and touchpad (RockPro64) (BETA)
+### Pine64 display and touchscreen (RockPro64) (BETA)
 
-1. Enable EDP display device-tree nodes:
+1. Enable display and touchscreen device-tree nodes:
 
     ```bash
     sudo dtedit
     ```
 
-    You have to find the nodes and change their status from `disabled` to `okay`:
+    Add the following text at the end of file:
 
     ```text
-    pwm@ff420000 {
-      compatible = "rockchip,rk3399-pwm", "rockchip,rk3288-pwm";
-      ...
-      status = "okay"; # changed from `disabled`
-      phandle = <0xe1>;
+    / {
+      pwm@ff420000 {
+        status = "okay";
+      };
+
+      lcd-backlight {
+        status = "okay";
+      };
+
+      dsi@ff960000 {
+        status = "okay";
+      };
+
+      i2c@ff3d0000 {
+        gt9xx@14 {
+          status = "okay";
+        };
+      };
     };
     ```
 
-    The nodes that has to be `status = "okay"` are:
-
-    - `pwm@ff420000 {` (pwm backlight)
-    - `lcd-backlight {` (backlight control)
-    - `dsi@ff960000 {` (dsi interface)
-    - `gt9xx@14 {` (touchpad)
-
-    Exit editor, and confirm that with `YES`:
+    Exit editor, and confirm that with `YES` and reboot:
 
     ```bash
     Use overlay or not?
