@@ -253,7 +253,7 @@ done
 if [[ "$DEBUSER" != "root" ]]; then
 	do_chroot adduser --gecos "$DEBUSER" --disabled-login "$DEBUSER" --uid 1000
 	do_chroot chown -R 1000:1000 "/home/$DEBUSER"
-	do_chroot usermod -a -G sudo,audio,adm,input,video,plugdev,ssh,lp,lpadmin "$DEBUSER"
+	do_chroot usermod -a -G sudo,audio,adm,input,video,plugdev,ssh,lp "$DEBUSER"
 fi
 
 # Change and expire password
@@ -284,6 +284,10 @@ case "$VARIANT" in
 		do_chroot /usr/local/sbin/install_container_linux.sh
 		;;
 esac
+
+if [[ "$DEBUSER" != "root" ]]; then
+	do_chroot usermod -a -G lpadmin "$DEBUSER" || true
+fi
 
 do_chroot apt-get dist-upgrade -y
 
