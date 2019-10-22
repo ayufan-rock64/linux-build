@@ -51,6 +51,7 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.9.x
 
+- 0.9.16: Bump kernel to 4.4.197,
 - 0.9.15: Bump kernel to 4.4.193,
 - 0.9.14: Bump kernel to 4.4.190,
 - 0.9.14: Fix Firefox video playback,
