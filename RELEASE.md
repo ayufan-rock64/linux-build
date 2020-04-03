@@ -1,5 +1,6 @@
 ## Notes
 
+- **HIGHLY EXPERIMENTAL AND NOT WORKING!!!***
 - **PRE-RELEASE**: unstable and should be only used for testing purposes
 - **Fully reproducible, upgradable and trustable builds, build by CI system**
 - Check [Compatibility list](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A) to get know about the working features of each release
@@ -16,7 +17,7 @@ Ubuntu Mate is not available for Rock64 as it is simply too slow.
 
 Credentials: rock64/rock64
 
-### 2. Bionic / Container Linux
+### 2. Focal / Container Linux
 
 It has Docker Community Edition / Docker Compose / Kubernetes-admin installed for easy Containers use.
 
@@ -33,9 +34,9 @@ To enable SSH for OMV go to Web > SSH > Permit Root Login > Save > Apply
 
 ```bash
 # Pick one
-sudo apt-get update -y && sudo apt-get install linux-rock64-0.10 -y
-sudo apt-get update -y && sudo apt-get install linux-rockpro64-0.10 -y
-sudo apt-get update -y && sudo apt-get install linux-pinebookpro-0.10 -y
+sudo apt-get update -y && sudo apt-get install linux-rock64-0.10-mainline -y
+sudo apt-get update -y && sudo apt-get install linux-rockpro64-0.10-mainline -y
+sudo apt-get update -y && sudo apt-get install linux-pinebookpro-0.10-mainline -y
 
 # Upgrade all other packages
 sudo apt-get update -y && sudo apt-get dist-upgrade -y
@@ -50,6 +51,11 @@ sudo rock64_upgrade_bootloader.sh
 ## Changelog
 
 ### 0.10.x
+
+- 0.10.0: Upgrade kernel to 5.6.0
+- 0.10.0: Upgrade u-boot to 2020.01
+- 0.10.0: Upgrade Ubuntu to 20.04/Focal
+- 0.10.0: Upgrade OMV to Buster/Ursul
 
 ### 0.9.x
 
