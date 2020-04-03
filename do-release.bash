@@ -68,7 +68,7 @@ echo
 
 echo "Differences:"
 show_diff linux-u-boot UBOOT_VERSION
-show_diff linux-kernel KERNEL_VERSION "-g*"
+show_diff linux-mainline-kernel KERNEL_VERSION "-g*"
 show_diff linux-package PACKAGE_VERSION
 echo
 

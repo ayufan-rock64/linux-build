@@ -66,54 +66,37 @@ pre-release:
   when: manual
   allow_failure: true
 
-bionic-mate-armhf rock64: *build_manual
-bionic-mate-armhf rockpro64: *build
-bionic-mate-armhf pinebookpro: *build
+focal-mate-armhf rock64: *build_manual
+focal-mate-armhf rockpro64: *build_manual
+focal-mate-armhf pinebookpro: *build_manual
 
-bionic-mate-arm64 rock64: *build_manual
-bionic-mate-arm64 rockpro64: *build_manual
-bionic-mate-arm64 pinebookpro: *build_manual
+focal-mate-arm64 rock64: *build_manual
+focal-mate-arm64 rockpro64: *build_manual
+focal-mate-arm64 pinebookpro: *build_manual
 
-bionic-lxde-armhf rock64: *build
-bionic-lxde-armhf rockpro64: *build
-bionic-lxde-armhf pinebookpro: *build
+focal-lxde-armhf rock64: *build_manual
+focal-lxde-armhf rockpro64: *build_manual
+focal-lxde-armhf pinebookpro: *build_manual
 
-bionic-lxde-arm64 rock64: *build_manual
-bionic-lxde-arm64 rockpro64: *build_manual
-bionic-lxde-arm64 pinebookpro: *build_manual
+focal-lxde-arm64 rock64: *build_manual
+focal-lxde-arm64 rockpro64: *build_manual
+focal-lxde-arm64 pinebookpro: *build_manual
 
-bionic-containers-arm64 rock64: *build
-bionic-containers-arm64 rockpro64: *build
+focal-containers-arm64 rock64: *build
+focal-containers-arm64 rockpro64: *build
 
 buster-openmediavault-arm64 rock64: *build_manual
 buster-openmediavault-armhf rock64: *build_manual
 buster-openmediavault-arm64 rockpro64: *build_manual
 buster-openmediavault-armhf rockpro64: *build_manual
 
-stretch-openmediavault-arm64 rock64: *build
-stretch-openmediavault-armhf rock64: *build
-stretch-openmediavault-arm64 rockpro64: *build
-stretch-openmediavault-armhf rockpro64: *build
-
-stretch-minimal-arm64 rock64: *build
-stretch-minimal-arm64 rockpro64: *build
-stretch-minimal-arm64 rockpi4b: *build_manual
-
 buster-minimal-arm64 rock64: *build
 buster-minimal-arm64 rockpro64: *build
 
-bionic-minimal-arm64 rock64: *build
-bionic-minimal-armhf rock64: *build
-bionic-minimal-arm64 rockpro64: *build
-bionic-minimal-armhf rockpro64: *build
-bionic-minimal-arm64 pinebookpro: *build_manual
-bionic-minimal-armhf pinebookpro: *build_manual
-bionic-minimal-arm64 rockpi4b: *build_manual
-
-disco-minimal-arm64 rock64: *build_manual
-disco-minimal-armhf rock64: *build_manual
-disco-minimal-arm64 rockpro64: *build_manual
-disco-minimal-armhf rockpro64: *build_manual
-disco-minimal-arm64 pinebookpro: *build_manual
-disco-minimal-armhf pinebookpro: *build_manual
-disco-minimal-arm64 rockpi4b: *build_manual
+focal-minimal-arm64 rock64: *build
+focal-minimal-armhf rock64: *build
+focal-minimal-arm64 rockpro64: *build
+focal-minimal-armhf rockpro64: *build
+focal-minimal-arm64 pinebookpro: *build
+focal-minimal-armhf pinebookpro: *build
+focal-minimal-arm64 rockpi4b: *build
