@@ -82,13 +82,13 @@ focal-lxde-arm64 rock64: *build_manual
 focal-lxde-arm64 rockpro64: *build_manual
 focal-lxde-arm64 pinebookpro: *build_manual
 
-focal-containers-arm64 rock64: *build
-focal-containers-arm64 rockpro64: *build
+buster-containers-arm64 rock64: *build
+buster-containers-arm64 rockpro64: *build
 
-buster-openmediavault-arm64 rock64: *build_manual
-buster-openmediavault-armhf rock64: *build_manual
-buster-openmediavault-arm64 rockpro64: *build_manual
-buster-openmediavault-armhf rockpro64: *build_manual
+buster-openmediavault-arm64 rock64: *build
+buster-openmediavault-armhf rock64: *build
+buster-openmediavault-arm64 rockpro64: *build
+buster-openmediavault-armhf rockpro64: *build
 
 buster-minimal-arm64 rock64: *build
 buster-minimal-arm64 rockpro64: *build
