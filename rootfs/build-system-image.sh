@@ -81,10 +81,9 @@ dd if=/dev/zero of="$TEMP_IMAGE" bs=1M seek=$((SIZE-1)) count=0
 echo Updating GPT...
 parted -s "${TEMP_IMAGE}" mklabel gpt
 parted -s "${TEMP_IMAGE}" unit s mkpart loader1             64       8063   # ~4MB
-parted -s "${TEMP_IMAGE}" unit s mkpart reserved1           8064     8191   # align `loader1`
 parted -s "${TEMP_IMAGE}" unit s mkpart boot_efi    fat16   8192     32767  # up-to 16MB => ~12MB
-parted -s "${TEMP_IMAGE}" unit s mkpart boot        ext4    32768    262143 # up-to 256MB => 240MB
-parted -s "${TEMP_IMAGE}" unit s mkpart root        ext4    262144   100%   # rest
+parted -s "${TEMP_IMAGE}" unit s mkpart linux_boot  ext4    32768    262143 # up-to 256MB => 240MB
+parted -s "${TEMP_IMAGE}" unit s mkpart linux_root  ext4    262144   100%   # rest
 parted -s "${TEMP_IMAGE}" set 4 legacy_boot on
 
 # Assign lodevice
@@ -97,16 +96,17 @@ LODEVMAPPER="${LODEV/\/dev\/loop/\/dev\/mapper\/loop}"
 kpartx -a "$LODEV"
 
 # Make filesystem
-mkfs.vfat -n "boot" -S 512 "${LODEVMAPPER}p6"
-mkfs.ext4 -L "linux-root" "${LODEVMAPPER}p7"
-tune2fs -o journal_data_writeback "${LODEVMAPPER}p7"
+mkfs.vfat -n "boot-efi" -S 512 "${LODEVMAPPER}p2"
+mkfs.ext4 -L "linux-boot" "${LODEVMAPPER}p3"
+mkfs.ext4 -L "linux-root" "${LODEVMAPPER}p4"
+tune2fs -o journal_data_writeback "${LODEVMAPPER}p4"
 
 # Mount filesystem
 mkdir -p "$TEMP/rootfs"
-mount -o data=writeback,commit=3600 "${LODEVMAPPER}p5" "$TEMP/rootfs"
+mount -o data=writeback,commit=3600 "${LODEVMAPPER}p4" "$TEMP/rootfs"
 mkdir -p "$TEMP/rootfs/boot/efi"
-mount "${LODEVMAPPER}p3" "$TEMP/rootfs/boot/efi"
-mount "${LODEVMAPPER}p4" "$TEMP/rootfs/boot"
+mount "${LODEVMAPPER}p2" "$TEMP/rootfs/boot/efi"
+mount "${LODEVMAPPER}p3" "$TEMP/rootfs/boot"
 
 # Create image
 rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"

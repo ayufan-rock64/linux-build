@@ -189,9 +189,9 @@ $MODEL
 EOF
 
 cat > "$DEST/etc/fstab" <<EOF
-LABEL=root      /            ext4    defaults         0    1
-LABEL=boot      /boot        ext4    defaults         0    1
-LABEL=boot_efi  /boot/efi    vfat    defaults,sync    0    1
+LABEL=linux-root /           ext4    defaults         0    1
+LABEL=linux-boot /boot       ext4    defaults         0    1
+LABEL=boot-efi   /boot/efi   vfat    defaults,sync    0    1
 EOF
 
 cat > "$DEST/etc/hosts" <<EOF
@@ -259,9 +259,8 @@ if [[ "$DEBUSER" != "root" ]]; then
 	do_chroot usermod -a -G sudo,audio,adm,input,video,plugdev,ssh,lp,lpadmin "$DEBUSER"
 fi
 
-# Change and expire password
+# Change password
 echo "$DEBUSER:$DEBUSERPW" | do_chroot chpasswd
-do_chroot passwd -e "$DEBUSER"
 
 case "$VARIANT" in
 	mate)
@@ -298,6 +297,9 @@ rm -f "$DEST/etc/resolv.conf"
 rm -f "$DEST"/etc/ssh/ssh_host_*
 do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 do_chroot apt-get clean
+
+# Expire password
+do_chroot passwd -e "$DEBUSER"
 
 # List all installed packages
 do_chroot apt list --installed > "$DEST/all-packages.txt"
