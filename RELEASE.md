@@ -56,6 +56,7 @@ sudo rock64_upgrade_bootloader.sh
 - 0.10.1: Add bonding
 - 0.10.1: Add additional VESA modes
 - 0.10.1: Add `lpadmin`
+- 0.10.1: Compile USB adapters as modules
 - 0.10.0: Upgrade kernel to 5.6.0
 - 0.10.0: Upgrade u-boot to 2020.01
 - 0.10.0: Upgrade Ubuntu to 20.04/Focal
