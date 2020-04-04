@@ -189,7 +189,9 @@ $MODEL
 EOF
 
 cat > "$DEST/etc/fstab" <<EOF
-LABEL=boot /boot/efi vfat defaults,sync 0 0
+LABEL=root      /            ext4    defaults         0    1
+LABEL=boot      /boot        ext4    defaults         0    1
+LABEL=boot_efi  /boot/efi    vfat    defaults,sync    0    1
 EOF
 
 cat > "$DEST/etc/hosts" <<EOF

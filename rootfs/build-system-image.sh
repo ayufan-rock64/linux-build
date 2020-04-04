@@ -60,6 +60,7 @@ echo "> Building in $TEMP ..."
 cleanup() {
     echo "> Cleaning up ..."
     umount "$TEMP/rootfs/boot/efi" || true
+    umount "$TEMP/rootfs/boot" || true
     umount "$TEMP/rootfs/"* || true
     umount "$TEMP/rootfs" || true
     kpartx -d "${LODEV}" || true
@@ -79,14 +80,12 @@ dd if=/dev/zero of="$TEMP_IMAGE" bs=1M seek=$((SIZE-1)) count=0
 # Create partitions
 echo Updating GPT...
 parted -s "${TEMP_IMAGE}" mklabel gpt
-parted -s "${TEMP_IMAGE}" unit s mkpart loader1      64 8063      # 4MB
-parted -s "${TEMP_IMAGE}" unit s mkpart reserved1    8064 8191    # 4MB
-parted -s "${TEMP_IMAGE}" unit s mkpart reserved2    8192 16383   # 4MB
-parted -s "${TEMP_IMAGE}" unit s mkpart loader2      16384 24575  # 4MB
-parted -s "${TEMP_IMAGE}" unit s mkpart atf          24576 32767  # 4MB
-parted -s "${TEMP_IMAGE}" unit s mkpart boot fat16   32768 262143 # 128MB
-parted -s "${TEMP_IMAGE}" unit s mkpart root ext4    262144 100%  # rest
-parted -s "${TEMP_IMAGE}" set 7 legacy_boot on
+parted -s "${TEMP_IMAGE}" unit s mkpart loader1             64       8063   # ~4MB
+parted -s "${TEMP_IMAGE}" unit s mkpart reserved1           8064     8191   # align `loader1`
+parted -s "${TEMP_IMAGE}" unit s mkpart boot_efi    fat16   8192     32767  # up-to 16MB => ~12MB
+parted -s "${TEMP_IMAGE}" unit s mkpart boot        ext4    32768    262143 # up-to 256MB => 240MB
+parted -s "${TEMP_IMAGE}" unit s mkpart root        ext4    262144   100%   # rest
+parted -s "${TEMP_IMAGE}" set 4 legacy_boot on
 
 # Assign lodevice
 LODEV=$(losetup -f --show "${TEMP_IMAGE}")
@@ -104,9 +103,10 @@ tune2fs -o journal_data_writeback "${LODEVMAPPER}p7"
 
 # Mount filesystem
 mkdir -p "$TEMP/rootfs"
-mount -o data=writeback,commit=3600 "${LODEVMAPPER}p7" "$TEMP/rootfs"
+mount -o data=writeback,commit=3600 "${LODEVMAPPER}p5" "$TEMP/rootfs"
 mkdir -p "$TEMP/rootfs/boot/efi"
-mount "${LODEVMAPPER}p6" "$TEMP/rootfs/boot/efi"
+mount "${LODEVMAPPER}p3" "$TEMP/rootfs/boot/efi"
+mount "${LODEVMAPPER}p4" "$TEMP/rootfs/boot"
 
 # Create image
 rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"
@@ -115,8 +115,8 @@ rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL"
 dd if="$TEMP/rootfs/usr/lib/u-boot-${MODEL}/rksd_loader.img" of="${LODEVMAPPER}p1"
 
 # Umount filesystem
-sync -f "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
-fstrim "$TEMP/rootfs"
+sync -f "$TEMP/rootfs" "$TEMP/rootfs/boot" "$TEMP/rootfs/boot/efi"
+fstrim "$TEMP/rootfs" "$TEMP/rootfs/boot" "$TEMP/rootfs/boot/efi"
 df -h "$TEMP/rootfs" "$TEMP/rootfs/boot/efi"
 mv "$TEMP/rootfs/all-packages.txt" "$(dirname "$OUT_IMAGE")/$(basename "$OUT_IMAGE" .img)-packages.txt"
 
