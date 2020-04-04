@@ -104,9 +104,10 @@ tune2fs -o journal_data_writeback "${LODEVMAPPER}p4"
 # Mount filesystem
 mkdir -p "$TEMP/rootfs"
 mount -o data=writeback,commit=3600 "${LODEVMAPPER}p4" "$TEMP/rootfs"
+mkdir -p "$TEMP/rootfs/boot"
+mount "${LODEVMAPPER}p3" "$TEMP/rootfs/boot"
 mkdir -p "$TEMP/rootfs/boot/efi"
 mount "${LODEVMAPPER}p2" "$TEMP/rootfs/boot/efi"
-mount "${LODEVMAPPER}p3" "$TEMP/rootfs/boot"
 
 # Create image
 rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"
