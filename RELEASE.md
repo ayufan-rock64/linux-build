@@ -17,7 +17,7 @@ Ubuntu Mate is not available for Rock64 as it is simply too slow.
 
 Credentials: rock64/rock64
 
-### 2. Focal / Container Linux
+### 2. Buster / Container Linux
 
 It has Docker Community Edition / Docker Compose / Kubernetes-admin installed for easy Containers use.
 
@@ -52,6 +52,9 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.2: Update partition scheme to use `/boot/efi`, `/boot` and `/`
+- 0.10.2: Configure `/etc/fstab` with all partitions
+- 0.10.2: Compile `buster/containers` instead of `focal/containers`
 - 0.10.1: Reconfigure FAN for RockPro64
 - 0.10.1: Add bonding
 - 0.10.1: Add additional VESA modes
