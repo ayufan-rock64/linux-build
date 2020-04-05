@@ -52,6 +52,9 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.3: Hopefully OMV will compile,
+- 0.10.3: ADd SPI boot on RockPro64
+- 0.10.3: Add NVME/SATA boot on RockPro64
 - 0.10.2: Update partition scheme to use `/boot/efi`, `/boot` and `/`
 - 0.10.2: Configure `/etc/fstab` with all partitions
 - 0.10.2: Compile `buster/containers` instead of `focal/containers`
