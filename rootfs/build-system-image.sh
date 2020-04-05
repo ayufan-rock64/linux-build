@@ -84,7 +84,7 @@ parted -s "${TEMP_IMAGE}" unit s mkpart loader1             64       8063   # ~4
 parted -s "${TEMP_IMAGE}" unit s mkpart boot_efi    fat16   8192     32767  # up-to 16MB => ~12MB
 parted -s "${TEMP_IMAGE}" unit s mkpart linux_boot  ext4    32768    262143 # up-to 256MB => 240MB
 parted -s "${TEMP_IMAGE}" unit s mkpart linux_root  ext4    262144   100%   # rest
-parted -s "${TEMP_IMAGE}" set 4 legacy_boot on
+parted -s "${TEMP_IMAGE}" set 3 legacy_boot on
 
 # Assign lodevice
 LODEV=$(losetup -f --show "${TEMP_IMAGE}")
