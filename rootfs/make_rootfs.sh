@@ -152,7 +152,8 @@ EOF
 chmod a+x "$DEST/usr/sbin/policy-rc.d"
 
 do_chroot() {
-	chroot "$DEST" $CHROOT_PREFIX "$@"
+	unshare -m -u -i -p --mount-proc --fork -- \
+		chroot "$DEST" $CHROOT_PREFIX "$@"
 }
 
 do_install() {
@@ -300,9 +301,6 @@ do_chroot apt-get dist-upgrade -y
 do_chroot systemctl enable ssh-keygen
 
 sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
-rm -f "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list"
-rm -f "$DEST/etc/resolv.conf"
-rm -f "$DEST"/etc/ssh/ssh_host_*
 do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 do_chroot apt-get clean
 
@@ -316,7 +314,11 @@ do_chroot apt list --installed > "$DEST/all-packages.txt"
 mkdir -p "$DEST/lib"
 mkdir -p "$DEST/usr"
 
-# Clean up
+# Remove secrets and overlays
+rm -f "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list"
+rm -f "$DEST/etc/resolv.conf"
+rm -f "$DEST"/etc/ssh/ssh_host_*
+rm -rf "$DEST/root/.ssh"
 rm -f "$DEST/usr/bin/qemu-arm-static"
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
 rm -f "$DEST/usr/sbin/policy-rc.d"
