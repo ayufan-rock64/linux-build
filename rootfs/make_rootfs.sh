@@ -223,6 +223,8 @@ if [[ -n "$USE_EATMYDATA" ]]; then
 	export CHROOT_PREFIX="eatmydata --"
 fi
 
+# Enable `en_US.UTF-8` locales
+sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" "$DEST/etc/locale.gen"
 do_chroot locale-gen en_US.UTF-8
 
 do_chroot apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
