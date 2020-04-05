@@ -61,7 +61,6 @@ cleanup() {
     echo "> Cleaning up ..."
     umount "$TEMP/rootfs/boot/efi" || true
     umount "$TEMP/rootfs/boot" || true
-    umount "$TEMP/rootfs/"* || true
     umount "$TEMP/rootfs" || true
     kpartx -d "${LODEV}" || true
     losetup -d "${LODEV}" || true
@@ -110,7 +109,8 @@ mkdir -p "$TEMP/rootfs/boot/efi"
 mount "${LODEVMAPPER}p2" "$TEMP/rootfs/boot/efi"
 
 # Create image
-rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"
+unshare -m -u -i -p --mount-proc --fork -- \
+    rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"
 
 # Write bootloader
 dd if="$TEMP/rootfs/usr/lib/u-boot-${MODEL}/rksd_loader.img" of="${LODEVMAPPER}p1"
