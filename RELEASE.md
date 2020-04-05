@@ -1,6 +1,6 @@
 ## Notes
 
-- **HIGHLY EXPERIMENTAL AND NOT WORKING!!!***
+- **HIGHLY EXPERIMENTAL AND NOT WORKING!!!**
 - **PRE-RELEASE**: unstable and should be only used for testing purposes
 - **Fully reproducible, upgradable and trustable builds, build by CI system**
 - Check [Compatibility list](https://docs.google.com/spreadsheets/d/1pCqJg0VSzvihUOoxCOq3wt5JeGB4iApAyBBfc_BGv2A) to get know about the working features of each release
