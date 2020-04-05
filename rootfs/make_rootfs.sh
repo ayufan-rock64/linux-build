@@ -163,7 +163,7 @@ do_install() {
 	rm -f "$DEST/$FILE"
 }
 
-rm "$DEST/etc/resolv.conf"
+mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.bak"
 cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 
 do_chroot apt-key add - < rootfs/ayufan-deb-ayufan-eu.gpg
@@ -301,7 +301,6 @@ do_chroot apt-get dist-upgrade -y
 do_chroot systemctl enable ssh-keygen
 
 sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
-do_chroot ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
 do_chroot apt-get clean
 
 # Expire password
@@ -327,5 +326,6 @@ rm -f "$DEST/var/lib/dbus/machine-id"
 rm -f "$DEST/etc/flash-kernel/machine"
 : > "$DEST/etc/machine-id"
 rm -f "$DEST/SHA256SUMS"
+mv "$DEST/etc/resolv.conf.bak" "$DEST/etc/resolv.conf"
 
 echo "Done - installed rootfs to $DEST"
