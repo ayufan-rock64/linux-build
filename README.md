@@ -54,7 +54,7 @@ This repository is regularly built by [Gitlab](https://gitlab.com/ayufan-repos/r
 For technical information, see the following documents:
 
 - [release-contents.md](recipes/release-contents.md): Explains the contents of the linux image builds
-- [compilation.md](recipes/release-contents.md): Explains the contents of the linux image builds
+- [compilation.md](recipes/compilation.md): Explains the contents of the linux image builds
 - [video-playback.md](recipes/video-playback.md): Explains how to get accelerated video playback
 - [binfmt-misc.md](recipes/binfmt-misc.md): Run binaries from other architectures (ex: `arm64 on x86_64`)
 - [configure-distcc.md](recipes/configure-distcc.md): Distribute compile jobs across multiple computers
