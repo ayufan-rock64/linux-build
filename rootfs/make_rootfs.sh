@@ -240,6 +240,12 @@ elif [[ "$DISTRIB" == "ubuntu" ]]; then
 	do_chroot apt-get -y install landscape-common linux-firmware
 fi
 
+# this is needed to allow booting from SATA/NVME drive
+cat <<EOF >> "$DEST/etc/initramfs-tools/modules"
+# include to allow booting from SATA/NVME drive
+pcie-rockchip-host
+EOF
+
 do_chroot fake-hwclock save
 
 for arch in $EXTRA_ARCHS; do
