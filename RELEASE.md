@@ -52,6 +52,9 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.5: Revert `systemd-networkd` change
+- 0.10.5: Maybe support USB3 boot on Rock64
+- 0.10.5: Maybe build OMV5
 - 0.10.4: Make Rock64 to boot
 - 0.10.4: Add SPI boot on Rock64
 - 0.10.4: Support LEDs in u-boot for Rock64
