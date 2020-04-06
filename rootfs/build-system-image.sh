@@ -110,7 +110,7 @@ mount "${LODEVMAPPER}p2" "$TEMP/rootfs/boot/efi"
 
 # Create image
 unshare -m -u -i -p --mount-proc --fork -- \
-    rootfs/make_rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"
+    rootfs/make-rootfs.sh "$TEMP/rootfs" "$DISTRO" "$VARIANT" "$BUILD_ARCH" "$MODEL" "$@"
 
 # Write bootloader
 dd if="$TEMP/rootfs/usr/lib/u-boot-${MODEL}/rksd_loader.img" of="${LODEVMAPPER}p1"
