@@ -14,7 +14,7 @@ linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb:
 		-p $@ \
 		--deb-priority optional --category admin \
 		--depends "board-package-$(BOARD_TARGET)-$(LATEST_PACKAGE_VERSION)" \
-		--depends "u-boot-rockchip-$(BOARD_TARGET)-$(LATEST_UBOOT_VERSION)" \
+		--depends "u-boot-$(BOARD_TARGET)-$(LATEST_UBOOT_VERSION)" \
 		--depends "linux-image-$(LATEST_KERNEL_VERSION)" \
 		--depends "linux-headers-$(LATEST_KERNEL_VERSION)" \
 		--deb-field "Provides: linux-board-mainline-virtual" \
