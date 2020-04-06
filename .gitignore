@@ -1,12 +1,15 @@
 /build
 /kernel
 /kernel-mainline
+/u-boot-mainline
 /out
 /rkbin
 /u-boot
 /.repo
 *.img
 *.img.xz
+*.img.tmp
+*-packages.txt
 *.deb
 /package/rtk_bt
 *.changes
@@ -15,3 +18,5 @@
 /linux-package
 /extras
 *.code-workspace
+/dockerfiles
+
