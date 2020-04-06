@@ -52,6 +52,9 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.6: Maybe build OMV5
+- 0.10.6: Use `u-boot` instead of `u-boot-rockchip`
+- 0.10.6: Fix `focal/armhf` build
 - 0.10.5: Revert `systemd-networkd` change
 - 0.10.5: Maybe support USB3 boot on Rock64
 - 0.10.5: Maybe build OMV5
