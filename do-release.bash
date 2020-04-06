@@ -68,9 +68,11 @@ echo
 
 echo "Differences:"
 # Show diff for `linux-build`
-PREVIOUS_TAG=$(git rev-parse --short $(git describe --tags --abbrev=0))
-CURRENT_HEAD=$(git rev-parse --short HEAD)
-echo "- https://github.com/ayufan-rock64/linux-build/compare/${PREVIOUS_TAG}..${CURRENT_HEAD}"
+if ! git describe --tags --exact &>/dev/null; then
+  PREVIOUS_TAG=$(git rev-parse --short $(git describe --tags --abbrev=0))
+  CURRENT_HEAD=$(git rev-parse --short HEAD)
+  echo "- https://github.com/ayufan-rock64/linux-build/compare/${PREVIOUS_TAG}..${CURRENT_HEAD}"
+fi
 
 # Show diff for additional repositories
 show_diff linux-mainline-u-boot UBOOT_VERSION
