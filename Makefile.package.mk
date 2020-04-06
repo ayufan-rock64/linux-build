@@ -1,4 +1,4 @@
-LATEST_UBOOT_VERSION ?= $(shell scripts/get-package-version linux-u-boot tag $(UBOOT_VERSION))
+LATEST_UBOOT_VERSION ?= $(shell scripts/get-package-version linux-mainline-u-boot tag $(UBOOT_VERSION))
 LATEST_KERNEL_VERSION ?= $(shell scripts/get-package-version linux-mainline-kernel tag_with_sha $(KERNEL_VERSION))
 LATEST_PACKAGE_VERSION ?= $(shell scripts/get-package-version linux-package tag $(VERSION))
 
