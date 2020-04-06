@@ -150,7 +150,6 @@ cat > "$DEST/usr/sbin/policy-rc.d" <<EOF
 exit 101
 EOF
 chmod a+x "$DEST/usr/sbin/policy-rc.d"
-chroot "$DEST" systemctl mask systemd-networkd.service
 
 do_chroot() {
 	unshare -m -u -i -p --mount-proc --fork -- \
@@ -315,7 +314,6 @@ mkdir -p "$DEST/lib"
 mkdir -p "$DEST/usr"
 
 # Remove secrets and overlays
-chroot "$DEST" systemctl unmask systemd-networkd.service
 rm -f "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list"
 rm -f "$DEST/etc/resolv.conf"
 rm -f "$DEST"/etc/ssh/ssh_host_*
