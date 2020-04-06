@@ -253,7 +253,7 @@ for arch in $EXTRA_ARCHS; do
 	if [[ "$arch" != "$BUILD_ARCH" ]]; then
 		do_chroot dpkg --add-architecture "$arch"
 		do_chroot apt-get update -y
-		do_chroot apt-get install -y "libc6:$arch" "libstdc++6:$arch"
+		do_chroot apt-get install -o APT::Immediate-Configure=false -y "libc6:$arch" "libstdc++6:$arch"
 	fi
 done
 
