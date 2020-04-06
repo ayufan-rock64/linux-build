@@ -52,8 +52,13 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
-- 0.10.3: Hopefully OMV will compile,
-- 0.10.3: ADd SPI boot on RockPro64
+- 0.10.4: Make Rock64 to boot
+- 0.10.4: Add SPI boot on Rock64
+- 0.10.4: Support LEDs in u-boot for Rock64
+- 0.10.4: Support USB2 boot over USB-C for RockPro64
+- 0.10.4: Mask `systemd-networkd` during install
+- 0.10.3: Hopefully OMV will compile
+- 0.10.3: Add SPI boot on RockPro64
 - 0.10.3: Add NVME/SATA boot on RockPro64
 - 0.10.2: Update partition scheme to use `/boot/efi`, `/boot` and `/`
 - 0.10.2: Configure `/etc/fstab` with all partitions
