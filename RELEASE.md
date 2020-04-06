@@ -52,6 +52,10 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.7: Maybe Pinebook Pro will work, thanks Manjaro :)
+- 0.10.7: Maybe Desktop will boot
+- 0.10.7: Maybe OMV5 will run
+- 0.10.7: Maybe `gl4es` will work
 - 0.10.6: Maybe build OMV5
 - 0.10.6: Use `u-boot` instead of `u-boot-rockchip`
 - 0.10.6: Fix `focal/armhf` build
