@@ -111,7 +111,7 @@ umount "$TEMP/rootfs/boot"
 umount "$TEMP/rootfs"
 
 # Do fsck
-fsck.ext4 -f "$LODEV_ROOT"
+fsck.ext4 -f -y "$LODEV_ROOT"
 
 for IMAGE_SIZE in $(seq $MIN_SIZE $SIZE_STEP $MAX_SIZE) $MAX_SIZE
 do
