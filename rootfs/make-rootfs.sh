@@ -331,6 +331,7 @@ rm -f "$DEST/usr/bin/qemu-arm-static"
 rm -f "$DEST/usr/bin/qemu-aarch64-static"
 rm -f "$DEST/usr/sbin/policy-rc.d"
 rm -f "$DEST/usr/local/bin/mdadm"
+rm -rf "$DEST"/var/lib/rrdcached/*
 rm -f "$DEST/var/lib/dbus/machine-id"
 rm -f "$DEST/etc/flash-kernel/machine"
 : > "$DEST/etc/machine-id"
