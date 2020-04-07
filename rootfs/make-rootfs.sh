@@ -163,7 +163,7 @@ do_install() {
 	rm -f "$DEST/$FILE"
 }
 
-mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.bak"
+rm -f "$DEST/etc/resolv.conf"
 cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 
 do_chroot apt-key add - < rootfs/ayufan-deb-ayufan-eu.gpg
@@ -316,7 +316,6 @@ mkdir -p "$DEST/usr"
 
 # Remove secrets and overlays
 rm -f "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list"
-rm -f "$DEST/etc/resolv.conf"
 rm -f "$DEST"/etc/ssh/ssh_host_*
 rm -rf "$DEST/root/.ssh"
 rm -f "$DEST/usr/bin/qemu-arm-static"
@@ -327,6 +326,10 @@ rm -f "$DEST/var/lib/dbus/machine-id"
 rm -f "$DEST/etc/flash-kernel/machine"
 : > "$DEST/etc/machine-id"
 rm -f "$DEST/SHA256SUMS"
-mv "$DEST/etc/resolv.conf.bak" "$DEST/etc/resolv.conf"
+
+# if /etc/resolv.conf is not a symlink, we overwrite it
+if [[ ! -L "$DEST/etc/resolv.conf" ]]; then
+	echo -n > "$DEST/etc/resolv.conf"
+fi
 
 echo "Done - installed rootfs to $DEST"
