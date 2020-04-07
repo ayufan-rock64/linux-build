@@ -196,9 +196,21 @@ EOF
 
 cat > "$DEST/etc/fstab" <<EOF
 LABEL=linux-root /           ext4    defaults         0    1
-LABEL=linux-boot /boot       ext4    defaults         0    1
-LABEL=boot-efi   /boot/efi   vfat    defaults,sync    0    1
 EOF
+
+# Detect `/boot`
+if findmnt "$DEST/boot"; then
+	cat >> "$DEST/etc/fstab" <<EOF
+LABEL=linux-boot /boot       ext4    defaults         0    1" >> "$DEST/etc/fstab"
+EOF
+fi
+
+# Detect `/boot/efi`
+if findmnt "$DEST/boot/efi"; then
+cat > "$DEST/etc/fstab" <<EOF
+	LABEL=boot-efi   /boot/efi   vfat    defaults,sync    0    1" >> "$DEST/etc/fstab
+EOF
+fi
 
 cat > "$DEST/etc/hosts" <<EOF
 127.0.0.1 localhost
