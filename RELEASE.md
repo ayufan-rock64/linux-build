@@ -52,6 +52,16 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.8: Make `rootfs` sticky
+- 0.10.8: Update sizes of images
+- 0.10.8: Enable by default `C.UTF-8` and `en_US.UTF-8` and use `dpkg-reconfigure locales`
+- 0.10.8: Run `update-command-not-found`
+- 0.10.8: Better handle `/etc/resolv.conf` (do not remove it, if it become system controlled)
+- 0.10.8: Load `dptx.alt.bin` to make it possible to ship also on `buster`
+- 0.10.8: Disable `CONFIG_MODULE_COMPRESS` to be able to load all modules
+- 0.10.8: Uninstall `dmidecode` to fix `OMV5` kernel panic
+- 0.10.8: Uninstall `dhcpcd5` to fix double IP address
+- 0.10.8: Disable `chromimum-browser` due to "snap requirement" on Ubuntu
 - 0.10.7: Maybe Pinebook Pro will work, thanks Manjaro :)
 - 0.10.7: Maybe Desktop will boot
 - 0.10.7: Maybe OMV5 will run
