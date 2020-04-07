@@ -24,27 +24,27 @@ fi
 
 case "$VARIANT" in
     minimal)
-        SIZE=2046
+        SIZE=1999
         ;;
 
     i3)
-        SIZE=2560
+        SIZE=2499
         ;;
 
     mate)
-        SIZE=5120
+        SIZE=4999
         ;;
 
     lxde)
-        SIZE=3584
+        SIZE=3999
         ;;
 
     openmediavault)
-        SIZE=2048
+        SIZE=2499
         ;;
 
     containers)
-        SIZE=2560
+        SIZE=2999
         ;;
 
     *)
