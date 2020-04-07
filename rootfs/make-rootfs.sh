@@ -300,6 +300,7 @@ esac
 do_chroot apt-get dist-upgrade -y
 
 do_chroot systemctl enable ssh-keygen
+do_chroot update-command-not-found
 
 sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 do_chroot apt-get clean
