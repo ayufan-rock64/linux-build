@@ -52,6 +52,9 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.9: Shrink created images to reduce write time
+- 0.10.9: Enable work/diy LEDs on boot for RockPro64/PinebookPro
+- 0.10.9: Fix excessive log messages on OMV5
 - 0.10.8: Make `rootfs` sticky
 - 0.10.8: Update sizes of images
 - 0.10.8: Enable by default `C.UTF-8` and `en_US.UTF-8` and use `dpkg-reconfigure locales`
