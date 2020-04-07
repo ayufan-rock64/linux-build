@@ -47,7 +47,7 @@ BOOT_OFFSET=$((16*1024*1024/512))  # 16MiB
 ROOT_OFFSET=$((256*1024*1024/512)) # 256MiB
 
 MIN_SIZE=$((500*1000*1000/512))    # 500MB
-SIZE_STEP=$((250*1000*1000/512))   # 250MB
+SIZE_STEP=$((100*1000*1000/512))   # 100MB
 MAX_SIZE=$((8*1000*1000*1000/512)) # 8GB
 
 # Create
@@ -113,17 +113,31 @@ umount "$TEMP/rootfs"
 # Do fsck
 fsck.ext4 -f -y "$LODEV_ROOT"
 
-for IMAGE_SIZE in $(seq $MIN_SIZE $SIZE_STEP $MAX_SIZE) $MAX_SIZE
+for IMAGE_SIZE in $(seq $MIN_SIZE $SIZE_STEP $MAX_SIZE)
 do
     # We need 33 sectors for GPT, give it 128
     ROOT_SIZE=$((IMAGE_SIZE-ROOT_OFFSET-128))
+    ROOT_SIZE_KB=$((ROOT_SIZE*512/1024))k
 
     # try to resize rootfs to fit into `IMAGE_SIZE`
-    if resize2fs "$LODEV_ROOT" "${ROOT_SIZE}"; then
-        # resize partition 7 to as much as possible
-        echo ",$((ROOT_SIZE)),,," | sfdisk "${LODEV}" -N4 --force
-        break
+    if ! resize2fs "$LODEV_ROOT" "${ROOT_SIZE_KB}"; then
+        continue
     fi
+
+    # unload partitions
+    kpartx -d "${LODEV}"
+
+    # resize partition 7 to as much as possible
+    echo ",$((ROOT_SIZE)),,," | sfdisk "${LODEV}" --no-tell-kernel -N4
+    truncate -s "$((IMAGE_SIZE*512))" "$TEMP_IMAGE"
+
+    # fix header
+    sgdisk -e "$TEMP_IMAGE"
+
+    # re-check after resize
+    kpartx -a "${LODEV}"
+    fsck.ext4 -f -y "$LODEV_ROOT"
+    break
 done
 
 # Cleanup
@@ -131,8 +145,6 @@ cleanup
 trap - EXIT
 
 # Now truncate the image, and fix it
-truncate -s "$((IMAGE_SIZE*512))" "$TEMP_IMAGE"
-sgdisk -e "$TEMP_IMAGE"
 parted -s "${TEMP_IMAGE}" print
 
 # Move image into final location
