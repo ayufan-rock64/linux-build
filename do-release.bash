@@ -77,6 +77,7 @@ fi
 # Show diff for additional repositories
 show_diff linux-mainline-u-boot UBOOT_VERSION
 show_diff linux-mainline-kernel KERNEL_VERSION "-g*"
+show_diff linux-rootfs ROOTFS_VERSION
 show_diff linux-package PACKAGE_VERSION
 echo
 

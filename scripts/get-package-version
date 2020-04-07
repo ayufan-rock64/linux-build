@@ -8,11 +8,27 @@ if [[ $# -ne 3 ]]; then
 fi
 
 case "$2" in
-  tag) FILTER='.tag_name' ;;
-  tag_with_sha) FILTER='(.tag_name + "-g" + (.target_commitish | .[0:12]))' ;;
-  *) echo "Invalid: $2"; exit 1 ;;
+  tag_iid)
+    FILTER='.tag_name'
+    MATCH="^$3-"
+    ;;
+
+  tag_version)
+    FILTER='.tag_name'
+    MATCH="^$3\."
+    ;;
+
+  tag_with_sha)
+    FILTER='(.tag_name + "-g" + (.target_commitish | .[0:12]))'
+    MATCH="^$3-"
+    ;;
+
+  *)
+    echo "Invalid: $2"
+    exit 1
+    ;;
 esac
 
 curl --fail -s "https://api.github.com/repos/ayufan-rock64/$1/releases" | \
   jq -r ".[] | $FILTER" | \
-  grep -m 1 "^$3-"
+  grep -m 1 "$MATCH"

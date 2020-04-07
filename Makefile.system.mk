@@ -5,6 +5,7 @@
 	pxz -f -3 $<
 
 %.img: $(PACKAGES)
+	export ROOTFS_VERSION="$(LATEST_ROOTFS_VERSION)"; \
 	sudo -E unshare -m -u -i -p --mount-proc --fork -- \
 		bash rootfs/build-system-image.sh \
 		"$$(readlink -f $@)" \

@@ -72,20 +72,25 @@ ROOTFS=""
 TAR_OPTIONS=""
 DISTRIB=""
 
+if [[ -z "${ROOTFS_VERSION}" ]]; then
+	echo 'Unknown `ROOTFS_VERSION`, requesting `linux-rootfs`...'
+	ROOTFS_VERSION="$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")"
+fi
+
+echo "RootFS Version: $ROOTFS_VERSION"
+
 case $DISTRO in
 	focal)
-		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
-		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/ubuntu-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
-		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/ubuntu-${DISTRO}-minimal-${version}-${BUILD_ARCH}.tar.xz"
+		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/ubuntu-${DISTRO}-${VARIANT}-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
+		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/ubuntu-${DISTRO}-minimal-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
 		DISTRIB="ubuntu"
 		EXTRA_ARCHS="arm64"
 		;;
 
 	buster)
-		version=$(curl -s https://api.github.com/repos/ayufan-rock64/linux-rootfs/releases/latest | jq -r ".tag_name")
-		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/debian-${DISTRO}-${VARIANT}-${version}-${BUILD_ARCH}.tar.xz"
-		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${version}/debian-${DISTRO}-minimal-${version}-${BUILD_ARCH}.tar.xz"
+		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/debian-${DISTRO}-${VARIANT}-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
+		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/debian-${DISTRO}-minimal-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
 		DISTRIB="debian"
 		EXTRA_ARCHS="arm64"
