@@ -22,37 +22,6 @@ if [[ "$(id -u)" -ne "0" ]]; then
 	exit 1
 fi
 
-case "$VARIANT" in
-    minimal)
-        SIZE=2499
-        ;;
-
-    i3)
-        SIZE=2499
-        ;;
-
-    mate)
-        SIZE=4999
-        ;;
-
-    lxde)
-        SIZE=3999
-        ;;
-
-    openmediavault)
-        SIZE=2499
-        ;;
-
-    containers)
-        SIZE=2999
-        ;;
-
-    *)
-        echo "Unknown VARIANT: $VARIANT"
-        exit 1
-        ;;
-esac
-
 PWD=$(readlink -f .)
 TEMP=$(mktemp -p $PWD -d -t "$MODEL-build-XXXXXXXXXX")
 echo "> Building in $TEMP ..."
@@ -72,17 +41,26 @@ TEMP_IMAGE="${OUT_IMAGE}.tmp"
 
 set -ex
 
+# Define max sizes and offsets
+EFI_OFFSET=$((4*1024*1024/512))    # 4MiB
+BOOT_OFFSET=$((16*1024*1024/512))  # 16MiB
+ROOT_OFFSET=$((256*1024*1024/512)) # 256MiB
+
+MIN_SIZE=$((500*1000*1000/512))    # 500MB
+SIZE_STEP=$((250*1000*1000/512))   # 250MB
+MAX_SIZE=$((8*1000*1000*1000/512)) # 8GB
+
 # Create
 rm -f "$TEMP_IMAGE"
-dd if=/dev/zero of="$TEMP_IMAGE" bs=1M seek=$((SIZE-1)) count=0
+truncate -s "$((MAX_SIZE*512))" "$TEMP_IMAGE"
 
 # Create partitions
 echo Updating GPT...
 parted -s "${TEMP_IMAGE}" mklabel gpt
-parted -s "${TEMP_IMAGE}" unit s mkpart loader1             64       8063   # ~4MB
-parted -s "${TEMP_IMAGE}" unit s mkpart boot_efi    fat16   8192     32767  # up-to 16MB => ~12MB
-parted -s "${TEMP_IMAGE}" unit s mkpart linux_boot  ext4    32768    262143 # up-to 256MB => 240MB
-parted -s "${TEMP_IMAGE}" unit s mkpart linux_root  ext4    262144   100%   # rest
+parted -s "${TEMP_IMAGE}" unit s mkpart loader1             64                  $((EFI_OFFSET-1))   # ~4MB
+parted -s "${TEMP_IMAGE}" unit s mkpart boot_efi    fat16   $((EFI_OFFSET))     $((BOOT_OFFSET-1))  # up-to 16MB => ~12MB
+parted -s "${TEMP_IMAGE}" unit s mkpart linux_boot  ext4    $((BOOT_OFFSET))    $((ROOT_OFFSET-1)) # up-to 132MB => 116MB
+parted -s "${TEMP_IMAGE}" unit s mkpart linux_root  ext4    $((ROOT_OFFSET))   100%                 # rest
 parted -s "${TEMP_IMAGE}" set 3 legacy_boot on
 
 # Assign lodevice
@@ -132,11 +110,29 @@ umount "$TEMP/rootfs/boot/efi"
 umount "$TEMP/rootfs/boot"
 umount "$TEMP/rootfs"
 
-# Cleanup build
+# Do fsck
+fsck.ext4 -f "$LODEV_ROOT"
+
+for IMAGE_SIZE in $(seq $MIN_SIZE $SIZE_STEP $MAX_SIZE) $MAX_SIZE
+do
+    # We need 33 sectors for GPT, give it 128
+    ROOT_SIZE=$((IMAGE_SIZE-ROOT_OFFSET-128))
+
+    # try to resize rootfs to fit into `IMAGE_SIZE`
+    if resize2fs "$LODEV_ROOT" "${ROOT_SIZE}"; then
+        # resize partition 7 to as much as possible
+        echo ",$((ROOT_SIZE)),,," | sfdisk "${LODEV}" -N4 --force
+        break
+    fi
+done
+
+# Cleanup
 cleanup
 trap - EXIT
 
-# Verify partitions
+# Now truncate the image, and fix it
+truncate -s "$((IMAGE_SIZE*512))" "$TEMP_IMAGE"
+sgdisk -e "$TEMP_IMAGE"
 parted -s "${TEMP_IMAGE}" print
 
 # Move image into final location
