@@ -24,7 +24,7 @@ fi
 
 case "$VARIANT" in
     minimal)
-        SIZE=1999
+        SIZE=2499
         ;;
 
     i3)
