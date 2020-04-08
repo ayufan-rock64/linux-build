@@ -162,6 +162,11 @@ do_chroot() {
 }
 
 do_install() {
+	do_chroot apt-get -y install "$@"
+	do_chroot apt-get clean
+}
+
+do_install_local() {
 	FILE=$(basename "$1")
 	cp "$1" "$DEST/$FILE"
 	yes | do_chroot apt install "/$FILE"
@@ -236,7 +241,7 @@ do_chroot apt-get -y update
 
 if [[ -n "$USE_EATMYDATA" ]]; then
 	# Disable fsyncs to speed-up build process
-	do_chroot apt-get -y install eatmydata
+	do_install eatmydata
 
 	export CHROOT_PREFIX="eatmydata --"
 fi
@@ -246,7 +251,7 @@ sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" "$DEST/etc/locale.gen"
 echo "C.UTF-8 UTF-8" >> "$DEST/etc/locale.gen"
 do_chroot dpkg-reconfigure locales
 
-do_chroot apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
+do_install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
 	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
 	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
 	network-manager psmisc u-boot-tools ifupdown resolvconf \
@@ -254,9 +259,9 @@ do_chroot apt-get -y install dosfstools curl xz-utils iw rfkill wpasupplicant op
 	initramfs-tools cifs-utils command-not-found console-setup kbd
 
 if [[ "$DISTRIB" == "debian" ]]; then
-	do_chroot apt-get -y install firmware-realtek
+	do_install firmware-realtek
 elif [[ "$DISTRIB" == "ubuntu" ]]; then
-	do_chroot apt-get -y install landscape-common linux-firmware
+	do_install landscape-common linux-firmware
 fi
 
 # this is needed to allow booting from SATA/NVME drive
@@ -271,12 +276,12 @@ for arch in $EXTRA_ARCHS; do
 	if [[ "$arch" != "$BUILD_ARCH" ]]; then
 		do_chroot dpkg --add-architecture "$arch"
 		do_chroot apt-get update -y
-		do_chroot apt-get install -o APT::Immediate-Configure=false -y "libc6:$arch" "libstdc++6:$arch"
+		do_install -o APT::Immediate-Configure=false "libc6:$arch" "libstdc++6:$arch"
 	fi
 done
 
 for package in "$@"; do
-	do_install "$package"
+	do_install_local "$package"
 done
 
 if [[ "$DEBUSER" != "root" ]]; then
