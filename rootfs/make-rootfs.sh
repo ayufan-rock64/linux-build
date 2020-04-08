@@ -206,14 +206,14 @@ EOF
 # Detect `/boot`
 if findmnt "$DEST/boot"; then
 	cat >> "$DEST/etc/fstab" <<EOF
-LABEL=linux-boot /boot       ext4    defaults         0    1" >> "$DEST/etc/fstab"
+LABEL=linux-boot /boot       ext4    defaults         0    1
 EOF
 fi
 
 # Detect `/boot/efi`
 if findmnt "$DEST/boot/efi"; then
-cat > "$DEST/etc/fstab" <<EOF
-	LABEL=boot-efi   /boot/efi   vfat    defaults,sync    0    1" >> "$DEST/etc/fstab
+	cat >> "$DEST/etc/fstab" <<EOF
+LABEL=boot-efi   /boot/efi   vfat    defaults,sync    0    1
 EOF
 fi
 
