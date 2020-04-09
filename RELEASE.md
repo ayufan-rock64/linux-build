@@ -54,6 +54,12 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.10: Do not compile OMV5 for armhf, only arm64
+- 0.10.10: Fix `fstab` issue introduced in 0.10.9
+- 0.10.10: Do more cleanups during image creation to reduce size
+- 0.10.10: Enable u-boot HDMI output for RockPro64
+- 0.10.10: Support HDMI modeline with pclck 32MHz (ie. 1024x600@43)
+- 0.10.10: Support automated resize when booting from nvme
 - 0.10.9: Shrink created images to reduce write time
 - 0.10.9: Enable work/diy LEDs on boot for RockPro64/PinebookPro
 - 0.10.9: Fix excessive log messages on OMV5
