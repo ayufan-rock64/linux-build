@@ -259,7 +259,7 @@ do_install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-
 	initramfs-tools cifs-utils command-not-found console-setup kbd
 
 if [[ "$DISTRIB" == "debian" ]]; then
-	do_install firmware-realtek
+	do_install firmware-realtek firmware-linux
 elif [[ "$DISTRIB" == "ubuntu" ]]; then
 	do_install landscape-common linux-firmware
 fi
