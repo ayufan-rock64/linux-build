@@ -4,7 +4,7 @@ export RELEASE_NAME ?= $(VERSION)~dev
 export RELEASE ?= 1
 
 BUILD_SYSTEMS := focal buster
-BUILD_VARIANTS := minimal mate lxde i3 openmediavault containers
+BUILD_VARIANTS := minimal mate lxde i3 kde xfce4 kde gnome openmediavault containers
 BUILD_ARCHS := armhf arm64
 BUILD_MODELS := rock64 rockpro64 pinebookpro rockpi4b
 

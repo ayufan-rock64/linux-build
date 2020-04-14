@@ -82,6 +82,18 @@ focal-lxde-arm64 rock64: *build_manual
 focal-lxde-arm64 rockpro64: *build_manual
 focal-lxde-arm64 pinebookpro: *build_manual
 
+focal-gnome-arm64 rock64: *build_manual
+focal-gnome-arm64 rockpro64: *build_manual
+focal-gnome-arm64 pinebookpro: *build_manual
+
+focal-kde-arm64 rock64: *build_manual
+focal-kde-arm64 rockpro64: *build_manual
+focal-kde-arm64 pinebookpro: *build_manual
+
+focal-xfce4-arm64 rock64: *build_manual
+focal-xfce4-arm64 rockpro64: *build_manual
+focal-xfce4-arm64 pinebookpro: *build_manual
+
 buster-containers-arm64 rock64: *build
 buster-containers-arm64 rockpro64: *build
 
