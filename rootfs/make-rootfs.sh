@@ -294,7 +294,7 @@ fi
 # Change password
 echo "$DEBUSER:$DEBUSERPW" | do_chroot chpasswd
 
-do_chroot root/usr/libexec/board-package/install_variant.sh "$VARIANT"
+do_chroot /usr/libexec/board-package/install_variant.sh "$VARIANT"
 do_chroot apt-get dist-upgrade -y
 do_chroot systemctl enable ssh-keygen
 
