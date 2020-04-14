@@ -294,33 +294,8 @@ fi
 # Change password
 echo "$DEBUSER:$DEBUSERPW" | do_chroot chpasswd
 
-case "$VARIANT" in
-	mate)
-		do_chroot /usr/local/sbin/install_desktop.sh mate
-		do_chroot systemctl set-default graphical.target
-		;;
-
-	i3)
-		do_chroot /usr/local/sbin/install_desktop.sh i3
-		do_chroot systemctl set-default graphical.target
-		;;
-
-	lxde)
-		do_chroot /usr/local/sbin/install_desktop.sh lxde
-		do_chroot systemctl set-default graphical.target
-		;;
-
-	openmediavault)
-		do_chroot /usr/local/sbin/install_openmediavault.sh
-		;;
-
-	containers)
-		do_chroot /usr/local/sbin/install_container_linux.sh
-		;;
-esac
-
+do_chroot root/usr/libexec/board-package/install_variant.sh "$VARIANT"
 do_chroot apt-get dist-upgrade -y
-
 do_chroot systemctl enable ssh-keygen
 
 if [[ "$DISTRIB" == "debian" ]]; then
