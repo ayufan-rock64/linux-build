@@ -54,6 +54,10 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.11: Support wifi/bt on Pinebook Pro
+- 0.10.11: Add `install_kernel` script
+- 0.10.11: Fix support for `rockchip/dptx.bin`
+- 0.10.11: Try Gnome, KDE, XFCE4 additionally to LXDE, Mate
 - 0.10.10: Do not compile OMV5 for armhf, only arm64
 - 0.10.10: Fix `fstab` issue introduced in 0.10.9
 - 0.10.10: Do more cleanups during image creation to reduce size
