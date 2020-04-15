@@ -305,6 +305,11 @@ fi
 sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 do_chroot apt-get clean
 
+if find "$DEST" -maxdepth 1 -name "qemu_*.core" | egrep '.*'; then
+	echo "Found qemu core dumps. Something failed."
+	exit 1
+fi
+
 # Expire password
 do_chroot passwd -e "$DEBUSER"
 
