@@ -54,6 +54,10 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.10.x
 
+- 0.10.12: Be strict on any qemu failures
+- 0.10.12: Build by default mate/lxde/gnome/xfce4
+- 0.10.12: Add pcie scan delay from @nuumio
+- 0.10.12: Add `ubuntu-mate-lightdm-theme` where possible
 - 0.10.11: Support wifi/bt on Pinebook Pro
 - 0.10.11: Add `install_kernel` script
 - 0.10.11: Fix support for `rockchip/dptx.bin`
