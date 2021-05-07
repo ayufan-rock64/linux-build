@@ -52,6 +52,10 @@ sudo rock64_upgrade_bootloader.sh
 
 ## Changelog
 
+### 0.11.x
+
+- 0.11.0: Try to use 2021.04 uboot and 5.12.0 kernel
+
 ### 0.10.x
 
 - 0.10.12: Be strict on any qemu failures
