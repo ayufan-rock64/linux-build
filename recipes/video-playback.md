@@ -112,6 +112,30 @@ And then using `LD_PRELOAD_PATH` to instruct `mpv` to use different library:
 LD_PRELOAD_PATH=/usr/lib/aarch64-linux-gnu/gbm mpv --vo=gpu --gpu-context=drm --hwdec=rkmpp video.mkv
 ```
 
+### Quirks
+
+If you experience distorted or very jerky video playback, try adding the follwing switch:
+
+ --drm-mode=21
+
+or
+
+ --drm-mode=17
+
+If you get large horizontal black bars during video playback ('letterboxing'), you may be able to achieve full screen playback by adjusting the aspect ratio.
+
+Tap 'A' during playback of a video to cycle through aspect modes or use a switch to make it permanent by adding something like:
+
+ --video-aspect=1.3333
+
+To the example mpv command above. 
+
+mpv defaults to rotating videos that have been shot in potrait mode. To get it to ignore videos rotation metadata and always play videos in landscape mode add:
+
+ --video-rotate=no
+
+To the example mpv command.
+
 ## Thanks
 
 You should thank [LongChair](https://github.com/LongChair) and [Kwiboo](https://github.com/Kwiboo/) for making this work!
