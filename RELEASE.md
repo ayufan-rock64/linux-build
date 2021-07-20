@@ -54,6 +54,7 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.11.x
 
+- 0.11.1: Update to 2021.07 and 5.13.0 kernel
 - 0.11.0: Try to use 2021.04 uboot and 5.12.0 kernel
 
 ### 0.10.x
