@@ -36,9 +36,9 @@ To enable SSH for OMV go to Web > SSH > Permit Root Login > Save > Apply
 
 ```bash
 # Pick one
-sudo apt-get update -y && sudo apt-get install linux-rock64-0.10-mainline -y
-sudo apt-get update -y && sudo apt-get install linux-rockpro64-0.10-mainline -y
-sudo apt-get update -y && sudo apt-get install linux-pinebookpro-0.10-mainline -y
+sudo apt-get update -y && sudo apt-get install linux-rock64-0.11-mainline -y
+sudo apt-get update -y && sudo apt-get install linux-rockpro64-0.11-mainline -y
+sudo apt-get update -y && sudo apt-get install linux-pinebookpro-0.11-mainline -y
 
 # Upgrade all other packages
 sudo apt-get update -y && sudo apt-get dist-upgrade -y
@@ -54,6 +54,7 @@ sudo rock64_upgrade_bootloader.sh
 
 ### 0.11.x
 
+- 0.11.2: Update OMV install (to also be able to run OMV6)
 - 0.11.1: Update to 2021.07 and 5.13.0 kernel
 - 0.11.0: Try to use 2021.04 uboot and 5.12.0 kernel
 
