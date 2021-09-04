@@ -1,0 +1,17 @@
+.git/
+.repo/
+app/
+buildroot/
+debian/
+device/
+docs/
+external/
+kernel/
+npu/
+prebuilts/
+rkbin/
+tools/
+u-boot/
+linux-u-boot/
+linux-kernel/
+linux-build/
