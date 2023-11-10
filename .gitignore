@@ -1,10 +1,5 @@
 /build
-/kernel
-/kernel-mainline
-/u-boot-mainline
 /out
-/rkbin
-/u-boot
 /.repo
 *.img
 *.img.xz
@@ -13,10 +8,21 @@
 *.deb
 /package/rtk_bt
 *.changes
-/arm-trusted-firmware
-/tmp
-/linux-package
 /extras
 *.code-workspace
-/dockerfiles
 
+/rkbin
+/u-boot
+/kernel
+/kernel-mainline
+/u-boot-mainline
+/arm-trusted-firmware
+
+/dockerfiles
+/rockchip-rkbin
+/linux-package
+/linux-mainline-kernel
+/linux-mainline-u-boot
+/linux-rootfs
+
+/tmp

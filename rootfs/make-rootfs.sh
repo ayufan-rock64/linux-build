@@ -80,7 +80,7 @@ fi
 echo "RootFS Version: $ROOTFS_VERSION"
 
 case $DISTRO in
-	focal)
+	focal|jammy)
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/ubuntu-${DISTRO}-${VARIANT}-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
 		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/ubuntu-${DISTRO}-minimal-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
@@ -88,7 +88,7 @@ case $DISTRO in
 		EXTRA_ARCHS="arm64"
 		;;
 
-	buster)
+	buster|bullseye|bookworm)
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/debian-${DISTRO}-${VARIANT}-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
 		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/debian-${DISTRO}-minimal-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
@@ -139,7 +139,7 @@ echo "OK"
 mount -o bind /tmp "$DEST/tmp"
 chroot "$DEST" mount -t proc proc /proc
 chroot "$DEST" mount -t sysfs sys /sys
-chroot "$DEST" mount --bind /dev/null /proc/mdstat
+chroot "$DEST" mount --bind /dev/null /proc/mdstat || true
 
 # Mount var/apt/cache
 # mkdir -p "$CACHE_ROOT/apt" "$DEST/var/cache/apt"
@@ -181,6 +181,12 @@ echo -n UTC > "$DEST/etc/timezone"
 
 # Configure package sources
 cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64.list" <<EOF
+deb http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO releases
+
+# uncomment to use pre-release kernels and compatibility packages
+# deb http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO pre-releases
+
+# LEGACY:
 deb http://deb.ayufan.eu/orgs/ayufan-rock64/releases /
 
 # uncomment to use pre-release kernels and compatibility packages
@@ -188,11 +194,15 @@ deb http://deb.ayufan.eu/orgs/ayufan-rock64/releases /
 EOF
 
 cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list" <<EOF
+deb http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO pre-releases
+
+# LEGACY:
 deb http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
 EOF
 
 # Add non-free packages
 sed -i 's/main contrib$/main contrib non-free/g' $DEST/etc/apt/sources.list
+sed -i 's/contrib non-free$/contrib non-free non-free-firmware/g' $DEST/etc/apt/sources.list
 
 # Configure system
 cat > "$DEST/etc/hostname" <<EOF
@@ -256,7 +266,7 @@ do_install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-
 	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
 	network-manager psmisc u-boot-tools ifupdown resolvconf \
 	net-tools mtd-utils rsync device-tree-compiler debsums pciutils \
-	initramfs-tools cifs-utils command-not-found console-setup kbd
+	initramfs-tools cifs-utils command-not-found console-setup kbd zstd
 
 if [[ "$DISTRIB" == "debian" ]]; then
 	do_install firmware-realtek firmware-linux
@@ -280,22 +290,24 @@ for arch in $EXTRA_ARCHS; do
 	fi
 done
 
-for package in "$@"; do
-	do_install_local "$package"
-done
-
 if [[ "$DEBUSER" != "root" ]]; then
-	do_chroot adduser --gecos "$DEBUSER" --disabled-login "$DEBUSER" --uid 1000
+	do_chroot adduser --gecos "$DEBUSER" "$DEBUSER" --uid 1000
 	do_chroot chown -R 1000:1000 "/home/$DEBUSER"
 	do_chroot getent group lpadmin > /dev/null || do_chroot addgroup --system lpadmin
+	do_chroot getent group ssh > /dev/null || do_chroot addgroup --system ssh
 	do_chroot usermod -a -G sudo,audio,adm,input,video,plugdev,ssh,lp,lpadmin "$DEBUSER"
 fi
 
 # Change password
 echo "$DEBUSER:$DEBUSERPW" | do_chroot chpasswd
 
-do_chroot /usr/libexec/board-package/install_variant.sh "$VARIANT"
 do_chroot apt-get dist-upgrade -y
+
+for package in "$@"; do
+	do_install_local "$package"
+done
+
+do_chroot /usr/libexec/board-package/install_variant.sh "$VARIANT"
 do_chroot systemctl enable ssh-keygen
 
 if [[ "$DISTRIB" == "debian" ]]; then

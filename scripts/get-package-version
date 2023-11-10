@@ -19,7 +19,7 @@ case "$2" in
     ;;
 
   tag_with_sha)
-    FILTER='(.tag_name + "-g" + (.target_commitish | .[0:12]))'
+    FILTER='(.tag_name + "-g" + (.target_commitish | .[0:9]))'
     MATCH="^$3-"
     ;;
 

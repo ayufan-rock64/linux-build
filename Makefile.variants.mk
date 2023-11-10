@@ -8,6 +8,5 @@ $(addsuffix -arm64, $(VARIANTS)): %-arm64: %-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm
 
 .PHONY: linux-variants		# build all linux variants
 linux-variants: \
-	bionic-minimal-arm64 \
-	stretch-minimal-arm64 \
+	bookworm-minimal-arm64 \
 	linux-virtual

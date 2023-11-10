@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -xe
+
+retry() {
+  for i in 1 2 3 4 5; do
+    if eval "$@"; then
+      return 0
+    fi
+    sleep 1s
+  done
+  return 1
+}
+
+if sd-mux-ctrl -v 0 --dut; then
+  sd-mux-ctrl -v 0 --ts
+  sleep 3s
+fi
+
+DEVICES=( $(find /dev/disk/by-id/ -name "usb-*" -not -name "*-part*") )
+
+if [[ "${#DEVICES[@]}" -eq 0 ]]; then
+  echo "No USB devices."
+  exit 1
+elif [[ "${#DEVICES[@]}" -ne 1 ]]; then
+  echo "Many devices: ${DEVICES[@]}"
+  exit 1
+fi
+
+DISK="${DEVICES[0]}"
+echo "Using $DISK..."
+
+trap 'set +e; sync; cd /; umount -f /mnt/boot; umount -f /mnt; sd-mux-ctrl -v 0 --dut' EXIT
+
+retry mount -t ext4 "$DISK-part4" /mnt
+retry mount -t ext4 "$DISK-part3" /mnt/boot
+
+cd /mnt
+bash

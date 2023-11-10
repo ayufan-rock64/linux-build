@@ -3,10 +3,10 @@ include Makefile.versions.mk
 export RELEASE_NAME ?= $(VERSION)~dev
 export RELEASE ?= 1
 
-BUILD_SYSTEMS := focal buster
+BUILD_SYSTEMS := bookworm
 BUILD_VARIANTS := minimal mate lxde i3 kde xfce4 kde gnome openmediavault containers
-BUILD_ARCHS := armhf arm64
-BUILD_MODELS := rock64 rockpro64 pinebookpro rockpi4b
+BUILD_ARCHS := arm64
+BUILD_MODELS := rock64 rockpro64 pinebookpro rockpi4b rockpi5b
 
 BOARD_TARGET ?= rock64
 

@@ -1,4 +1,4 @@
-image: ayufan/rock64-dockerfiles:x86_64
+image: ayufan/rock64-dockerfiles:bookworm
 
 stages:
   - build

@@ -11,7 +11,15 @@ generate-latest:
 	@echo LATEST_ROOTFS_VERSION=$(LATEST_ROOTFS_VERSION)
 	@echo LATEST_PACKAGE_VERSION=$(LATEST_PACKAGE_VERSION)
 
-linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb:
+store-latest:
+	git checkout Makefile.latest.mk
+	make -s generate-latest | tee Makefile.latest.mk
+
+ifeq (,$(CI))
+.PHONY: linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb
+endif
+
+linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb: Makefile.latest.mk
 	fpm -s empty -t deb -n linux-$(BOARD_TARGET)-$(VERSION)-mainline -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \

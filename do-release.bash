@@ -60,9 +60,7 @@ show_diff() {
 }
 
 eval $(git show "HEAD:Makefile.latest.mk" | sed "s/^LATEST_/PREVIOUS_/g")
-
-git checkout Makefile.latest.mk
-make generate-latest > Makefile.latest.mk
+make store-latest
 source Makefile.latest.mk
 echo
 

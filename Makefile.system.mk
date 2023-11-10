@@ -1,8 +1,8 @@
 %.tar.xz: %.tar
-	pxz -f -3 $<
+	xz -T 0 -3 -f $<
 
 %.img.xz: %.img
-	pxz -f -3 $<
+	xz -T 0 -3 -f $<
 
 %.img: $(PACKAGES)
 	export ROOTFS_VERSION="$(LATEST_ROOTFS_VERSION)"; \
