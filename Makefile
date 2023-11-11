@@ -6,7 +6,7 @@ export RELEASE ?= 1
 BUILD_SYSTEMS := bookworm
 BUILD_VARIANTS := minimal mate lxde i3 kde xfce4 kde gnome openmediavault containers
 BUILD_ARCHS := arm64
-BUILD_MODELS := rock64 rockpro64 pinebookpro rockpi4b rock5b
+BUILD_MODELS := rock64 rockpro64 quartz64a quartz64b rockpi4b rock5b
 
 BOARD_TARGET ?= rock64
 
