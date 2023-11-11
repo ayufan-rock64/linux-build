@@ -140,6 +140,12 @@ do
     break
 done
 
+# Zero empty space
+mount -o data=writeback,commit=3600 "${LODEV_ROOT}" "$TEMP/rootfs"
+dd if=/dev/zero of="$TEMP/rootfs/zero.file" bs=1M || true
+rm -f "$TEMP/rootfs/zero.file"
+umount "$TEMP/rootfs"
+
 # Cleanup
 cleanup
 trap - EXIT

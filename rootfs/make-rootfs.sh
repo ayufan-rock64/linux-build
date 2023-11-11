@@ -343,6 +343,8 @@ rm -f "$DEST/usr/local/bin/mdadm"
 rm -rf "$DEST"/var/lib/rrdcached/*
 rm -f "$DEST/var/lib/dbus/machine-id"
 rm -f "$DEST/etc/flash-kernel/machine"
+rm -rf "$DEST"/var/lib/apt/lists/*
+rm -rf "$DEST"/var/cache/*
 : > "$DEST/etc/machine-id"
 rm -f "$DEST/SHA256SUMS"
 
