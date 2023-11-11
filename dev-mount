@@ -12,9 +12,11 @@ retry() {
   return 1
 }
 
-if sd-mux-ctrl -v 0 --dut; then
-  sd-mux-ctrl -v 0 --ts
-  sleep 3s
+if SD_MUX=$(sd-mux-ctrl -v 0 --status); then
+  if [[ "$SD_MUX" == "SD connected to: DUT" ]]; then
+    sd-mux-ctrl -v 0 --ts
+    sleep 1s
+  fi
 fi
 
 DEVICES=( $(find /dev/disk/by-id/ -name "usb-*" -not -name "*-part*") )

@@ -17,9 +17,12 @@ retry() {
 
 set -xe
 
-sd-mux-ctrl -v 0 --dut || true
-sd-mux-ctrl -v 0 --ts || true
-sleep 1s
+if SD_MUX=$(sd-mux-ctrl -v 0 --status); then
+  if [[ "$SD_MUX" == "SD connected to: DUT" ]]; then
+    sd-mux-ctrl -v 0 --ts
+    sleep 1s
+  fi
+fi
 
 DEVICES=( $(find /dev/disk/by-id/ -name 'usb-*' -not -name '*-part*') )
 
@@ -34,11 +37,6 @@ fi
 DISK="${DEVICES[0]}"
 echo "Using $DISK..."
 
-if sd-mux-ctrl -v 0 --dut; then
-  sd-mux-ctrl -v 0 --ts
-  sleep 3s
-fi
-
-zstd -d -c "$1" | pv > "$DISK"
+zstd -d -c "$1" | pv | dd of="$DISK" bs=512k iflag=fullblock oflag=direct
 sync
 sd-mux-ctrl -v 0 --dut || true
