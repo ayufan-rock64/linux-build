@@ -291,7 +291,7 @@ for arch in $EXTRA_ARCHS; do
 done
 
 if [[ "$DEBUSER" != "root" ]]; then
-	do_chroot adduser --gecos "$DEBUSER" "$DEBUSER" --uid 1000
+	do_chroot adduser --gecos "$DEBUSER" "$DEBUSER" --disabled-password --uid 1000
 	do_chroot chown -R 1000:1000 "/home/$DEBUSER"
 	do_chroot getent group lpadmin > /dev/null || do_chroot addgroup --system lpadmin
 	do_chroot getent group ssh > /dev/null || do_chroot addgroup --system ssh
