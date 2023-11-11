@@ -1,5 +1,7 @@
 VARIANTS := $(foreach system, $(BUILD_SYSTEMS), $(foreach variants, $(BUILD_VARIANTS), $(system)-$(variants)))
 
+ifneq (,$(BOARD_TARGET))
+
 variants:
 	@echo $(VARIANTS)
 
@@ -10,3 +12,7 @@ $(addsuffix -arm64, $(VARIANTS)): %-arm64: %-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm
 linux-variants: \
 	bookworm-minimal-arm64 \
 	linux-virtual
+
+all: linux-variants
+
+endif

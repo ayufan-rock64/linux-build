@@ -15,6 +15,8 @@ store-latest:
 	git checkout Makefile.latest.mk
 	make -s generate-latest | tee Makefile.latest.mk
 
+ifneq (,$(BOARD_TARGET))
+
 ifeq (,$(CI))
 .PHONY: linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb
 endif
@@ -40,3 +42,6 @@ linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb: Makefile.latest.mk
 		-a arm64
 
 linux-virtual: linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb
+
+all: linux-virtual
+endif
