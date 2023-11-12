@@ -54,7 +54,7 @@ if [[ -n "$2" ]]; then
     DISK="$MATCH"
     echo "Found '$DISK' for 'LABEL=$2'."
   else
-    echo "The '$DISK' does not exist."
+    echo "The '$2' on '$DISK' does not exist."
     exit 1
   fi
 fi

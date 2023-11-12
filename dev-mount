@@ -1,10 +1,10 @@
 #!/bin/bash
 
-set -xe
+set -eo pipefail
 
 retry() {
   for i in 1 2 3 4 5; do
-    if eval "$@"; then
+    if "$@"; then
       return 0
     fi
     sleep 1s
@@ -12,30 +12,93 @@ retry() {
   return 1
 }
 
-if SD_MUX=$(sd-mux-ctrl -v 0 --status); then
-  if [[ "$SD_MUX" == "SD connected to: DUT" ]]; then
-    sd-mux-ctrl -v 0 --ts
-    sleep 1s
+if [[ $# -ne 0 ]] && [[ $# -ne 1 ]]; then
+  echo "usage: $0 [img-or-block]"
+  exit 1
+fi
+
+if mountpoint -q /mnt; then
+  echo "Something is mounted to '/mnt'. Unmount first."
+  mount /mnt || true
+  exit 1
+fi
+
+cleanup() {
+  sync
+  cd /
+  umount -f /mnt/dev || true
+  umount -f /mnt/proc || true
+  umount -f /mnt/sys || true
+  umount -f /mnt/boot || true
+  umount -f /mnt || true
+  kpartx -d "$DISK" || true
+  losetup -d "$DISK" || true
+  [[ -z "$SD_MUX" ]] || sd-mux-ctrl -v 0 --dut
+}
+trap cleanup EXIT
+
+if [[ $# -eq 0 ]]; then
+  if SD_MUX=$(sd-mux-ctrl -v 0 --status); then
+    echo "Using SD_MUX..."
+    if [[ "$SD_MUX" == "SD connected to: DUT" ]]; then
+      echo "Switching SD_MUX to TS..."
+      sd-mux-ctrl -v 0 --ts
+      sleep 1s
+    fi
   fi
+
+  DEVICES=( $(find /dev/disk/by-id/ -name "usb-*" -not -name "*-part*") )
+
+  if [[ "${#DEVICES[@]}" -eq 0 ]]; then
+    echo "No USB devices."
+    exit 1
+  elif [[ "${#DEVICES[@]}" -ne 1 ]]; then
+    echo "Many devices: ${DEVICES[@]}"
+    exit 1
+  fi
+
+  DISK="${DEVICES[0]}"
+  echo "Using '$DISK'..."
+else
+  DISK=$(losetup -f --show "${1}")
+  kpartx -a "$DISK"
+  echo "Attached '$1' to '$DISK'..."
 fi
 
-DEVICES=( $(find /dev/disk/by-id/ -name "usb-*" -not -name "*-part*") )
+mount_part() {
+  local parts="${DISK/\/dev\/loop/\/dev\/mapper\/loop}"
+  local matches="$1"
+  shift
 
-if [[ "${#DEVICES[@]}" -eq 0 ]]; then
-  echo "No USB devices."
-  exit 1
-elif [[ "${#DEVICES[@]}" -ne 1 ]]; then
-  echo "Many devices: ${DEVICES[@]}"
-  exit 1
-fi
+  for match in $matches; do
+    if [[ -b "$DISK-$match" ]]; then
+      local disk="$DISK-$match"
+      echo "Found '$DISK' for '$match'."
+    elif MATCH=$(blkid -o device -l -t "PARTLABEL=$match" "$parts"*); then
+      local disk="$MATCH"
+      echo "Found '$DISK' for 'PARTLABEL=$match'."
+    elif MATCH=$(blkid -o device -l -t "LABEL=$match" "$parts"*); then
+      local disk="$MATCH"
+      echo "Found '$DISK' for 'LABEL=$match'."
+    else
+      continue
+    fi
 
-DISK="${DEVICES[0]}"
-echo "Using $DISK..."
+    echo "Mounting '$disk' to '$@'..."
+    mount "$disk" "$@"
+    return 0
+  done
 
-trap 'set +e; sync; cd /; umount -f /mnt/boot; umount -f /mnt; sd-mux-ctrl -v 0 --dut' EXIT
+  echo "The '$matches' does not exist."
+  return 1
+}
 
-retry mount -t ext4 "$DISK-part4" /mnt
-retry mount -t ext4 "$DISK-part3" /mnt/boot
+retry mount_part "part4 rootfs" /mnt
+retry mount_part "part3 bootfs" /mnt/boot
+
+mount --bind /dev /mnt/dev
+mount --bind /proc /mnt/proc
+mount --bind /sys /mnt/sys
 
 cd /mnt
 bash
