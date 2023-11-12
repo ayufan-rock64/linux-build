@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ $# -ne 1 ]]; then
-  echo "usage: $0 <img>"
+if [[ $# -ne 1 ]] && [[ $# -ne 2 ]]; then
+  echo "usage: $0 <img> [part1]"
   exit 1
 fi
 
@@ -15,10 +15,12 @@ retry() {
   return 1
 }
 
-set -xe
+set -eo pipefail
 
 if SD_MUX=$(sd-mux-ctrl -v 0 --status); then
+  echo "Using SD_MUX..."
   if [[ "$SD_MUX" == "SD connected to: DUT" ]]; then
+    echo "Switching SD_MUX to TS..."
     sd-mux-ctrl -v 0 --ts
     sleep 1s
   fi
@@ -30,13 +32,55 @@ if [[ "${#DEVICES[@]}" -eq 0 ]]; then
   echo "No USB devices."
   exit 1
 elif [[ "${#DEVICES[@]}" -ne 1 ]]; then
-  echo "Many devices: ${DEVICES[@]}"
+  echo "Too many devices: ${DEVICES[@]}"
   exit 1
 fi
 
 DISK="${DEVICES[0]}"
-echo "Using $DISK..."
 
-zstd -d -c "$1" | pv | dd of="$DISK" bs=512k iflag=fullblock oflag=direct
+if [[ ! -b "$DISK" ]]; then
+  echo "The '$DISK' does not exist."
+  exit 1
+fi
+
+if [[ -n "$2" ]]; then
+  if [[ -b "$DISK-$2" ]]; then
+    DISK="$DISK-$2"
+    echo "Found '$DISK' for '$2'."
+  elif MATCH=$(blkid -o device -l -t "PARTLABEL=$2" "$DISK"*); then
+    DISK="$MATCH"
+    echo "Found '$DISK' for 'PARTLABEL=$2'."
+  elif MATCH=$(blkid -o device -l -t "LABEL=$2" "$DISK"*); then
+    DISK="$MATCH"
+    echo "Found '$DISK' for 'LABEL=$2'."
+  else
+    echo "The '$DISK' does not exist."
+    exit 1
+  fi
+fi
+
+echo "Writing '$1' to '$DISK'..."
+
+case "$1" in
+  *.img.xz|*.img.gz|*.img.zstd)
+    zstd -d -c "$1" | pv | dd of="$DISK" bs=512k iflag=fullblock oflag=direct 2>/dev/null
+    ;;
+
+  *.img)
+    pv "$1" | dd of="$DISK" bs=512k iflag=fullblock oflag=direct 2>/dev/null
+    ;;
+
+  *)
+    echo "$1: unsupported file"
+    ;;
+esac
+
+echo Syncing...
 sync
-sd-mux-ctrl -v 0 --dut || true
+
+if [[ -n "$SD_MUX" ]]; then
+  echo "Switching SD_MUX to DUT..."
+  sd-mux-ctrl -v 0 --dut || true
+fi
+
+echo Done.
