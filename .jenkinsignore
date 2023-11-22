@@ -1,0 +1,7 @@
+rockpro64_3399v7.1/
+.repo/
+ccache/
+kernel/
+u-boot/
+rkbin/
+arm-trusted-firmware/
