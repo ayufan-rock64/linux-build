@@ -1,8 +1,8 @@
 # ayufan's Rock64 Linux releases
 
-This repository contains a set of scripts to build ROCK64 linux images.
+> **This project is no longer actively maintained. The information below is outdated and may not reflect the current state of the codebase or supported hardware.**
 
-This is community maintained project in my free time. Don't expect everything to be perfect and working. Rather be prepared that there are problems, as always try to fix them and contribute, but if you can't drop the issue here so we can track the progress and resolution of the problem.
+This repository contains a set of scripts to build ROCK64 linux images.
 
 ## Releases
 

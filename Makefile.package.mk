@@ -1,7 +1,7 @@
 LATEST_UBOOT_VERSION ?= $(shell scripts/get-package-version linux-mainline-u-boot tag_iid $(UBOOT_VERSION))
 LATEST_KERNEL_VERSION ?= $(shell scripts/get-package-version linux-mainline-kernel tag_with_sha $(KERNEL_VERSION))
-LATEST_ROOTFS_VERSION ?= $(shell scripts/get-package-version linux-rootfs tag_version $(ROOTFS_VERSION))
-LATEST_PACKAGE_VERSION ?= $(shell scripts/get-package-version linux-package tag_iid $(VERSION))
+LATEST_ROOTFS_VERSION ?= $(shell scripts/get-package-version linux-rootfs tag_iid $(ROOTFS_VERSION))
+LATEST_PACKAGE_VERSION ?= $(shell scripts/get-package-version linux-package tag_iid $(PACKAGE_VERSION))
 
 PACKAGES += linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb
 

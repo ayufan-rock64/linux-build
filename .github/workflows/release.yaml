@@ -1,0 +1,84 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Override version (default: VERSION from Makefile.versions.mk)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        board: [rock64, rockpro64, quartz64a, quartz64b, rockpi4b, rock5b]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute release name
+        id: release
+        run: |
+          BASE="${{ inputs.version }}"
+          if [[ -z "$BASE" ]]; then
+            BASE=$(grep '^VERSION=' Makefile.versions.mk | cut -d= -f2)
+          fi
+          echo "name=$BASE-$GITHUB_RUN_NUMBER" >> "$GITHUB_OUTPUT"
+
+      - name: Build ${{ matrix.board }}
+        run: |
+          docker run --rm --privileged \
+            -e CI \
+            -e RELEASE_NAME="${{ steps.release.outputs.name }}" \
+            -e RELEASE="$GITHUB_RUN_NUMBER" \
+            -v "$PWD:/build" -w /build \
+            ayufan/rock64-dockerfiles:trixie \
+            make trixie-minimal-arm64 linux-virtual BOARD_TARGET=${{ matrix.board }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-${{ matrix.board }}
+          path: |
+            *.xz
+            *.deb
+            *-packages.txt
+          if-no-files-found: warn
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute release name
+        id: release
+        run: |
+          BASE="${{ inputs.version }}"
+          if [[ -z "$BASE" ]]; then
+            BASE=$(grep '^VERSION=' Makefile.versions.mk | cut -d= -f2)
+          fi
+          echo "name=$BASE-$GITHUB_RUN_NUMBER" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: build-*
+          merge-multiple: true
+          path: artifacts
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NAME="${{ steps.release.outputs.name }}"
+          CHANGES=$(grep -B1000 -A2 "$NAME" RELEASE.md 2>/dev/null || head -n 60 RELEASE.md)
+          gh release create "$NAME" \
+            --title "$NAME" \
+            --notes "$CHANGES" \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            artifacts/*
