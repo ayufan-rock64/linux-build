@@ -88,7 +88,7 @@ case $DISTRO in
 		EXTRA_ARCHS="arm64"
 		;;
 
-	buster|bullseye|bookworm)
+	buster|bullseye|bookworm|trixie)
 		ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/debian-${DISTRO}-${VARIANT}-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
 		FALLBACK_ROOTFS="https://github.com/ayufan-rock64/linux-rootfs/releases/download/${ROOTFS_VERSION}/debian-${DISTRO}-minimal-${ROOTFS_VERSION}-${BUILD_ARCH}.tar.xz"
 		TAR_OPTIONS="-J --strip-components=1 binary"
@@ -176,7 +176,7 @@ do_install_local() {
 rm -f "$DEST/etc/resolv.conf"
 cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 
-do_chroot apt-key add - < rootfs/ayufan-deb-ayufan-eu.gpg
+cp rootfs/ayufan-deb-ayufan-eu.gpg "$DEST/etc/apt/trusted.gpg.d/ayufan-deb-ayufan-eu.gpg"
 echo -n UTC > "$DEST/etc/timezone"
 
 # Configure package sources
