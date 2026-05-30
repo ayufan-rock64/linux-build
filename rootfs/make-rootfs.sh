@@ -181,23 +181,23 @@ echo -n UTC > "$DEST/etc/timezone"
 
 # Configure package sources
 cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64.list" <<EOF
-deb http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO releases
+deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO releases
 
 # uncomment to use pre-release kernels and compatibility packages
-# deb http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO pre-releases
+# deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO pre-releases
 
 # LEGACY:
-deb http://deb.ayufan.eu/orgs/ayufan-rock64/releases /
+deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64/releases /
 
 # uncomment to use pre-release kernels and compatibility packages
-# deb http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
+# deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
 EOF
 
 cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list" <<EOF
-deb http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO pre-releases
+deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO pre-releases
 
 # LEGACY:
-deb http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
+deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
 EOF
 
 # Add non-free packages
@@ -262,8 +262,8 @@ echo "C.UTF-8 UTF-8" >> "$DEST/etc/locale.gen"
 do_chroot dpkg-reconfigure locales
 
 do_install dosfstools curl xz-utils iw rfkill wpasupplicant openssh-server alsa-utils \
-	nano git build-essential vim jq wget ca-certificates software-properties-common dirmngr \
-	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntp \
+	nano git build-essential vim jq wget ca-certificates dirmngr \
+	gdisk parted figlet htop fake-hwclock usbutils sysstat fping iperf3 iozone3 ntpsec \
 	network-manager psmisc u-boot-tools ifupdown resolvconf \
 	net-tools mtd-utils rsync device-tree-compiler debsums pciutils \
 	initramfs-tools cifs-utils command-not-found console-setup kbd zstd

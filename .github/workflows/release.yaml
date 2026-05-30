@@ -25,6 +25,7 @@ jobs:
 
       - name: Compute release name
         id: release
+        shell: bash
         run: |
           BASE="${{ inputs.version }}"
           if [[ -z "$BASE" ]]; then
@@ -56,6 +57,7 @@ jobs:
 
       - name: Compute release name
         id: release
+        shell: bash
         run: |
           BASE="${{ inputs.version }}"
           if [[ -z "$BASE" ]]; then
