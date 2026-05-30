@@ -13,6 +13,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04-arm
+    container:
+      image: ayufan/rock64-dockerfiles:bookworm
+      options: --privileged
     strategy:
       fail-fast: false
       matrix:
@@ -30,14 +33,10 @@ jobs:
           echo "name=$BASE-$GITHUB_RUN_NUMBER" >> "$GITHUB_OUTPUT"
 
       - name: Build ${{ matrix.board }}
-        run: |
-          docker run --rm --privileged \
-            -e CI \
-            -e RELEASE_NAME="${{ steps.release.outputs.name }}" \
-            -e RELEASE="$GITHUB_RUN_NUMBER" \
-            -v "$PWD:/build" -w /build \
-            ayufan/rock64-dockerfiles:bookworm \
-            make trixie-minimal-arm64 linux-virtual BOARD_TARGET=${{ matrix.board }}
+        env:
+          RELEASE_NAME: ${{ steps.release.outputs.name }}
+          RELEASE: ${{ github.run_number }}
+        run: make trixie-minimal-arm64 linux-virtual BOARD_TARGET=${{ matrix.board }}
 
       - uses: actions/upload-artifact@v4
         if: always()
