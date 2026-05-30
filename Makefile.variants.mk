@@ -10,7 +10,7 @@ $(addsuffix -arm64, $(VARIANTS)): %-arm64: %-$(BOARD_TARGET)-$(IMAGE_SUFFIX)-arm
 
 .PHONY: linux-variants		# build all linux variants
 linux-variants: \
-	bookworm-minimal-arm64 \
+	trixie-minimal-arm64 \
 	linux-virtual
 
 all: linux-variants

@@ -1,4 +1,4 @@
-image: ayufan/rock64-dockerfiles:bookworm
+image: ayufan/rock64-dockerfiles:trixie
 
 stages:
   - build

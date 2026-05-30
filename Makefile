@@ -3,7 +3,7 @@ include Makefile.versions.mk
 export RELEASE_NAME ?= $(VERSION)~dev
 export RELEASE ?= 1
 
-BUILD_SYSTEMS := bookworm
+BUILD_SYSTEMS := trixie
 BUILD_VARIANTS := minimal mate lxde i3 kde xfce4 kde gnome openmediavault containers
 BUILD_ARCHS := arm64
 BUILD_MODELS := rock64 rockpro64 quartz64a quartz64b rockpi4b rock5b

@@ -17,5 +17,5 @@ exec docker run \
   -h rock64-build-env \
   -v "${CURDIR}:${CURDIR}" \
   -w "${CURDIR}" \
-  ayufan/rock64-dockerfiles:bookworm \
+  ayufan/rock64-dockerfiles:trixie \
   "$@"
