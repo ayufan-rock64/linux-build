@@ -182,22 +182,10 @@ echo -n UTC > "$DEST/etc/timezone"
 # Configure package sources
 cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64.list" <<EOF
 deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO releases
-
-# uncomment to use pre-release kernels and compatibility packages
-# deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO pre-releases
-
-# LEGACY:
-deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64/releases /
-
-# uncomment to use pre-release kernels and compatibility packages
-# deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
 EOF
 
 cat > "$DEST/etc/apt/sources.list.d/ayufan-rock64-pre-releases.list" <<EOF
 deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64 $DISTRO pre-releases
-
-# LEGACY:
-deb [trusted=yes] http://deb.ayufan.eu/orgs/ayufan-rock64/pre-releases /
 EOF
 
 # Add non-free packages
