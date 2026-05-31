@@ -6,7 +6,12 @@ export RELEASE ?= 1
 BUILD_SYSTEMS := trixie
 BUILD_VARIANTS := minimal mate lxde i3 kde xfce4 kde gnome openmediavault containers
 BUILD_ARCHS := arm64
-BUILD_MODELS := rock64 rockpro64 quartz64a quartz64b rockpi4b rock5b
+BUILD_MODELS := rock64 rockpro64 quartz64a quartz64b quartzpro64 rockpi4b rock5b
+
+BOARD_PACKAGE_quartz64a ?= generic
+BOARD_PACKAGE_quartz64b ?= generic
+BOARD_PACKAGE_quartzpro64 ?= generic
+BOARD_PACKAGE_rock5b ?= generic
 
 IMAGE_SUFFIX := $(RELEASE_NAME)-$(RELEASE)
 

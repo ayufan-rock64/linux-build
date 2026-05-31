@@ -17,6 +17,9 @@ store-latest:
 
 ifneq (,$(BOARD_TARGET))
 
+BOARD_PACKAGE_TARGET ?= $(or $(BOARD_PACKAGE_$(BOARD_TARGET)),$(BOARD_TARGET))
+UBOOT_TARGET ?= $(or $(BOARD_UBOOT_$(BOARD_TARGET)),$(BOARD_TARGET))
+
 ifeq (,$(CI))
 .PHONY: linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb
 endif
@@ -25,8 +28,8 @@ linux-$(BOARD_TARGET)-$(RELEASE_NAME)-mainline_arm64.deb: Makefile.latest.mk
 	fpm -s empty -t deb -n linux-$(BOARD_TARGET)-$(VERSION)-mainline -v $(RELEASE_NAME) \
 		-p $@ \
 		--deb-priority optional --category admin \
-		--depends "board-package-$(BOARD_TARGET)-$(LATEST_PACKAGE_VERSION)" \
-		--depends "u-boot-$(BOARD_TARGET)-$(LATEST_UBOOT_VERSION)" \
+		--depends "board-package-$(BOARD_PACKAGE_TARGET)-$(LATEST_PACKAGE_VERSION)" \
+		--depends "u-boot-$(UBOOT_TARGET)-$(LATEST_UBOOT_VERSION)" \
 		--depends "linux-image-$(LATEST_KERNEL_VERSION)" \
 		--depends "linux-headers-$(LATEST_KERNEL_VERSION)" \
 		--deb-field "Provides: linux-board-mainline-virtual" \

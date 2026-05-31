@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        board: [rock64, rockpro64, quartz64a, quartz64b, rockpi4b, rock5b]
+        board: [rock64, rockpro64, quartz64a, quartz64b, quartzpro64, rockpi4b, rock5b]
     steps:
       - uses: actions/checkout@v4
 
